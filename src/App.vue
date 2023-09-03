@@ -8,7 +8,7 @@ import NavTab from './components/NavTab.vue'
     <nav>
       <NavTab to="/" content="H" />
       <NavTab to="/recipies" content="R" />
-      <NavTab to="/planner" content="S" />
+      <NavTab to="/planner" content="P" />
       <NavTab to="/ingredients" content="I" />
     </nav>
   </header>
