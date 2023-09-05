@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
-import Recipie from '../model/Recipie'
+import Recipie from '../models/Recipie'
 
-export const useCounterStore = defineStore('counter', {
+export const useRecipieStore = defineStore('recipies', {
     state: () => ({
-        recipies: [] as Recipie[]
+        recipies: [] as Recipie[],
+        loading: false,
+        error: null
     }),
     getters: {
         recipiesCount: (state) => state.recipies.length
