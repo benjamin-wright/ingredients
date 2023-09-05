@@ -1,26 +1,19 @@
 <script setup lang="ts">
-defineProps<{
-  id: string
-  name: string
-  label: string
-  options: string[]
-  modelValue: string
-}>()
+  defineProps<{
+    id: string
+    name: string
+    label: string
+    options: string[]
+    required?: boolean
+  }>()
 
-const emit = defineEmits<{
-  (e: 'input', modelValue: string): void
-}>()
-
-function updateValue(event: Event) {
-  const target = event.target as HTMLInputElement
-  emit('input', target.value)
-}
+  const modelValue = defineModel<string>({ required: true })
 </script>
 
 <template>
   <fieldset>
     <label for="{{ id }}">{{ label }}</label>
-    <select v-bind:value="modelValue" v-on:change="updateValue($event)" type="combo" id="{{ id }}" name="{{ name || id }}" >
+    <select v-model="modelValue" type="combo" id="{{ id }}" name="{{ name || id }}" :required="required" >
       <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
     </select>
   </fieldset>

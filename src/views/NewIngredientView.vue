@@ -1,59 +1,41 @@
-<script lang="ts">
-import { ref, onMounted } from "vue";
-import { useIngredientsStore } from "../stores/ingredients";
-import { QuantityUnit, quantityUnitStrings, quantityFromString } from "@/models/IngredientType";
-import StringInput from "../components/StringInput.vue";
-import ListInput from "../components/ListInput.vue";
+<script setup lang="ts">
+  import { onMounted, ref } from "vue";
+  import { useIngredientsStore } from "../stores/ingredients";
+  import { useRouter } from 'vue-router';
+  import { quantityUnitStrings, quantityFromString } from "@/models/IngredientType";
+  import StringInput from "../components/StringInput.vue";
+  import ListInput from "../components/ListInput.vue";
 
-const form = ref<HTMLFormElement | null>(null)
-
-export default {
-  name: "NewIngredientView",
-  data() {
-    return {
-      ingredient: "",
-      quantity: QuantityUnit.Piece.toString(),
-      quantities: quantityUnitStrings(),
-      ingredientValidationError: ""
-    };
-  },
-  setup() {
-    const store = useIngredientsStore();
-
-    onMounted(() => {
-      store.load();
-    });
-
-    return {
-      store,
-    };
-  },
-  methods: {
-    async newIngredient(event: Event) {
-      event.preventDefault();
-
-      if (!form.value?.checkValidity()) {
-        console.info('invalid');
-        return;
-      }
+  const form = ref<HTMLFormElement | null>(null);
   
-      await this.store.addIngredient(this.ingredient, quantityFromString(this.quantity));
-      this.$router.push("/ingredients");
-    },
-  },
-  components: {
-    StringInput,
-    ListInput
-  },
-};
+  const router = useRouter()
+  const quantities = quantityUnitStrings();
+  let ingredient = "";
+  let quantity = quantities[0];
+  
+  const store = useIngredientsStore();
+
+  onMounted(() => {
+    store.load();
+  });
+
+  async function newIngredient() {
+    if (!form.value?.checkValidity()) {
+      form.value?.reportValidity();
+      return;
+    }
+
+    await store.addIngredient(ingredient, quantityFromString(quantity));
+    router.push("/ingredients");
+  }
 </script>
 
 <template>
   <form class="ingredients" ref="form">
     <h2>New Ingredient</h2>
-    <StringInput id="ingredient" name="ingredient" label="Name" v-model="ingredient" validate:="{{ (value: string) => value.length < 1 ? 'must have a name' : '' }}" />
+    <StringInput id="ingredient" name="ingredient" label="Name" v-model="ingredient" required />
     <ListInput id="quantity" name="quantity" label="Quantity" :options="quantities" v-model="quantity" />
-    <button type="submit" v-on:click="newIngredient($event)">Add</button>
+    <button type="submit" @click.prevent="newIngredient">Add</button>
   </form>
 </template>
 
