@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 const input = ref<HTMLInputElement | null>(null)
 
@@ -7,9 +7,8 @@ const props = defineProps<{
   id: string
   name: string
   label: string
-  error: string
   modelValue: string
-  validate?: (value: string) => string | null
+  validate?: (value: string) => string
 }>()
 
 const emit = defineEmits<{
@@ -18,10 +17,10 @@ const emit = defineEmits<{
 
 function updateValue(event: Event) {
   const target = event.target as HTMLInputElement
-  const error = props.validate?(target.value);
-  input.value?.setCustomValidity('oops');
-
-  // emit('input', target.value)
+  const error = props.validate ? props.validate(target.value) : "";
+  input.value?.setCustomValidity(error);
+  
+  emit('input', target.value)
 }
 </script>
 
