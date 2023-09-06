@@ -25,7 +25,6 @@ export default {
   },
   methods: {
     newRecipie() {
-      console.log("new recipie");
       this.store.addRecipie(new Recipie(1, "New Recipie", 1, []));
     },
   },
@@ -47,13 +46,3 @@ export default {
     </div>
   </div>
 </template>
-
-<style>
-@media (min-width: 1024px) {
-  .recipies {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>

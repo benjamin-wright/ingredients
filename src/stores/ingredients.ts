@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { IngredientStorage } from '@/persistence/ingredient-storage'
 import IngredientType, { QuantityUnit } from '@/models/IngredientType'
-import { useEventsStore, type IEvent } from './events';
+import { useEventsStore, Event } from './events';
 
 const storage = new IngredientStorage();
 
@@ -44,14 +44,11 @@ export const useIngredientsStore = defineStore('ingredients', {
     }
 })
 
-class RemoveIngredientEvent implements IEvent {
-    message: string
+class RemoveIngredientEvent extends Event {
     ingredient: IngredientType
-    undo: () => Promise<void>
 
     constructor(ingredient: IngredientType, undo: () => Promise<void>) {
-        this.message = `Removed ingredient "${ingredient.name}"`;
+        super(`Removed ingredient: "${ingredient.name}"`, undo);
         this.ingredient = ingredient;
-        this.undo = undo;
     }
 }

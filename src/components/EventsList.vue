@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import { useEventsStore, type IEvent } from '@/stores/events';
-const events = useEventsStore();
+    import { useEventsStore, Event } from '@/stores/events';
+    const events = useEventsStore();
+    let eventsList = events.events;
 
-async function undo(event: IEvent) {
-    await event.undo();
-    events.remove(event);
-}
+    async function undo(event: Event) {
+        await event.undo();
+        events.remove(event);
+    }
 </script>
 
 <template>
-<section>
-    <div class="event" v-for="event, id in events.events" :key="id">
-        <p>{{ event.message }}</p>
-        <button @click.prevent="undo(event)">↶</button>
-    </div>
-</section>
+    <section>
+        <div class="event" v-for="event, id in eventsList" :key="id">
+            <p>{{ event.message }}</p>
+            <button @click.prevent="undo(event)">↶</button>
+        </div>
+    </section>
 </template>
 
 <style scoped>
@@ -23,6 +24,7 @@ section {
     bottom: 0.5em;
     right: 0.5em;
 }
+
 .event {
     border: solid 1px var(--color-text);
     background: var(--color-background-soft);

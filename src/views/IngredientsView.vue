@@ -20,7 +20,6 @@ async function remove(ingredient: IngredientType) {
 
 <template>
   <div class="ingredients">
-    <h1>Ingredients</h1>
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
     <div v-else>
@@ -31,11 +30,7 @@ async function remove(ingredient: IngredientType) {
 </template>
 
 <style>
-@media (min-width: 1024px) {
   .ingredients {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
+    padding-top: 1em;
   }
-}
 </style>
