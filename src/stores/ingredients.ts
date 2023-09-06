@@ -21,7 +21,7 @@ export const useIngredientsStore = defineStore('ingredients', {
             }
 
             const ingredients = await storage.getAll();
-            this.ingredients = ingredients;
+            this.ingredients = ingredients.sort(IngredientType.Compare);
             this.loading = false;
         },
         async remove(ingredient: IngredientType) {
@@ -30,11 +30,16 @@ export const useIngredientsStore = defineStore('ingredients', {
             this.ingredients.splice(idx, 1);
 
             const events = useEventsStore();
-            events.add(new RemoveIngredientEvent(ingredient));
+            events.add(new RemoveIngredientEvent(ingredient, async () => {
+                await storage.addIngredient(ingredient);
+                this.ingredients.push(ingredient);
+                this.ingredients.sort(IngredientType.Compare);
+            }));
         },
         async addIngredient(name: string, quantity: QuantityUnit) {
             const ingredient = await storage.add(name, quantity);
             this.ingredients.push(ingredient);
+            this.ingredients.sort(IngredientType.Compare);
         }
     }
 })
@@ -42,13 +47,11 @@ export const useIngredientsStore = defineStore('ingredients', {
 class RemoveIngredientEvent implements IEvent {
     message: string
     ingredient: IngredientType
+    undo: () => Promise<void>
 
-    constructor(ingredient: IngredientType) {
+    constructor(ingredient: IngredientType, undo: () => Promise<void>) {
         this.message = `Removed ingredient "${ingredient.name}"`;
         this.ingredient = ingredient;
-    }
-
-    async undo() {
-        await storage.addIngredient(this.ingredient);
+        this.undo = undo;
     }
 }

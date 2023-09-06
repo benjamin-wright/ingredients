@@ -40,8 +40,14 @@ export class IngredientStorage {
     }
 
     addIngredient(ingredient: IngredientType): Promise<void> {
+        console.info(`re-instating ingredient: ${JSON.stringify(ingredient)}`);
+
         return this.db.then(db => {
-            const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").add(ingredient);
+            const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").add({
+                id: ingredient.id,
+                name: ingredient.name,
+                quantity: ingredient.quantity
+            });
 
             return new Promise((resolve, reject) => {
                 req.onsuccess = (event: any) => {

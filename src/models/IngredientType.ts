@@ -8,6 +8,18 @@ export default class IngredientType {
         this.name = name
         this.quantity = quantity
     }
+
+    static Compare(a: IngredientType, b: IngredientType): number {
+        if (a.name < b.name) {
+            return -1;
+        }
+
+        if (a.name > b.name) {
+            return 1;
+        }
+
+        return 0;
+    }
 }
 
 export enum QuantityUnit {
