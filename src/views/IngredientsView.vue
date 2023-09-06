@@ -1,47 +1,30 @@
-<script lang="ts">
+<script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useIngredientsStore } from "../stores/ingredients";
-import { QuantityUnit } from "@/models/IngredientType";
 import IngredientsList from "../components/IngredientsList.vue";
+import type IngredientType from "@/models/IngredientType";
 
-export default {
-  name: "IngredientTypesView",
-  setup() {
-    const store = useIngredientsStore();
-    
-    const ingredients = computed(() => store.ingredients);
-    const loading = computed(() => store.loading);
-    const error = computed(() => store.error);
+const store = useIngredientsStore();
+const ingredients = computed(() => store.ingredients);
+const loading = computed(() => store.loading);
+const error = computed(() => store.error);
 
-    onMounted(() => {
-      store.load();
-    });
+onMounted(() => {
+  store.load();
+});
 
-    return {
-      store,
-      ingredients,
-      loading,
-      error,
-    };
-  },
-  methods: {
-    newIngredientType() {
-      this.store.addIngredient("New IngredientType", QuantityUnit.Piece);
-    },
-  },
-  components: {
-    IngredientsList,
-  },
-};
+async function remove(ingredient: IngredientType) {
+  await store.remove(ingredient);
+}
 </script>
 
 <template>
   <div class="ingredients">
-    <h1>This is the ingredients page</h1>
+    <h1>Ingredients</h1>
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
     <div v-else>
-      <IngredientsList :ingredients="store.ingredients" />
+      <IngredientsList :ingredients="ingredients" @delete="remove" />
       <RouterLink to="/ingredients/new">Add New</RouterLink>
     </div>
   </div>

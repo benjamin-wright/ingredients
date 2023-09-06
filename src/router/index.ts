@@ -4,6 +4,7 @@ import IngredientsView from '../views/IngredientsView.vue'
 import NewIngredientView from '../views/NewIngredientView.vue'
 import RecipiesView from '../views/RecipiesView.vue'
 import PlannerView from '../views/PlannerView.vue'
+import ListView from '../views/ListView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/planner',
       name: 'planner',
       component: PlannerView
+    },
+    {
+      path: '/list',
+      name: 'list',
+      component: ListView
     },
   ]
 })
