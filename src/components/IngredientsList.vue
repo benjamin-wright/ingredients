@@ -7,6 +7,7 @@ defineProps<{
 
 const emit = defineEmits<{
   (event: "delete", ingredient: IngredientType): void
+  (event: "edit", ingredient: IngredientType): void
 }>()
 
 let selected: HTMLElement | null = null;
@@ -30,15 +31,27 @@ function remove(ingredient: IngredientType) {
   selected?.classList.remove("selected");
   selected = null;
 }
+
+function edit(ingredient: IngredientType) {
+  emit("edit", ingredient)
+
+  selected?.classList.remove("selected");
+  selected = null;
+}
 </script>
 
 <template>
 <div class="ingredient-list">
   <div @click="select($event)" class="ingredient" v-for="ingredient in ingredients" :key="ingredient.id">
     <h2>{{ ingredient.name }}</h2>
-    <button @click.stop="remove(ingredient)">
-      🗑
-    </button>
+    <div class="buttons">
+      <button @click.stop="edit(ingredient)">
+        ✎
+      </button>
+      <button @click.stop="remove(ingredient)">
+        🗑
+      </button>
+    </div>
   </div>
 </div>
 </template>

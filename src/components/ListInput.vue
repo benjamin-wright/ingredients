@@ -13,7 +13,7 @@
 <template>
   <fieldset>
     <label for="{{ id }}">{{ label }}</label>
-    <select v-model="modelValue" type="combo" id="{{ id }}" name="{{ name || id }}" :required="required" >
+    <select v-model="modelValue" id="{{ id }}" name="{{ name || id }}" :required="required" >
       <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
     </select>
   </fieldset>

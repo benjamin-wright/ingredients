@@ -11,10 +11,12 @@
 
 <template>
     <section>
-        <div class="event" v-for="event, id in eventsList" :key="id">
-            <p>{{ event.message }}</p>
-            <button @click.prevent="undo(event)">↶</button>
-        </div>
+        <TransitionGroup name="list" tag="div">
+            <div class="event" v-for="event, id in eventsList" :key="id">
+                <p>{{ event.message }}</p>
+                <button @click.prevent="undo(event)">↶</button>
+            </div>
+        </TransitionGroup>
     </section>
 </template>
 
@@ -34,6 +36,17 @@ section {
     display: flex;
     gap: 1em;
     align-items: center;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 
 button {

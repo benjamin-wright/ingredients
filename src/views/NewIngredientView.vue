@@ -1,22 +1,29 @@
 <script setup lang="ts">
-  import { onMounted, ref } from "vue";
+  import { onMounted, onUnmounted, ref } from "vue";
   import { useIngredientsStore } from "../stores/ingredients";
   import { useRouter } from 'vue-router';
-  import { quantityUnitStrings, quantityFromString } from "@/models/IngredientType";
+  import IngredientType, { quantityUnitStrings, quantityFromString, QuantityUnit } from "@/models/IngredientType";
   import StringInput from "../components/StringInput.vue";
   import ListInput from "../components/ListInput.vue";
 
   const form = ref<HTMLFormElement | null>(null);
-  
-  const router = useRouter()
-  const quantities = quantityUnitStrings();
-  let ingredient = "";
-  let quantity = quantities[0];
-  
+  const router = useRouter();
   const store = useIngredientsStore();
+  const selected = store.selected;
+
+  const quantities = quantityUnitStrings();
+  let ingredient = selected?.name || "";
+  let quantity = selected ? quantities.find(s => s === QuantityUnit[selected.quantity]) || quantities[0] : quantities[0];
+
+  console.info(`quantity: ${quantity}`);
+  console.info(`quantity: ${selected?.quantity}`);
 
   onMounted(() => {
     store.load();
+  });
+
+  onUnmounted(() => {
+    store.deselect();
   });
 
   async function newIngredient() {
@@ -25,17 +32,25 @@
       return;
     }
 
-    await store.addIngredient(ingredient, quantityFromString(quantity));
+    if (selected) {
+      await store.updateIngredient(new IngredientType(
+        selected.id,
+        ingredient,
+        quantityFromString(quantity)
+      ));
+    } else {
+      await store.addIngredient(ingredient, quantityFromString(quantity));
+    }
     router.push("/ingredients");
   }
 </script>
 
 <template>
   <form class="ingredients" ref="form">
-    <h2>New Ingredient</h2>
+    <h2>{{ selected ? "Edit" : "New" }} Ingredient</h2>
     <StringInput id="ingredient" name="ingredient" label="Name" v-model="ingredient" required />
     <ListInput id="quantity" name="quantity" label="Quantity" :options="quantities" v-model="quantity" />
-    <button type="submit" @click.prevent="newIngredient">Add</button>
+    <button type="submit" @click.prevent="newIngredient">{{ selected ? "Update" : "Add" }}</button>
   </form>
 </template>
 

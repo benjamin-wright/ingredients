@@ -8,6 +8,7 @@ const storage = new IngredientStorage();
 export const useIngredientsStore = defineStore('ingredients', {
     state: () => ({
         ingredients: [] as IngredientType[],
+        selected: null as IngredientType | null,
         loading: true,
         error: null as Error | null
     }),
@@ -24,6 +25,12 @@ export const useIngredientsStore = defineStore('ingredients', {
             this.ingredients = ingredients.sort(IngredientType.Compare);
             this.loading = false;
         },
+        select(ingredient: IngredientType) {
+            this.selected = ingredient;
+        },
+        deselect() {
+            this.selected = null;
+        },
         async remove(ingredient: IngredientType) {
             await storage.remove(ingredient)
             const idx = this.ingredients.findIndex(a => a.id === ingredient.id);
@@ -39,6 +46,13 @@ export const useIngredientsStore = defineStore('ingredients', {
         async addIngredient(name: string, quantity: QuantityUnit) {
             const ingredient = await storage.add(name, quantity);
             this.ingredients.push(ingredient);
+            this.ingredients.sort(IngredientType.Compare);
+        },
+        async updateIngredient(ingredient: IngredientType) {
+            await storage.put(ingredient);
+            const index = this.ingredients.findIndex(i => i.id === ingredient.id);
+            this.ingredients[index].name = ingredient.name;
+            this.ingredients[index].quantity = ingredient.quantity;
             this.ingredients.sort(IngredientType.Compare);
         }
     }

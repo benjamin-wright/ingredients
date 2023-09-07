@@ -58,7 +58,11 @@ export class IngredientStorage {
 
     put(ingredient: IngredientType): Promise<void> {
         return this.db.then(db => {
-            const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").put(ingredient);
+            const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").put({
+                id: ingredient.id,
+                name: ingredient.name,
+                quantity: ingredient.quantity
+            });
 
             return new Promise((resolve, reject) => {
                 req.onsuccess = () => resolve();

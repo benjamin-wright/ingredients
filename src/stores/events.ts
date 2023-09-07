@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const EVENT_BOUNCE_TIME = 3000;
+export const EVENT_BOUNCE_TIME = 5000;
 
 export class Event {
     id: number = 0
