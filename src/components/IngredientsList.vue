@@ -61,6 +61,7 @@ function edit(ingredient: IngredientType) {
     margin: 0.2em;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     user-select: none;
   }
 

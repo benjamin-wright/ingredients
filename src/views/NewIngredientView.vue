@@ -43,6 +43,10 @@
     }
     router.push("/ingredients");
   }
+
+  function cancel() {
+    router.push("/ingredients");
+  }
 </script>
 
 <template>
@@ -50,11 +54,15 @@
     <h2>{{ selected ? "Edit" : "New" }} Ingredient</h2>
     <StringInput id="ingredient" name="ingredient" label="Name" v-model="ingredient" required />
     <ListInput id="quantity" name="quantity" label="Quantity" :options="quantities" v-model="quantity" />
-    <button type="submit" @click.prevent="newIngredient">{{ selected ? "Update" : "Add" }}</button>
+    <div class="buttons">
+      <button type="button" @click.prevent="cancel">Cancel</button>
+      <button type="submit" @click.prevent="newIngredient">{{ selected ? "Update" : "Add" }}</button>
+    </div>
   </form>
 </template>
 
 <style scoped>
+
 .ingredients {
   display: flex;
   flex-direction: column;
@@ -66,9 +74,21 @@
 
 button {
   padding: 0.5rem;
-  background-color: var(--color-text);
+  background-color: var(--color-text-ok);
   color: var(--color-background);
   border: none;
   border-radius: 0.25rem;
+  font-size: 1em;
 }
+
+button[type="button"] {
+  background-color: var(--color-text-cancel);
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 0.5em;
+}
+
 </style>
