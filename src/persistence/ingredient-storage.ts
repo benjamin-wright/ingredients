@@ -1,4 +1,4 @@
-import IngredientType, { QuantityUnit } from "@/models/IngredientType";
+import IngredientType from "@/models/IngredientType";
 
 export class IngredientStorage {
     private db: Promise<IDBDatabase>;
@@ -34,8 +34,7 @@ export class IngredientStorage {
         return this.db.then(db => {
             const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").add({
                 id: ingredient.id,
-                name: ingredient.name,
-                quantity: ingredient.quantity
+                name: ingredient.name
             });
 
             return new Promise((resolve, reject) => {
@@ -45,12 +44,12 @@ export class IngredientStorage {
         });
     }
 
-    add(name: string, quantity: QuantityUnit ): Promise<IngredientType> {
+    add(name: string): Promise<IngredientType> {
         return this.db.then(db => {
-            const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").add({ name, quantity });
+            const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").add({ name });
 
             return new Promise((resolve, reject) => {
-                req.onsuccess = (event: any) => resolve(new IngredientType(event.target.result, name, quantity));
+                req.onsuccess = (event: any) => resolve(new IngredientType(event.target.result, name));
                 req.onerror = (event: any) => reject(new Error("Database error: " + event.target.errorCode));
             });
         });
@@ -60,8 +59,7 @@ export class IngredientStorage {
         return this.db.then(db => {
             const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").put({
                 id: ingredient.id,
-                name: ingredient.name,
-                quantity: ingredient.quantity
+                name: ingredient.name
             });
 
             return new Promise((resolve, reject) => {

@@ -3,6 +3,7 @@
   import { useRouter } from 'vue-router';
   import { useIngredientsStore } from "../stores/ingredients";
   import IngredientsList from "../components/IngredientsList.vue";
+  import NewThing from "@/components/NewThing.vue";
   import type IngredientType from "@/models/IngredientType";
 
   const router = useRouter();
@@ -29,15 +30,18 @@
   <div class="ingredients">
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
-    <div v-else>
+    <template v-else>
       <IngredientsList :ingredients="ingredients" @delete="remove" @edit="edit" />
-      <RouterLink to="/ingredients/new">Add New</RouterLink>
-    </div>
+      <NewThing to="/ingredients/new" />
+    </template>
   </div>
 </template>
 
 <style>
   .ingredients {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
     padding-top: 1em;
   }
 </style>

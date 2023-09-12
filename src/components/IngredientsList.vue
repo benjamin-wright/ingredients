@@ -57,12 +57,20 @@ function edit(ingredient: IngredientType) {
 </template>
 
 <style scoped>
+  .ingredient-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
   .ingredient {
-    margin: 0.2em;
+    padding: 0.5em;
     display: flex;
     justify-content: space-between;
     align-items: center;
     user-select: none;
+    border: solid 2px var(--color-border);
+    border-radius: 0.3em;
   }
 
   button {
@@ -70,7 +78,7 @@ function edit(ingredient: IngredientType) {
     border: none;
     background: none;
     color: yellow;
-    padding: 0.5em;
+    padding: 0.1em;
   }
 
   button:hover {
@@ -83,5 +91,9 @@ function edit(ingredient: IngredientType) {
 
   .selected button {
     display: inline;
+  }
+
+  .buttons :nth-child(1) {
+    margin-right: 0.2em;
   }
 </style>

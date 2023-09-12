@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { IngredientStorage } from '@/persistence/ingredient-storage'
-import IngredientType, { QuantityUnit } from '@/models/IngredientType'
+import IngredientType from '@/models/IngredientType'
 import { useEventsStore, Event } from './events';
 
 const storage = new IngredientStorage();
@@ -43,8 +43,8 @@ export const useIngredientsStore = defineStore('ingredients', {
                 this.ingredients.sort(IngredientType.Compare);
             }));
         },
-        async addIngredient(name: string, quantity: QuantityUnit) {
-            const ingredient = await storage.add(name, quantity);
+        async addIngredient(name: string) {
+            const ingredient = await storage.add(name);
             this.ingredients.push(ingredient);
             this.ingredients.sort(IngredientType.Compare);
         },
@@ -52,7 +52,6 @@ export const useIngredientsStore = defineStore('ingredients', {
             await storage.put(ingredient);
             const index = this.ingredients.findIndex(i => i.id === ingredient.id);
             this.ingredients[index].name = ingredient.name;
-            this.ingredients[index].quantity = ingredient.quantity;
             this.ingredients.sort(IngredientType.Compare);
         }
     }

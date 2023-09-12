@@ -14,16 +14,32 @@ export default class Recipie {
     }
 
     getIngredients(portions: number): RecipieIngredient[] {
-        return this.ingredients.map((i) => new RecipieIngredient(i.ingredient, i.quantity * portions / this.portions))
+        return this.ingredients.map((i) => new RecipieIngredient(i.ingredient, i.unit, i.quantity * portions / this.portions))
     }
+}
+
+export enum QuantityUnit {
+    Count = 1,
+    Weight,
+    Volume,
+}
+
+export function quantityUnitStrings(): string[] {
+    return Object.keys(QuantityUnit).filter(k => typeof QuantityUnit[k as any] === "number")
+}
+
+export function quantityFromString(s: string): QuantityUnit {
+    return QuantityUnit[s as keyof typeof QuantityUnit]
 }
 
 export class RecipieIngredient {
     public ingredient: IngredientType
+    public unit: QuantityUnit
     public quantity: number
 
-    constructor(ingredient: IngredientType, quantity: number) {
-        this.ingredient = ingredient
-        this.quantity = quantity
+    constructor(ingredient: IngredientType, unit: QuantityUnit, quantity: number) {
+        this.ingredient = ingredient;
+        this.unit = unit;
+        this.quantity = quantity;
     }
 }
