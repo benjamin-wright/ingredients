@@ -22,9 +22,14 @@ button {
   cursor: pointer;
 }
 
-input, select {
+input, select, textarea {
   background-color: var(--color-background-soft);
   color: var(--color-text);
+}
+
+textarea {
+  resize: vertical;
+  max-height: none;
 }
 
 @media (hover: hover) {
@@ -44,4 +49,20 @@ input, select {
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
+}
+
+button[type="submit"], button[type="reset"] {
+  padding: 0.5rem;
+  color: var(--color-background);
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 1em;
+}
+
+button[type="submit"] {
+  background-color: var(--color-text-ok);
+}
+
+button[type="reset"] {
+  background-color: var(--color-text-cancel);
 }

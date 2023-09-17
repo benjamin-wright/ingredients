@@ -1,48 +1,36 @@
-<script lang="ts">
-import { computed, onMounted } from "vue";
-import { useRecipieStore } from "../stores/recipies";
-import Recipie from "@/models/Recipie";
-import RecipieList from "../components/RecipieList.vue";
+<script setup lang="ts">
+  import { computed, onMounted } from "vue";
+  import { useRecipieStore } from "../stores/recipies";
+  import RecipieList from "../components/RecipieList.vue";
+  import NewThing from "@/components/NewThing.vue";
 
-export default {
-  name: "RecipiesView",
-  setup() {
-    const store = useRecipieStore();
-    
-    const recipies = computed(() => store.recipies);
-    const loading = computed(() => store.loading);
-    const error = computed(() => store.error);
+  const store = useRecipieStore();
 
-    onMounted(() => {
-    });
+  onMounted(() => {
+    store.load();
+  });
 
-    return {
-      store,
-      recipies,
-      loading,
-      error,
-    };
-  },
-  methods: {
-    newRecipie() {
-      this.store.addRecipie(new Recipie(1, "New Recipie", 1, []));
-    },
-  },
-  components: {
-    RecipieList,
-  },
-};
+  const recipies = computed(() => store.recipies);
+  const loading = computed(() => store.loading);
+  const error = computed(() => store.error);
 </script>
 
 <template>
   <div class="recipies">
-    <h1>This is the recipies page</h1>
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
     <div v-else>
-      <p>Num recipies: {{ store.recipiesCount }}</p>
-      <RecipieList :recipies="store.recipies" />
-      <button @click="newRecipie()">This</button>
+      <RecipieList :recipies="recipies" />
+      <NewThing to="/recipies/new/name" />
     </div>
   </div>
 </template>
+
+<style scoped>
+  .recipies {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding-top: 1em;
+  }
+</style>

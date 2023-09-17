@@ -1,5 +1,6 @@
 import type IngredientType from "@/models/IngredientType";
-import Recipie, { RecipieIngredient } from "@/models/Recipie";
+import Recipie from "@/models/Recipie";
+import RecipieIngredient from "@/models/RecipieIngredient";
 
 type StoredIngredient = {
     ingredient: number,
@@ -35,7 +36,7 @@ export class RecipieStorage {
 
     getAll(ingredients: IngredientType[]): Promise<Recipie[]> {
         return this.db.then(db => {
-            const req = db.transaction("recipies", "readonly").objectStore("ingredients").getAll() as IDBRequest<StoredRecipie[]>;
+            const req = db.transaction("recipies", "readonly").objectStore("recipies").getAll() as IDBRequest<StoredRecipie[]>;
 
             return new Promise((resolve, reject) => {
                 req.onsuccess = (event: any) => {

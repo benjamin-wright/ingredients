@@ -1,6 +1,6 @@
 export default class IngredientType {
     public id: number
-    public name: String
+    public name: string
 
     constructor(id: number, name: string) {
         this.id = id

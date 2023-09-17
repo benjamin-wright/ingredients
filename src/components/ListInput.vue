@@ -5,15 +5,16 @@
     label: string
     options: string[]
     required?: boolean
+    multiple?: boolean
   }>()
 
-  const modelValue = defineModel<string>({ required: true })
+  const modelValue = defineModel<string | string[]>({ required: true })
 </script>
 
 <template>
   <fieldset>
     <label for="{{ id }}">{{ label }}</label>
-    <select v-model="modelValue" id="{{ id }}" name="{{ name || id }}" :required="required" >
+    <select v-model="modelValue" id="{{ id }}" name="{{ name || id }}" :required="required" :multiple="multiple" >
       <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
     </select>
   </fieldset>

@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
   .ingredients {
     display: flex;
     flex-direction: column;

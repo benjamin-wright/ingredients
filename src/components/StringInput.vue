@@ -4,6 +4,7 @@ defineProps<{
   name: string
   label: string
   required?: boolean
+  multiline?: boolean
 }>()
 
 const modelValue = defineModel<string>({ required: true })
@@ -12,7 +13,17 @@ const modelValue = defineModel<string>({ required: true })
 <template>
   <fieldset>
     <label for="{{ id }}">{{ label }}</label>
+    <div class="grower" v-if="multiline">
+      <textarea
+        v-model="modelValue"
+        id="{{ id }}"
+        name="{{ name || id }}"
+        :required="required"
+        oninput="this.parentNode.dataset.replicatedValue = this.value"
+      ></textarea>
+    </div>
     <input
+      v-else
       v-model="modelValue"
       type="text"
       id="{{ id }}"
@@ -27,5 +38,28 @@ fieldset {
   display: flex;
   flex-direction: column;
   border-radius: 0.35rem;
+}
+
+.grower {
+  display: grid;
+}
+
+.grower::after {
+  content: attr(data-replicated-value) " ";
+  white-space: pre-wrap;
+  visibility: hidden;
+}
+
+.grower > textarea {
+  resize: none;
+  overflow: hidden;
+}
+
+.grower > textarea,
+.grower::after {
+  border: 1px solid black;
+  padding: 0.5rem;
+  font: inherit;
+  grid-area: 1 / 1 / 2 / 2;
 }
 </style>
