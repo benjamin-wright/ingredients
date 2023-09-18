@@ -35,8 +35,8 @@
 </script>
 
 <template>
-  <h1>Ingredients for {{ store.name }}</h1>
   <form class="recipies" ref="form">
+    <h1>Ingredients for "{{ store.name }}""</h1>
     <IngredientInput
       v-for="ingredient, idx in store.ingredients"
       :key="idx"

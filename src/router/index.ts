@@ -5,6 +5,7 @@ import NewIngredientView from '../views/NewIngredientView.vue'
 import RecipiesView from '../views/RecipiesView.vue'
 import NewRecipieNameView from '../views/NewRecipieNameView.vue'
 import NewRecipieIngredientsView from '../views/NewRecipieIngredientsView.vue'
+import NewRecipieStepsView from '../views/NewRecipieStepsView.vue'
 import PlannerView from '../views/PlannerView.vue'
 import ListView from '../views/ListView.vue'
 
@@ -40,6 +41,11 @@ const router = createRouter({
       path: '/recipies/new/ingredients',
       name: 'new-recipie-ingredients',
       component: NewRecipieIngredientsView
+    },
+    {
+      path: '/recipies/new/steps',
+      name: 'new-recipie-steps',
+      component: NewRecipieStepsView
     },
     {
       path: '/planner',

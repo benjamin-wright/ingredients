@@ -3,14 +3,18 @@ import RecipieIngredient from "./RecipieIngredient"
 export default class Recipie {
     public id: number
     public name: string
+    public description: string
     public ingredients: RecipieIngredient[]
+    public steps: string[]
     public portions: number
 
-    constructor(id: number, name: string, portions: number, ingredients: RecipieIngredient[]) {
-        this.id = id;
+    constructor(id: number, name: string, description: string, portions: number, ingredients: RecipieIngredient[], steps: string[]) {
+        this.id = id
         this.name = name
+        this.description = description
         this.portions = portions
         this.ingredients = ingredients
+        this.steps = steps
     }
 
     getIngredients(portions: number): RecipieIngredient[] {

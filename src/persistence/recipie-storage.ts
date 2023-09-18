@@ -11,8 +11,10 @@ type StoredIngredient = {
 type StoredRecipie = {
     id: number,
     name: string,
+    description: string,
     portions: number,
     ingredients: StoredIngredient[],
+    steps: string[]
 }
 
 export class RecipieStorage {
@@ -46,7 +48,7 @@ export class RecipieStorage {
                             return new RecipieIngredient(ingredients.find(ing => ing.id === i.ingredient) as IngredientType, i.unit, i.quantity);
                         });
 
-                        return new Recipie(s.id, s.name, s.portions, converted);
+                        return new Recipie(s.id, s.name, s.description, s.portions, converted, s.steps);
                     });
 
                     resolve(converted);
@@ -61,12 +63,14 @@ export class RecipieStorage {
             const req = db.transaction("recipies", "readwrite").objectStore("recipies").add({
                 id: recipie.id,
                 name: recipie.name,
+                description: recipie.description,
                 portions: recipie.portions,
                 ingredients: recipie.ingredients.map(i => ({
                     ingredient: i.ingredient.id,
                     unit: i.unit,
                     quantity: i.quantity
-                }))
+                })),
+                steps: recipie.steps
             });
 
             return new Promise((resolve, reject) => {
@@ -76,20 +80,22 @@ export class RecipieStorage {
         });
     }
 
-    add(name: string, portions: number, ingredients: RecipieIngredient[]): Promise<Recipie> {
+    add(name: string, description: string, portions: number, ingredients: RecipieIngredient[], steps: string[]): Promise<Recipie> {
         return this.db.then(db => {
             const req = db.transaction("recipies", "readwrite").objectStore("recipies").add({
                 name,
+                description,
                 portions,
                 ingredients: ingredients.map(i => ({
                     ingredient: i.ingredient.id,
                     unit: i.unit,
                     quantity: i.quantity
-                }))
+                })),
+                steps
             });
 
             return new Promise((resolve, reject) => {
-                req.onsuccess = (event: any) => resolve(new Recipie(event.target.result, name, portions, ingredients));
+                req.onsuccess = (event: any) => resolve(new Recipie(event.target.result, name, description, portions, ingredients, steps));
                 req.onerror = (event: any) => reject(new Error("Database error: " + event.target.errorCode));
             });
         });
@@ -100,12 +106,14 @@ export class RecipieStorage {
             const req = db.transaction("recipies", "readwrite").objectStore("recipies").put({
                 id: recipie.id,
                 name: recipie.name,
+                description: recipie.description,
                 portions: recipie.portions,
                 ingredients: recipie.ingredients.map(i => ({
                     ingredient: i.ingredient.id,
                     unit: i.unit,
                     quantity: i.quantity
-                }))
+                })),
+                steps: recipie.steps
             });
 
             return new Promise((resolve, reject) => {

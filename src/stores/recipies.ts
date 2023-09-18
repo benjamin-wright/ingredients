@@ -1,8 +1,9 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import Recipie from '../models/Recipie'
 import { RecipieStorage } from '../persistence/recipie-storage'
 import { useIngredientsStore } from './ingredients'
 import { useEventsStore, Event } from './events';
+import type RecipieIngredient from '@/models/RecipieIngredient';
 
 const storage = new RecipieStorage();
 
@@ -27,6 +28,12 @@ export const useRecipieStore = defineStore('recipies', {
             this.recipies.sort(Recipie.Compare);
 
             this.loading = false;
+        },
+        async newRecipie(name: string, description: string, portions: number, ingredients: RecipieIngredient[], steps: string[]) {
+            const recipie = await storage.add(name, description, portions, ingredients, steps);
+
+            this.recipies.push(recipie);
+            this.recipies.sort(Recipie.Compare);
         },
         async addRecipie(recipie: Recipie) {
             await storage.addRecipie(recipie);
