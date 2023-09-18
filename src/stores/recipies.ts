@@ -1,4 +1,4 @@
-import { defineStore, storeToRefs } from 'pinia'
+import { defineStore } from 'pinia'
 import Recipie from '../models/Recipie'
 import { RecipieStorage } from '../persistence/recipie-storage'
 import { useIngredientsStore } from './ingredients'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, onMounted, ref } from "vue";
+  import { ref } from "vue";
   import { useNewRecipieStore } from "@/stores/new-recipie";
   import { useRouter } from 'vue-router';
   import StringInput from "../components/StringInput.vue";

@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { ref } from "vue";
   import { useNewRecipieStore } from "@/stores/new-recipie";
-  import { useRecipieStore } from "@/stores/recipies";
   import { useRouter } from 'vue-router';
   import StringInput from "@/components/StringInput.vue";
 
@@ -31,10 +30,6 @@
 
   function remove(idx: number) {
     store.steps.splice(idx, 1);
-  }
-
-  function back() {
-
   }
 </script>
 
