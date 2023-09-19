@@ -1,25 +1,21 @@
 <script setup lang="ts">
-  import { ref } from "vue";
   import { useNewRecipieStore } from "@/stores/new-recipie";
   import { useRouter } from 'vue-router';
+  import FormTemplate from "@/components/FormTemplate.vue";
   import StringInput from "@/components/StringInput.vue";
 
-  const form = ref<HTMLFormElement | null>(null);
   const router = useRouter();
   const store = useNewRecipieStore();
 
-  async function submit() {
-    if (!form.value?.checkValidity()) {
-      form.value?.reportValidity();
-      return;
-    }
-
-    await store.submit();
-    router.push("/recipies");
-  }
+  const title = `${store.edit ? 'Edit' : 'New'} Recipie: ${ store.name }`;
 
   function cancel() {
     router.push("/recipies/new/ingredients");
+  }
+
+  async function submit() {
+    await store.submit();
+    router.push("/recipies");
   }
 
   let count = 0;
@@ -34,8 +30,7 @@
 </script>
 
 <template>
-  <form ref="form">
-    <h1>Steps for "{{ store.name }}"</h1>
+  <FormTemplate :title="title" cancelLabel="Back" submitLabel="Save" @cancel="cancel" @submit="submit">
     <TransitionGroup name="list" tag="div">
       <div class="input-row" v-for="step, idx in store.steps" :key="step.id">
         <StringInput
@@ -49,12 +44,8 @@
         <button @click.prevent="remove(idx)">-</button>
       </div>
     </TransitionGroup>
-    <button @click.prevent="add">+</button>
-    <div class="button-pair">
-      <button type="reset" @click.prevent="cancel">Back</button>
-      <button type="submit" @click.prevent="submit">{{ store.edit ? "Update" : "Add" }}</button>
-    </div>
-  </form>
+    <button @click.prevent="add">Add Step</button>
+  </FormTemplate>
 </template>
 
 <style scoped>
@@ -64,7 +55,7 @@
   justify-content: stretch;
   align-items: stretch;
 
-  margin-bottom: 0.5em;
+  margin-bottom: 1em;
 }
 
 .input-row *:first-child {

@@ -1,27 +1,24 @@
 <script setup lang="ts">
-  import { onMounted, ref } from "vue";
+  import { onMounted } from "vue";
   import { useNewRecipieStore } from "@/stores/new-recipie";
   import { useIngredientsStore } from "@/stores/ingredients";
   import { useRouter } from 'vue-router';
+  import FormTemplate from "@/components/FormTemplate.vue";
   import IngredientInput from "@/components/IngredientInput.vue";
   import RecipieIngredient from "@/models/RecipieIngredient";
   import { QuantityUnit } from "@/models/QuantityUnit";
 
-  const form = ref<HTMLFormElement | null>(null);
   const router = useRouter();
   const ingredients = useIngredientsStore();
   const store = useNewRecipieStore();
+
+  const title = `${store.edit ? 'Edit' : 'New'} Recipie: ${ store.name }`;
 
   onMounted(async () => {
     await ingredients.load();
   });
 
   async function submit() {
-    if (!form.value?.checkValidity()) {
-      form.value?.reportValidity();
-      return;
-    }
-
     router.push("/recipies/new/steps");
   }
 
@@ -35,8 +32,7 @@
 </script>
 
 <template>
-  <form ref="form">
-    <h1>Ingredients for "{{ store.name }}""</h1>
+  <FormTemplate :title="title" cancelLabel="Back" submitLabel="Next" @cancel="cancel" @submit="submit">
     <IngredientInput
       v-for="ingredient, idx in store.ingredients"
       :key="idx"
@@ -46,10 +42,6 @@
       :ingredients="ingredients.ingredients"
       @delete="store.ingredients.splice(idx, 1)"
     />
-    <button @click.prevent="add">+</button>
-    <div class="button-pair">
-      <button type="reset" @click.prevent="cancel">Back</button>
-      <button type="submit" @click.prevent="submit">Next</button>
-    </div>
-  </form>
+    <button @click.prevent="add">Add Ingredient</button>
+  </FormTemplate>
 </template>
