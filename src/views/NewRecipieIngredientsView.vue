@@ -35,7 +35,7 @@
 </script>
 
 <template>
-  <form class="recipies" ref="form">
+  <form ref="form">
     <h1>Ingredients for "{{ store.name }}""</h1>
     <IngredientInput
       v-for="ingredient, idx in store.ingredients"
@@ -47,27 +47,9 @@
       @delete="store.ingredients.splice(idx, 1)"
     />
     <button @click.prevent="add">+</button>
-    <div class="buttons">
+    <div class="button-pair">
       <button type="reset" @click.prevent="cancel">Back</button>
       <button type="submit" @click.prevent="submit">Next</button>
     </div>
   </form>
 </template>
-
-<style scoped>
-.recipies {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1em;
-  justify-content: center;
-  flex-grow: 1;
-}
-
-.buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 0.5em;
-}
-
-</style>

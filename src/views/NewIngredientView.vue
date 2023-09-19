@@ -43,30 +43,12 @@
 </script>
 
 <template>
-  <form class="ingredients" ref="form">
+  <form ref="form">
     <h2>{{ selected ? "Edit" : "New" }} Ingredient</h2>
     <StringInput id="ingredient" name="ingredient" label="Name" v-model="ingredient" required />
-    <div class="buttons">
+    <div class="button-pair">
       <button type="reset" @click.prevent="cancel">Cancel</button>
       <button type="submit" @click.prevent="submit">{{ selected ? "Update" : "Add" }}</button>
     </div>
   </form>
 </template>
-
-<style scoped>
-.ingredients {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1em;
-  justify-content: center;
-  flex-grow: 1;
-}
-
-.buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 0.5em;
-}
-
-</style>

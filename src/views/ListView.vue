@@ -1,15 +1,5 @@
 <template>
-  <div class="list">
+  <main>
     <h1>This is the list page</h1>
-  </div>
+  </main>
 </template>
-
-<style>
-@media (min-width: 1024px) {
-  .list {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>

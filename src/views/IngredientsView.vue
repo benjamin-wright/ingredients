@@ -1,16 +1,13 @@
 <script setup lang="ts">
-  import { computed, onMounted } from "vue";
+  import { onMounted } from "vue";
   import { useRouter } from 'vue-router';
   import { useIngredientsStore } from "../stores/ingredients";
-  import IngredientsList from "../components/IngredientsList.vue";
+  import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
   import type IngredientType from "@/models/IngredientType";
 
   const router = useRouter();
   const store = useIngredientsStore();
-  const ingredients = computed(() => store.ingredients);
-  const loading = computed(() => store.loading);
-  const error = computed(() => store.error);
 
   onMounted(() => {
     store.load();
@@ -27,21 +24,14 @@
 </script>
 
 <template>
-  <div class="ingredients">
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
+  <main>
+    <template v-if="store.loading">Loading...</template>
+    <template v-else-if="store.error">{{ store.error }}</template>
     <template v-else>
-      <IngredientsList :ingredients="ingredients" @delete="remove" @edit="edit" />
+      <ObjectList :data="store.ingredients" @delete="remove" @edit="edit" v-slot="slotProps">
+        <h2>{{ slotProps.obj.name }}</h2>
+      </ObjectList>
       <NewThing to="/ingredients/new" />
     </template>
-  </div>
+  </main>
 </template>
-
-<style scoped>
-  .ingredients {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    padding-top: 1em;
-  }
-</style>

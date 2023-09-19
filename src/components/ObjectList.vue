@@ -1,13 +1,15 @@
-<script setup lang="ts">
-import IngredientType from "../models/IngredientType";
+<script setup lang="ts" generic="T extends IListable">
+export interface IListable {
+  id: number
+}
 
 defineProps<{
-  ingredients: IngredientType[]
+  data: T[]
 }>()
 
 const emit = defineEmits<{
-  (event: "delete", ingredient: IngredientType): void
-  (event: "edit", ingredient: IngredientType): void
+  (event: "delete", object: T): void
+  (event: "edit", object: T): void
 }>()
 
 let selected: HTMLElement | null = null;
@@ -25,15 +27,15 @@ function select(event: MouseEvent) {
   element.classList.add("selected");
 }
 
-function remove(ingredient: IngredientType) {
-  emit("delete", ingredient);
+function remove(object: T) {
+  emit("delete", object);
 
   selected?.classList.remove("selected");
   selected = null;
 }
 
-function edit(ingredient: IngredientType) {
-  emit("edit", ingredient)
+function edit(object: T) {
+  emit("edit", object)
 
   selected?.classList.remove("selected");
   selected = null;
@@ -41,29 +43,31 @@ function edit(ingredient: IngredientType) {
 </script>
 
 <template>
-<div class="ingredient-list">
-  <div @click="select($event)" class="ingredient" v-for="ingredient in ingredients" :key="ingredient.id">
-    <h2>{{ ingredient.name }}</h2>
-    <div class="buttons">
-      <button @click.stop="edit(ingredient)">
-        ✎
-      </button>
-      <button @click.stop="remove(ingredient)">
-        🗑
-      </button>
+  <div class="object-list">
+    <div @click="select($event)" class="object" v-for="obj in data" :key="obj.id">
+      <slot :obj="obj">
+        <h2>{{ obj.id }}</h2>
+      </slot>
+      <div class="buttons">
+        <button @click.stop="edit(obj)">
+          ✎
+        </button>
+        <button @click.stop="remove(obj)">
+          🗑
+        </button>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <style scoped>
-  .ingredient-list {
+  .object-list {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
   }
 
-  .ingredient {
+  .object {
     padding: 0.5em;
     display: flex;
     justify-content: space-between;

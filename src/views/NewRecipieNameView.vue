@@ -24,31 +24,13 @@
 </script>
 
 <template>
-  <form class="recipies" ref="form">
+  <form ref="form">
     <h2>New Recipie</h2>
     <StringInput id="name" name="name" label="Name" v-model="store.name" required />
     <StringInput id="description" name="description" label="Description" v-model="store.description" required multiline />
-    <div class="buttons">
+    <div class="button-pair">
       <button type="reset" @click.prevent="cancel">Cancel</button>
       <button type="submit" @click.prevent="submit">Next</button>
     </div>
   </form>
 </template>
-
-<style scoped>
-.recipies {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1em;
-  justify-content: center;
-  flex-grow: 1;
-}
-
-.buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 0.5em;
-}
-
-</style>

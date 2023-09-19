@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { computed, onMounted } from "vue";
+  import { onMounted } from "vue";
   import { useRecipieStore } from "../stores/recipies";
-  import RecipieList from "../components/RecipieList.vue";
+  import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
 
   const store = useRecipieStore();
@@ -9,28 +9,17 @@
   onMounted(() => {
     store.load();
   });
-
-  const recipies = computed(() => store.recipies);
-  const loading = computed(() => store.loading);
-  const error = computed(() => store.error);
 </script>
 
 <template>
-  <div class="recipies">
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <div v-else>
-      <RecipieList :recipies="recipies" />
+  <main>
+    <template v-if="store.loading">Loading...</template>
+    <template v-else-if="store.error">{{ store.error }}</template>
+    <template v-else>
+      <ObjectList :data="store.recipies" v-slot="slotProps">
+        <h2>{{ slotProps.obj.name }}</h2>
+      </ObjectList>
       <NewThing to="/recipies/new/name" />
-    </div>
-  </div>
+    </template>
+  </main>
 </template>
-
-<style scoped>
-  .recipies {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    padding-top: 1em;
-  }
-</style>

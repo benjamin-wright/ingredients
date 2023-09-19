@@ -34,7 +34,7 @@
 </script>
 
 <template>
-  <form class="recipies" ref="form">
+  <form ref="form">
     <h1>Steps for "{{ store.name }}"</h1>
     <TransitionGroup name="list" tag="div">
       <div class="input-row" v-for="step, idx in store.steps" :key="step.id">
@@ -50,7 +50,7 @@
       </div>
     </TransitionGroup>
     <button @click.prevent="add">+</button>
-    <div class="buttons">
+    <div class="button-pair">
       <button type="reset" @click.prevent="cancel">Back</button>
       <button type="submit" @click.prevent="submit">Add</button>
     </div>
@@ -58,30 +58,17 @@
 </template>
 
 <style scoped>
-.recipies {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1em;
-  justify-content: center;
-  flex-grow: 1;
-}
-
-.buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 0.5em;
-}
 
 .input-row {
-    display: flex;
-    justify-content: stretch;
-    align-items: stretch;
-    gap: 0.5em;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+
+  margin-bottom: 0.5em;
 }
 
 .input-row *:first-child {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 </style>
