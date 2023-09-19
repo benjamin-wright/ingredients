@@ -70,7 +70,7 @@ export class RecipieStorage {
                     unit: i.unit,
                     quantity: i.quantity
                 })),
-                steps: recipie.steps
+                steps: [...recipie.steps]
             });
 
             return new Promise((resolve, reject) => {

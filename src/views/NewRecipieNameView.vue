@@ -25,7 +25,7 @@
 
 <template>
   <form ref="form">
-    <h2>New Recipie</h2>
+    <h2>{{ store.edit ? "Edit" : "New" }} Recipie</h2>
     <StringInput id="name" name="name" label="Name" v-model="store.name" required />
     <StringInput id="description" name="description" label="Description" v-model="store.description" required multiline />
     <div class="button-pair">

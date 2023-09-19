@@ -41,6 +41,17 @@ export const useRecipieStore = defineStore('recipies', {
             this.recipies.push(recipie);
             this.recipies.sort(Recipie.Compare);
         },
+        async updateRecipie(id: number, name: string, description: string, portions: number, ingredients: RecipieIngredient[], steps: string[]) {
+            await storage.put(new Recipie(id, name, description, portions, ingredients, steps));
+
+            const idx = this.recipies.findIndex(r => r.id === id);
+            this.recipies[idx].name = name;
+            this.recipies[idx].description = description;
+            this.recipies[idx].portions = portions;
+            this.recipies[idx].ingredients = ingredients;
+            this.recipies[idx].steps = steps;
+            this.recipies.sort(Recipie.Compare);
+        },
         async removeRecipie(recipie: Recipie) {
             await storage.remove(recipie);
             const idx = this.recipies.findIndex(r => r.id === recipie.id);

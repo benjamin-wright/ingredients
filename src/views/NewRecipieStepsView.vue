@@ -52,7 +52,7 @@
     <button @click.prevent="add">+</button>
     <div class="button-pair">
       <button type="reset" @click.prevent="cancel">Back</button>
-      <button type="submit" @click.prevent="submit">Add</button>
+      <button type="submit" @click.prevent="submit">{{ store.edit ? "Update" : "Add" }}</button>
     </div>
   </form>
 </template>

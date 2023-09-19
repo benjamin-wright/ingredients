@@ -1,11 +1,14 @@
 <script setup lang="ts">
   import { onMounted } from "vue";
+  import { useRouter } from 'vue-router';
   import { useRecipieStore } from "../stores/recipies";
+  import { useNewRecipieStore } from "../stores/new-recipie";
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
-import type Recipie from "@/models/Recipie";
+  import type Recipie from "@/models/Recipie";
 
   const store = useRecipieStore();
+  const router = useRouter();
 
   onMounted(() => {
     store.load();
@@ -16,9 +19,9 @@ import type Recipie from "@/models/Recipie";
   }
 
   function edit(recipie: Recipie) {
-    console.info(`Edit ${recipie.name}`);
-    // store.select(recipie);
-    // router.push("/recipies/new/name");
+    const newRecipieStore = useNewRecipieStore();
+    newRecipieStore.load(recipie);
+    router.push("/recipies/new/name");
   }
 </script>
 
