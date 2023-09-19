@@ -2,7 +2,7 @@
 defineProps<{
   id: string
   name: string
-  label?: string
+  label: string
   required?: boolean
   multiline?: boolean
   remove?: () => void
@@ -13,10 +13,10 @@ const modelValue = defineModel<string>({ required: true })
 
 <template>
   <fieldset>
-    <label v-if="label" for="{{ id }}">{{ label }}</label>
     <div class="row">
       <div class="grower" v-if="multiline">
         <textarea
+          :placeholder="label"
           v-model="modelValue"
           id="{{ id }}"
           name="{{ name || id }}"
@@ -26,6 +26,7 @@ const modelValue = defineModel<string>({ required: true })
       </div>
       <input
         v-else
+        :placeholder="label"
         v-model="modelValue"
         type="text"
         id="{{ id }}"

@@ -2,13 +2,15 @@
   import { ref } from "vue";
   const form = ref<HTMLFormElement | null>(null);
 
-  defineProps<{
+  const props = defineProps<{
     title: string
     submitLabel?: string
     cancelLabel?: string
   }>()
 
   const emit = defineEmits(['submit', 'cancel'])
+  const resetType = props.cancelLabel ? 'button' : 'reset';
+  const submitType = props.submitLabel ? 'button' : 'submit';
 
   function submit() {
     console.log(form.value);
@@ -25,12 +27,12 @@
 <template>
   <main>
     <h2>{{ title }}</h2>
-    <form ref="form">
+    <form ref="form" @submit.prevent="submit">
       <slot></slot>
     </form>
     <div class="button-pair">
-      <button type="reset" @click.prevent="$emit('cancel')">{{ cancelLabel || "Cancel" }}</button>
-      <button type="submit" @click.prevent="submit">{{ submitLabel || "Submit" }}</button>
+      <button :type=resetType @click.prevent="$emit('cancel')">{{ cancelLabel || "Cancel" }}</button>
+      <button :type=submitType @click.prevent="submit">{{ submitLabel || "Save" }}</button>
     </div>
   </main>
 </template>

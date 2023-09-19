@@ -1,16 +1,17 @@
 <script setup lang="ts">
-  import { onMounted, onUnmounted, ref } from "vue";
+  import { onMounted, onUnmounted } from "vue";
   import { useIngredientsStore } from "../stores/ingredients";
   import { useRouter } from 'vue-router';
+  import FormTemplate from "@/components/FormTemplate.vue";
   import IngredientType from "@/models/IngredientType";
   import StringInput from "../components/StringInput.vue";
 
-  const form = ref<HTMLFormElement | null>(null);
   const router = useRouter();
   const store = useIngredientsStore();
   const selected = store.selected;
 
   let ingredient = selected?.name || "";
+  const title = `${ selected ? "Edit" : "New" } Ingredient`
 
   onMounted(() => {
     store.load();
@@ -21,11 +22,6 @@
   });
 
   async function submit() {
-    if (!form.value?.checkValidity()) {
-      form.value?.reportValidity();
-      return;
-    }
-
     if (selected) {
       await store.updateIngredient(new IngredientType(
         selected.id,
@@ -43,12 +39,7 @@
 </script>
 
 <template>
-  <form ref="form">
-    <h2>{{ selected ? "Edit" : "New" }} Ingredient</h2>
+  <FormTemplate :title="title" @cancel="cancel" @submit="submit" >
     <StringInput id="ingredient" name="ingredient" label="Name" v-model="ingredient" required />
-    <div class="button-pair">
-      <button type="reset" @click.prevent="cancel">Cancel</button>
-      <button type="submit" @click.prevent="submit">{{ selected ? "Update" : "Add" }}</button>
-    </div>
-  </form>
+  </FormTemplate>
 </template>

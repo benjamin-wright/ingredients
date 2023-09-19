@@ -64,6 +64,7 @@ button {
   border: none;
   font-weight: bold;
   font-size: 1.5em;
+  padding: 0.5rem;
 }
 
 button.delete {
@@ -71,11 +72,9 @@ button.delete {
 }
 
 button[type="submit"], button[type="reset"] {
-  padding: 0.5rem;
   color: var(--color-background);
   border: none;
   border-radius: 0.25rem;
-  font-size: 1em;
 }
 
 button[type="submit"] {
@@ -104,5 +103,6 @@ form {
 }
 
 fieldset {
-  padding: 0.5em;
+  padding: 0;
+  border: none;
 }

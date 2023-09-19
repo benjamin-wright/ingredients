@@ -81,6 +81,7 @@ function edit(object: T) {
 
   button {
     display: none;
+    padding: 0;
   }
 
   button:hover {
@@ -95,7 +96,7 @@ function edit(object: T) {
     display: inline;
   }
 
-  .buttons :nth-child(1) {
-    margin-right: 0.2em;
+  .buttons > :nth-child(1) {
+    margin-right: 0.75em;
   }
 </style>

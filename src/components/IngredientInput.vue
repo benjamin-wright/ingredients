@@ -1,20 +1,10 @@
 <script setup lang="ts">
 import type IngredientType from '@/models/IngredientType';
 import type RecipieIngredient from '@/models/RecipieIngredient';
-import { 
-    QuantityUnit,
-    VolumeUnit,
-    WeightUnit,
-    quantityUnitStrings,
-    quantityFromString,
-    volumeUnitStrings,
-    volumeFromString,
-    weightUnitStrings,
-    weightFromString
+import {
+  quantityUnitFromString,
+  quantityUnits
 } from '@/models/QuantityUnit';
-
-let volumeUnit = VolumeUnit.Milliliter;
-let weightUnit = WeightUnit.Gram;
 
 defineProps<{
   id: string
@@ -32,29 +22,20 @@ const modelValue = defineModel<RecipieIngredient>({ required: true });
 
 <template>
   <fieldset>
-    <div class="content">
-        <select v-model="modelValue.ingredient" id="{{ id }}" name="{{ name || id }}" :required="required" >
-            <option v-for="ingredient in ingredients" :key="ingredient.id" :value="ingredient">{{ ingredient.name }}</option>
-        </select>
-        <p>by</p>
-        <select v-model="modelValue.unit" id="{{ id }}" name="{{ name || id }}" :required="required" >
-            <option v-for="unit in quantityUnitStrings()" :key="unit" :value="quantityFromString(unit)">{{ unit }}</option>
-        </select>
-        <input
-            v-model="modelValue.quantity"
-            type="number"
-            id="{{ id }}"
-            name="{{ name || id }}"
-            :required="required"
-            size="0"
-        />
-        <select class="skip" v-if="modelValue.unit === QuantityUnit.Volume" v-model="volumeUnit">
-            <option v-for="unit in volumeUnitStrings()" :key="unit" :value="volumeFromString(unit)">{{ unit }}</option>
-        </select>
-        <select class="skip" v-if="modelValue.unit === QuantityUnit.Weight" v-model="weightUnit">
-            <option v-for="unit in weightUnitStrings()" :key="unit" :value="weightFromString(unit)">{{ unit }}</option>
-        </select>
-    </div>
+    <select v-model="modelValue.ingredient" id="{{ id }}" name="{{ name || id }}" :required="required" >
+        <option v-for="ingredient in ingredients" :key="ingredient.id" :value="ingredient">{{ ingredient.name }}</option>
+    </select>
+    <p>:</p>
+    <input
+        v-model="modelValue.quantity"
+        type="number"
+        id="{{ id }}"
+        name="{{ name || id }}"
+        :required="required"
+    />
+    <select v-model="modelValue.unit" id="{{ id }}-unit" name="{{ name || id }}" :required="required" >
+        <option v-for="unit in quantityUnits()" :key="unit" :value="quantityUnitFromString(unit)">{{ unit }}</option>
+    </select>
     <button class="delete" @click.prevent="emit('delete')">
       <font-awesome-icon :icon="['fas', 'minus-square']" />
     </button>
@@ -62,25 +43,26 @@ const modelValue = defineModel<RecipieIngredient>({ required: true });
 </template>
 
 <style scoped>
+select {
+  background: none;
+  border: none;
+  width:fit-content;
+}
+
 fieldset {
   border-radius: 0.35rem;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 0.5em;
 }
 
 .content {
-  display: grid;
+  display: flex;
   gap: 3px;
-
-  grid-template-columns: 1fr auto 1fr;
 }
 
 input {
-    width: 100%;
-}
-
-.skip {
-    grid-column: 2 / span 2;
+  flex-grow: 1;
 }
 </style>

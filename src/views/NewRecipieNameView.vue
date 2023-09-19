@@ -20,7 +20,7 @@
 </script>
 
 <template>
-  <FormTemplate :title="title" cancelLabel="Cancel" submitLabel="Next" @cancel="cancel" @submit="submit">
+  <FormTemplate :title="title" submitLabel="Next" @cancel="cancel" @submit="submit">
     <StringInput id="name" name="name" label="Name" v-model="store.name" required />
     <StringInput id="description" name="description" label="Description" v-model="store.description" required multiline />
   </FormTemplate>

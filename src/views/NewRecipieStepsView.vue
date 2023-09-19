@@ -31,11 +31,12 @@
 </script>
 
 <template>
-  <FormTemplate :title="title" cancelLabel="Back" submitLabel="Save" @cancel="cancel" @submit="submit">
+  <FormTemplate :title="title" cancelLabel="Back" @cancel="cancel" @submit="submit">
     <TransitionGroup name="list">
       <StringInput
           v-for="step, idx in store.steps"
           :key="step.id"
+          :label="`Step ${idx + 1}`"
           v-model="store.steps[idx].content"
           :id="'step-' + idx"
           :name="'step-' + idx"
