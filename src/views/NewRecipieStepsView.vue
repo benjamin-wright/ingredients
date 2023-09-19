@@ -8,7 +8,7 @@
   const router = useRouter();
   const store = useNewRecipieStore();
 
-  const title = `${store.edit ? 'Edit' : 'New'} Recipie: ${ store.name }`;
+  const title = `${store.edit ? 'Edit' : 'New'} Recipie Steps`;
 
   function cancel() {
     router.push("/recipies/new/ingredients");
@@ -38,7 +38,6 @@
             v-model="store.steps[idx].content"
             :id="'step-' + idx"
             :name="'step-' + idx"
-            :label="'Step ' + (idx + 1)"
             required
             multiline
         />

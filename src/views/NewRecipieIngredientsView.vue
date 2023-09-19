@@ -13,7 +13,7 @@
   const ingredients = useIngredientsStore();
   const store = useNewRecipieStore();
 
-  const title = `${store.edit ? 'Edit' : 'New'} Recipie: ${ store.name }`;
+  const title = `${store.edit ? 'Edit' : 'New'} Recipie Ingredients`;
 
   onMounted(async () => {
     await ingredients.load();
