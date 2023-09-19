@@ -33,16 +33,16 @@
 <template>
   <FormTemplate :title="title" cancelLabel="Back" submitLabel="Save" @cancel="cancel" @submit="submit">
     <TransitionGroup name="list">
-      <div class="input-row" v-for="step, idx in store.steps" :key="step.id">
-        <StringInput
-            v-model="store.steps[idx].content"
-            :id="'step-' + idx"
-            :name="'step-' + idx"
-            required
-            multiline
-        />
-        <button @click.prevent="remove(idx)">-</button>
-      </div>
+      <StringInput
+          v-for="step, idx in store.steps"
+          :key="step.id"
+          v-model="store.steps[idx].content"
+          :id="'step-' + idx"
+          :name="'step-' + idx"
+          :remove="() => remove(idx)"
+          required
+          multiline
+      />
     </TransitionGroup>
     <NewThing @click="add" />
   </FormTemplate>

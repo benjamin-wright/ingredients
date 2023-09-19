@@ -60,10 +60,14 @@ main {
 button {
   cursor: pointer;
   background: none;
-  color: var(--color-highlight);
+  color: var(--color-text);
   border: none;
   font-weight: bold;
   font-size: 1.5em;
+}
+
+button.delete {
+  color: var(--color-highlight);
 }
 
 button[type="submit"], button[type="reset"] {
@@ -97,4 +101,8 @@ form {
   flex-grow: 1;
   overflow-x: hidden;
   overflow-y: scroll;
+}
+
+fieldset {
+  padding: 0.5em;
 }

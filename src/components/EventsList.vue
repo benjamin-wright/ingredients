@@ -30,8 +30,12 @@
         <TransitionGroup name="list" tag="ul">
             <li :class="getClass(event)" @click.stop="click(event)" v-for="event, id in eventsList" :key="id">
                 <p>{{ event.message }}</p>
-                <button v-if="event.paused" @click.stop="undo(event)">↶</button>
-                <button v-if="!event.paused" @click.stop="clear(event)">X</button>
+                <button class="delete" v-if="event.paused" @click.stop="undo(event)">
+                    <font-awesome-icon :icon="['fas', 'undo']" />
+                </button>
+                <button class="delete" v-if="!event.paused" @click.stop="clear(event)">
+                    <font-awesome-icon :icon="['fas', 'xmark-circle']" />
+                </button>
                 <div v-if="!event.paused" class="elapsed" :style="{
                     animation: `${EVENT_BOUNCE_TIME / 1000}s linear grow`,
                 }"></div>

@@ -55,7 +55,9 @@ const modelValue = defineModel<RecipieIngredient>({ required: true });
             <option v-for="unit in weightUnitStrings()" :key="unit" :value="weightFromString(unit)">{{ unit }}</option>
         </select>
     </div>
-    <button @click.prevent="emit('delete')">-</button>
+    <button class="delete" @click.prevent="emit('delete')">
+      <font-awesome-icon :icon="['fas', 'minus-square']" />
+    </button>
   </fieldset>
 </template>
 

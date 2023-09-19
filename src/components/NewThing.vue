@@ -21,7 +21,7 @@ function handler() {
 
 <template>
     <button @click.prevent="handler">
-        +
+        <font-awesome-icon :icon="['fas', 'plus-circle']" />
     </button>
 </template>
 

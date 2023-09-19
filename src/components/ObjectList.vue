@@ -51,10 +51,10 @@ function edit(object: T) {
         </slot>
         <div class="buttons">
           <button @click.stop="edit(obj)">
-            ✎
+            <font-awesome-icon :icon="['fas', 'pencil']" />
           </button>
-          <button @click.stop="remove(obj)">
-            🗑
+          <button class="delete" @click.stop="remove(obj)">
+            <font-awesome-icon :icon="['fas', 'trash']" />
           </button>
         </div>
       </div>
@@ -81,10 +81,6 @@ function edit(object: T) {
 
   button {
     display: none;
-    border: none;
-    background: none;
-    color: yellow;
-    padding: 0.1em;
   }
 
   button:hover {
