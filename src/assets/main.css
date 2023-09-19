@@ -59,6 +59,11 @@ main {
 
 button {
   cursor: pointer;
+  background: none;
+  color: var(--color-highlight);
+  border: none;
+  font-weight: bold;
+  font-size: 1.5em;
 }
 
 button[type="submit"], button[type="reset"] {

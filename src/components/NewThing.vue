@@ -1,15 +1,26 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 
-defineProps<{
-  to: string,
+const props = defineProps<{
+  to?: string,
+  click?: () => void,
 }>()
 
 const router = useRouter();
+
+function handler() {
+    if (props.to) {
+        router.push(props.to);
+    }
+
+    if (props.click) {
+        props.click();
+    }
+}
 </script>
 
 <template>
-    <button @click.prevent="router.push(to)">
+    <button @click.prevent="handler">
         +
     </button>
 </template>

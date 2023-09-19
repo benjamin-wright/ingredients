@@ -44,19 +44,21 @@ function edit(object: T) {
 
 <template>
   <div class="object-list">
-    <div @click="select($event)" class="object" v-for="obj in data" :key="obj.id">
-      <slot :obj="obj">
-        <h2>{{ obj.id }}</h2>
-      </slot>
-      <div class="buttons">
-        <button @click.stop="edit(obj)">
-          ✎
-        </button>
-        <button @click.stop="remove(obj)">
-          🗑
-        </button>
+    <TransitionGroup name="list">
+      <div @click="select($event)" class="object" v-for="obj in data" :key="obj.id">
+        <slot :obj="obj">
+          <h2>{{ obj.id }}</h2>
+        </slot>
+        <div class="buttons">
+          <button @click.stop="edit(obj)">
+            ✎
+          </button>
+          <button @click.stop="remove(obj)">
+            🗑
+          </button>
+        </div>
       </div>
-    </div>
+    </TransitionGroup>
   </div>
 </template>
 

@@ -6,6 +6,7 @@
   import FormTemplate from "@/components/FormTemplate.vue";
   import IngredientInput from "@/components/IngredientInput.vue";
   import RecipieIngredient from "@/models/RecipieIngredient";
+  import NewThing from "@/components/NewThing.vue";
   import { QuantityUnit } from "@/models/QuantityUnit";
 
   const router = useRouter();
@@ -42,6 +43,6 @@
       :ingredients="ingredients.ingredients"
       @delete="store.ingredients.splice(idx, 1)"
     />
-    <button @click.prevent="add">Add Ingredient</button>
+    <NewThing @click="add" />
   </FormTemplate>
 </template>

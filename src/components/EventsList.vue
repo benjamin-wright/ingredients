@@ -110,12 +110,4 @@ ul {
   opacity: 0;
   transform: translateX(30px);
 }
-
-button {
-    background: none;
-    color: var(--color-highlight);
-    border: none;
-    font-weight: bold;
-    font-size: 1.5em;
-}
 </style>

@@ -3,6 +3,7 @@
   import { useRouter } from 'vue-router';
   import FormTemplate from "@/components/FormTemplate.vue";
   import StringInput from "@/components/StringInput.vue";
+  import NewThing from "@/components/NewThing.vue";
 
   const router = useRouter();
   const store = useNewRecipieStore();
@@ -31,7 +32,7 @@
 
 <template>
   <FormTemplate :title="title" cancelLabel="Back" submitLabel="Save" @cancel="cancel" @submit="submit">
-    <TransitionGroup name="list" tag="div">
+    <TransitionGroup name="list">
       <div class="input-row" v-for="step, idx in store.steps" :key="step.id">
         <StringInput
             v-model="store.steps[idx].content"
@@ -44,7 +45,7 @@
         <button @click.prevent="remove(idx)">-</button>
       </div>
     </TransitionGroup>
-    <button @click.prevent="add">Add Step</button>
+    <NewThing @click="add" />
   </FormTemplate>
 </template>
 
@@ -54,8 +55,6 @@
   display: flex;
   justify-content: stretch;
   align-items: stretch;
-
-  margin-bottom: 1em;
 }
 
 .input-row *:first-child {

@@ -29,6 +29,7 @@ export const useNewRecipieStore = defineStore('new-recipie', {
                 this.clear();
                 return;
             }
+            
             await store.newRecipie(this.name, this.description, 1, this.ingredients, this.steps.map(s => s.content));
             this.clear();
         },
