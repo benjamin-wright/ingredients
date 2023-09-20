@@ -34,15 +34,17 @@
 
 <template>
   <FormTemplate :title="title" cancelLabel="Back" submitLabel="Next" @cancel="cancel" @submit="submit">
-    <IngredientInput
-      v-for="ingredient, idx in store.ingredients"
-      :key="idx"
-      id="ingredient-{{ idx }}"
-      name="ingredient-{{ id }}"
-      v-model="store.ingredients[idx]"
-      :ingredients="ingredients.ingredients"
-      @delete="store.ingredients.splice(idx, 1)"
-    />
+    <TransitionGroup name="list">
+      <IngredientInput
+        v-for="ingredient, idx in store.ingredients"
+        :key="idx"
+        id="ingredient-{{ idx }}"
+        name="ingredient-{{ id }}"
+        v-model="store.ingredients[idx]"
+        :ingredients="ingredients.ingredients"
+        @delete="store.ingredients.splice(idx, 1)"
+      />
+    </TransitionGroup>
     <NewThing @click="add" />
   </FormTemplate>
 </template>

@@ -28,10 +28,19 @@
     <template v-if="store.loading">Loading...</template>
     <template v-else-if="store.error">{{ store.error }}</template>
     <template v-else>
-      <ObjectList :data="store.ingredients" @delete="remove" @edit="edit" v-slot="slotProps">
-        <h2>{{ slotProps.obj.name }}</h2>
+      <ObjectList :data="store.ingredients" @delete="remove" @edit="edit">
+        <template #content="content">
+          <h2>{{ content.obj.name }}</h2>
+        </template>
       </ObjectList>
       <NewThing to="/ingredients/new" />
     </template>
   </main>
 </template>
+
+<style scoped>
+  h2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>

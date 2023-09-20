@@ -30,10 +30,31 @@
     <template v-if="store.loading">Loading...</template>
     <template v-else-if="store.error">{{ store.error }}</template>
     <template v-else>
-      <ObjectList :data="store.recipies" @delete="remove" @edit="edit" v-slot="slotProps">
-        <h2>{{ slotProps.obj.name }}</h2>
+      <ObjectList :data="store.recipies" @delete="remove" @edit="edit" dropdown>
+        <template #content="data">
+          <h2 :title="data.obj.name">{{ data.obj.name }}</h2>
+        </template>
+        <template #select-dropdown="data">
+          <article>
+            <p>Ingredients:</p>
+            <p v-for="ingredient in data.obj.ingredients" :key="ingredient.ingredient.id">
+              - {{ ingredient.toString() }}
+            </p>
+          </article>
+        </template>
       </ObjectList>
       <NewThing to="/recipies/new/name" />
     </template>
   </main>
 </template>
+
+<style scoped>
+  h2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  article {
+    padding: 0.5em;
+  }
+</style>

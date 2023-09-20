@@ -22,20 +22,23 @@ const modelValue = defineModel<RecipieIngredient>({ required: true });
 
 <template>
   <fieldset>
-    <select v-model="modelValue.ingredient" id="{{ id }}" name="{{ name || id }}" :required="required" >
-        <option v-for="ingredient in ingredients" :key="ingredient.id" :value="ingredient">{{ ingredient.name }}</option>
-    </select>
-    <p>:</p>
-    <input
-        v-model="modelValue.quantity"
-        type="number"
-        id="{{ id }}"
-        name="{{ name || id }}"
-        :required="required"
-    />
-    <select v-model="modelValue.unit" id="{{ id }}-unit" name="{{ name || id }}" :required="required" >
-        <option v-for="unit in quantityUnits()" :key="unit" :value="quantityUnitFromString(unit)">{{ unit }}</option>
-    </select>
+    <div>
+      <select class="big" v-model="modelValue.ingredient" id="{{ id }}" name="{{ name || id }}" :required="required" >
+          <option v-for="ingredient in ingredients" :key="ingredient.id" :value="ingredient">{{ ingredient.name }}</option>
+      </select>
+      <div class="row">
+        <input
+          v-model="modelValue.quantity"
+          type="number"
+          id="{{ id }}"
+          name="{{ name || id }}"
+          :required="required"
+        />
+        <select v-model="modelValue.unit" id="{{ id }}-unit" name="{{ name || id }}" :required="required" >
+            <option v-for="unit in quantityUnits()" :key="unit" :value="quantityUnitFromString(unit)">{{ unit }}</option>
+        </select>
+      </div>
+    </div>    
     <button class="delete" @click.prevent="emit('delete')">
       <font-awesome-icon :icon="['fas', 'minus-square']" />
     </button>
@@ -46,7 +49,18 @@ const modelValue = defineModel<RecipieIngredient>({ required: true });
 select {
   background: none;
   border: none;
-  width:fit-content;
+  color: var(--color-text-ok);
+  font-weight: bold;
+  width: fit-content;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+}
+
+select:focus-visible {
+  outline: none;
 }
 
 fieldset {
@@ -57,12 +71,18 @@ fieldset {
   gap: 0.5em;
 }
 
-.content {
+.big {
+  font-size: 1.5em;
+}
+
+.row {
   display: flex;
-  gap: 3px;
+  flex-direction: row;
+  gap: 0.5em;
 }
 
 input {
-  flex-grow: 1;
+  min-width: 0;
+  width: 7em;
 }
 </style>

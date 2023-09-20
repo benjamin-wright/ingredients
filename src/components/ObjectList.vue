@@ -3,8 +3,9 @@ export interface IListable {
   id: number
 }
 
-defineProps<{
+const props = defineProps<{
   data: T[]
+  dropdown?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -16,6 +17,7 @@ let selected: HTMLElement | null = null;
 
 function select(event: MouseEvent) {
   selected?.classList.remove("selected");
+  selected?.classList.remove("drop");
 
   const element = event.currentTarget as HTMLElement;
   if (selected == element) {
@@ -25,12 +27,16 @@ function select(event: MouseEvent) {
 
   selected = element;
   element.classList.add("selected");
+  if (props.dropdown) {
+    element.classList.add("drop");
+  }
 }
 
 function remove(object: T) {
   emit("delete", object);
 
   selected?.classList.remove("selected");
+  selected?.classList.remove("drop");
   selected = null;
 }
 
@@ -38,6 +44,7 @@ function edit(object: T) {
   emit("edit", object)
 
   selected?.classList.remove("selected");
+  selected?.classList.remove("drop");
   selected = null;
 }
 </script>
@@ -45,17 +52,22 @@ function edit(object: T) {
 <template>
   <div class="object-list">
     <TransitionGroup name="list">
-      <div @click="select($event)" class="object" v-for="obj in data" :key="obj.id">
-        <slot :obj="obj">
-          <h2>{{ obj.id }}</h2>
-        </slot>
-        <div class="buttons">
-          <button @click.stop="edit(obj)">
-            <font-awesome-icon :icon="['fas', 'pencil']" />
-          </button>
-          <button class="delete" @click.stop="remove(obj)">
-            <font-awesome-icon :icon="['fas', 'trash']" />
-          </button>
+      <div @click="select($event)" v-for="obj in data" :key="obj.id">
+        <div class="object">
+          <slot :obj="obj" name="content">
+            <h2>{{ obj.id }}</h2>
+          </slot>
+          <div class="buttons">
+            <button @click.stop="edit(obj)">
+              <font-awesome-icon :icon="['fas', 'pencil']" />
+            </button>
+            <button class="delete" @click.stop="remove(obj)">
+              <font-awesome-icon :icon="['fas', 'trash']" />
+            </button>
+          </div>
+        </div>
+        <div class="select-dropdown">
+          <slot :obj="obj" name="select-dropdown" />
         </div>
       </div>
     </TransitionGroup>
@@ -79,6 +91,11 @@ function edit(object: T) {
     border-radius: 0.3em;
   }
 
+  .drop .object {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
   button {
     display: none;
     padding: 0;
@@ -96,7 +113,30 @@ function edit(object: T) {
     display: inline;
   }
 
+  .buttons {
+    display: flex;
+  }
+
   .buttons > :nth-child(1) {
     margin-right: 0.75em;
+  }
+
+  h2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .select-dropdown {
+    height: 0;
+    overflow: hidden;
+  }
+
+  .drop .select-dropdown {
+    height: auto;
+    border: solid 2px var(--color-border);
+    border-top: none;
+    border-radius: 0.3em;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 </style>
