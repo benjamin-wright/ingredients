@@ -15,7 +15,7 @@
   });
 
   async function remove(recipie: Recipie) {
-    await store.removeRecipie(recipie);
+    await store.remove(recipie);
   }
 
   function edit(recipie: Recipie) {

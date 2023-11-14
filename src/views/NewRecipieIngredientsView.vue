@@ -28,7 +28,7 @@
   }
 
   function add() {
-    store.ingredients.push(new RecipieIngredient(ingredients.ingredients[0], QuantityUnit.Count, 0));
+    store.ingredients.push(new RecipieIngredient(ingredients.ingredients[0], QuantityUnit.Unit, 0));
   }
 </script>
 

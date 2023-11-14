@@ -1,5 +1,5 @@
 export enum QuantityUnit {
-    Count = 1,
+    Unit = 1,
     Gram,
     Kilogram,
     Ounce,

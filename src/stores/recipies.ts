@@ -14,7 +14,7 @@ export const useRecipieStore = defineStore('recipies', {
         error: null,
     }),
     getters: {
-        recipiesCount: (state) => state.recipies.length
+        count: (state) => state.recipies.length
     },
     actions: {
         async load() {
@@ -29,19 +29,19 @@ export const useRecipieStore = defineStore('recipies', {
 
             this.loading = false;
         },
-        async newRecipie(name: string, description: string, portions: number, ingredients: RecipieIngredient[], steps: string[]) {
+        async new(name: string, description: string, portions: number, ingredients: RecipieIngredient[], steps: string[]) {
             const recipie = await storage.add(name, description, portions, ingredients, steps);
 
             this.recipies.push(recipie);
             this.recipies.sort(Recipie.Compare);
         },
-        async addRecipie(recipie: Recipie) {
+        async add(recipie: Recipie) {
             await storage.addRecipie(recipie);
 
             this.recipies.push(recipie);
             this.recipies.sort(Recipie.Compare);
         },
-        async updateRecipie(id: number, name: string, description: string, portions: number, ingredients: RecipieIngredient[], steps: string[]) {
+        async update(id: number, name: string, description: string, portions: number, ingredients: RecipieIngredient[], steps: string[]) {
             await storage.put(new Recipie(id, name, description, portions, ingredients, steps));
 
             const idx = this.recipies.findIndex(r => r.id === id);
@@ -52,25 +52,17 @@ export const useRecipieStore = defineStore('recipies', {
             this.recipies[idx].steps = steps;
             this.recipies.sort(Recipie.Compare);
         },
-        async removeRecipie(recipie: Recipie) {
+        async remove(recipie: Recipie) {
             await storage.remove(recipie);
             const idx = this.recipies.findIndex(r => r.id === recipie.id);
             this.recipies.splice(idx, 1);
 
             const events = useEventsStore();
-            events.add(new RemoveRecipieEvent(recipie, async () => {
+            events.add(new Event(`Recipie ${recipie.name} removed`, async () => {
                 await storage.addRecipie(recipie);
                 this.recipies.push(recipie);
                 this.recipies.sort(Recipie.Compare);
             }));
         },
     }
-})
-
-class RemoveRecipieEvent extends Event {
-    constructor(recipie: Recipie, undo: () => Promise<void>) {
-        super(`Recipie ${recipie.name} removed`, undo);
-
-        this.message = `Recipie ${recipie.name} removed`;
-    }
-}
+});

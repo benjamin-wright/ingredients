@@ -1,5 +1,4 @@
 {
-  "extends": "@tsconfig/node18/tsconfig.json",
   "include": [
     "vite.config.*",
     "vitest.config.*",
@@ -8,6 +7,7 @@
     "playwright.config.*"
   ],
   "compilerOptions": {
+    "lib": ["ES2015"],
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",

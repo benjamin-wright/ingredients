@@ -13,7 +13,7 @@ export const useIngredientsStore = defineStore('ingredients', {
         error: null as Error | null
     }),
     getters: {
-        ingredientsCount: (state) => state.ingredients.length
+        count: (state) => state.ingredients.length
     },
     actions: {
         async load() {
@@ -37,7 +37,7 @@ export const useIngredientsStore = defineStore('ingredients', {
             this.ingredients.splice(idx, 1);
 
             const events = useEventsStore();
-            events.add(new RemoveIngredientEvent(ingredient, async () => {
+            events.add(new Event(`Removed ingredient: "${ingredient.name}"`, async () => {
                 await storage.addIngredient(ingredient);
                 this.ingredients.push(ingredient);
                 this.ingredients.sort(IngredientType.Compare);
@@ -56,12 +56,3 @@ export const useIngredientsStore = defineStore('ingredients', {
         }
     }
 })
-
-class RemoveIngredientEvent extends Event {
-    ingredient: IngredientType
-
-    constructor(ingredient: IngredientType, undo: () => Promise<void>) {
-        super(`Removed ingredient: "${ingredient.name}"`, undo);
-        this.ingredient = ingredient;
-    }
-}
