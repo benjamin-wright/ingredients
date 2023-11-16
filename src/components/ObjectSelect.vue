@@ -3,7 +3,7 @@ export interface IListable {
   id: number
 }
 
-const props = defineProps<{
+defineProps<{
   options: T[],
   id: string,
   name: string,

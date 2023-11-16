@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { isInDestructureAssignment } from 'vue/compiler-sfc';
 
 defineProps<{
   id: string
@@ -65,8 +64,6 @@ fieldset {
   font-weight: bold;
   width: fit-content;
 
-  -webkit-appearance: none;
-  -moz-appearance: none;
   text-indent: 1px;
   text-overflow: '';
 }

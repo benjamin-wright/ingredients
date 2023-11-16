@@ -54,8 +54,6 @@ select {
   font-weight: bold;
   width: fit-content;
 
-  -webkit-appearance: none;
-  -moz-appearance: none;
   text-indent: 1px;
   text-overflow: '';
 }
