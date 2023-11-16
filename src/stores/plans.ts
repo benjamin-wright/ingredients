@@ -1,7 +1,8 @@
-import { defineStore } from 'pinia'
-import Plan from '../models/Plan'
-import { PlanStorage } from '../persistence/plan-storage'
-import { useRecipieStore } from './recipies'
+import { defineStore } from 'pinia';
+import Plan, { PlanDay } from '../models/Plan';
+import Recipie from '../models/Recipie';
+import { PlanStorage } from '../persistence/plan-storage';
+import { useRecipieStore } from './recipies';
 import { useEventsStore, Event } from './events';
 
 
@@ -36,7 +37,7 @@ export const usePlanStore = defineStore('plans', {
         deselect() {
             this.selected = null;
         },
-        async new(day: string, recipie: Recipie, portions: number) {
+        async new(day: PlanDay, recipie: Recipie, portions: number) {
             const plan = await storage.add(day, recipie, portions);
 
             this.plans.push(plan);
@@ -48,10 +49,11 @@ export const usePlanStore = defineStore('plans', {
             this.plans.push(plan);
             this.plans.sort(Plan.Compare);
         },
-        async update(id: number, day: string, recipie: Recipie, portions: number) {
+        async update(id: number, day: PlanDay, recipie: Recipie, portions: number) {
             await storage.put(new Plan(id, day, recipie, portions));
 
             const idx = this.plans.findIndex(r => r.id === id);
+            this.plans[idx].day = day;
             this.plans[idx].recipie = recipie;
             this.plans[idx].portions = portions;
             this.plans.sort(Plan.Compare);

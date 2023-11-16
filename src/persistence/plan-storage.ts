@@ -1,8 +1,9 @@
-import Plan from "@/models/Plan";
+import Plan, { PlanDay } from "@/models/Plan";
 import Recipie from "@/models/Recipie";
 
 type StoredPlan = {
-    day: string,
+    id: number,
+    day: PlanDay,
     recipie: number,
     portions: number
 }
@@ -63,7 +64,7 @@ export class PlanStorage {
         });
     }
 
-    add(day: string, recipie: Recipie, portions: number): Promise<Plan> {
+    add(day: PlanDay, recipie: Recipie, portions: number): Promise<Plan> {
         return this.db.then(db => {
             const req = db.transaction("plans", "readwrite").objectStore("plans").add({
                 day: day,

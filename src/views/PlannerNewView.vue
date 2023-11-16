@@ -3,6 +3,7 @@
   import { usePlanStore } from "../stores/plans";
   import { useRecipieStore } from "../stores/recipies";
   import { useRouter } from 'vue-router';
+  import { PlanDay } from "@/models/Plan";
   import FormTemplate from "@/components/FormTemplate.vue";
   import NumberInput from "../components/NumberInput.vue";
   import ObjectSelect from "../components/ObjectSelect.vue";
@@ -12,7 +13,7 @@
   const recipies = useRecipieStore();
   const selected = store.selected;
 
-  let day = selected?.day || "Monday";
+  let day = selected?.day || PlanDay.Monday;
   let portions = selected?.portions || 1;
   let recipie = selected?.recipie || recipies.recipies[0];
   const title = `${ selected ? "Edit" : "New" } Plan Day`
@@ -47,7 +48,9 @@
       v-model="day"
       required
     >
-      <option v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']" :key="day">{{ day }}</option>
+      <option v-for="day in Object.values(PlanDay)" :key="day" :value="day">
+        {{ day }}
+      </option>
     </select>
     <ObjectSelect id="recipie" name="recipie" label="Recipie" :options="recipies.recipies" v-model="recipie" required>
       <template #default="{ option }">

@@ -1,13 +1,33 @@
 import Recipie from "./Recipie"
 import RecipieIngredient from "./RecipieIngredient"
 
+export enum PlanDay {
+    Monday = "Monday",
+    Tuesday = "Tuesday",
+    Wednesday = "Wednesday",
+    Thursday = "Thursday",
+    Friday = "Friday",
+    Saturday = "Saturday",
+    Sunday = "Sunday"
+}
+
+const days = [
+    PlanDay.Monday,
+    PlanDay.Tuesday,
+    PlanDay.Wednesday,
+    PlanDay.Thursday,
+    PlanDay.Friday,
+    PlanDay.Saturday,
+    PlanDay.Sunday
+];
+
 export default class Plan {
     public id: number
-    public day: string
+    public day: PlanDay
     public recipie: Recipie
     public portions: number
 
-    constructor(id: number, day: string, recipie: Recipie, portions: number) {
+    constructor(id: number, day: PlanDay, recipie: Recipie, portions: number) {
         this.id = id;
         this.day = day
         this.recipie = recipie
@@ -19,11 +39,14 @@ export default class Plan {
     }
 
     static Compare(a: Plan, b: Plan): number {
-        if (a.name < b.name) {
+        // compare days based on their index in the days array
+        const dayA = days.indexOf(a.day);
+        const dayB = days.indexOf(b.day);
+        if (dayA < dayB) {
             return -1;
         }
 
-        if (a.name > b.name) {
+        if (dayA > dayB) {
             return 1;
         }
 

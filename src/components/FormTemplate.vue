@@ -13,8 +13,6 @@
   const submitType = props.submitLabel ? 'button' : 'submit';
 
   function submit() {
-    console.log(form.value);
-
     if (!form.value?.checkValidity()) {
       form.value?.reportValidity();
       return;
