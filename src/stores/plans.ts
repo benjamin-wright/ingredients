@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import Plan from '../models/Plan'
-import { RecipieStorage } from '../persistence/recipie-storage'
-import { useIngredientsStore } from './ingredients'
+import { PlanStorage } from '../persistence/plan-storage'
+import { useRecipieStore } from './recipies'
 import { useEventsStore, Event } from './events';
 
 
-const storage = new RecipieStorage();
+const storage = new PlanStorage();
 
 export const usePlanStore = defineStore('plans', {
     state: () => ({
@@ -23,9 +23,9 @@ export const usePlanStore = defineStore('plans', {
                 return;
             }
 
-            const ingredients = useIngredientsStore();
-            await ingredients.load();
-            this.plans = await storage.getAll(ingredients.ingredients);
+            const recipies = useRecipieStore();
+            await recipies.load();
+            this.plans = await storage.getAll(recipies.recipies);
             this.plans.sort(Plan.Compare);
 
             this.loading = false;
@@ -48,17 +48,17 @@ export const usePlanStore = defineStore('plans', {
             this.plans.push(plan);
             this.plans.sort(Plan.Compare);
         },
-        async update(day: string, recipie: Recipie, portions: number) {
-            await storage.put(new Plan(day, recipie, portions));
+        async update(id: number, day: string, recipie: Recipie, portions: number) {
+            await storage.put(new Plan(id, day, recipie, portions));
 
-            const idx = this.plans.findIndex(r => r.day === day);
+            const idx = this.plans.findIndex(r => r.id === id);
             this.plans[idx].recipie = recipie;
             this.plans[idx].portions = portions;
             this.plans.sort(Plan.Compare);
         },
         async remove(plan: Plan) {
             await storage.remove(plan);
-            const idx = this.plans.findIndex(r => r.day === plan.day);
+            const idx = this.plans.findIndex(r => r.id === plan.id);
             this.plans.splice(idx, 1);
 
             const events = useEventsStore();

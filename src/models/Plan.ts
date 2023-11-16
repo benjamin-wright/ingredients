@@ -17,7 +17,7 @@ export default class Plan {
     getIngredients(): RecipieIngredient[] {
         return this.recipie.getIngredients(this.portions);
     }
-    
+
     static Compare(a: Plan, b: Plan): number {
         if (a.name < b.name) {
             return -1;

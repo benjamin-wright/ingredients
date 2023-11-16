@@ -63,7 +63,7 @@ export class PlanStorage {
         });
     }
 
-    add(recipie: Recipie, day: string, portions: number): Promise<Plan> {
+    add(day: string, recipie: Recipie, portions: number): Promise<Plan> {
         return this.db.then(db => {
             const req = db.transaction("plans", "readwrite").objectStore("plans").add({
                 day: day,

@@ -23,12 +23,12 @@
 
   async function submit() {
     if (selected) {
-      await store.updateIngredient(new IngredientType(
+      await store.update(new IngredientType(
         selected.id,
         ingredient
       ));
     } else {
-      await store.addIngredient(ingredient);
+      await store.add(ingredient);
     }
     router.push("/ingredients");
   }

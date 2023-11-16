@@ -25,12 +25,12 @@ export const useNewRecipieStore = defineStore('new-recipie', {
         async submit() {
             const store = useRecipieStore();
             if (this.edit) {
-                await store.updateRecipie(this.id, this.name, this.description, 1, this.ingredients, this.steps.map(s => s.content));
+                await store.update(this.id, this.name, this.description, 1, this.ingredients, this.steps.map(s => s.content));
                 this.clear();
                 return;
             }
             
-            await store.newRecipie(this.name, this.description, 1, this.ingredients, this.steps.map(s => s.content));
+            await store.new(this.name, this.description, 1, this.ingredients, this.steps.map(s => s.content));
             this.clear();
         },
         clear() {

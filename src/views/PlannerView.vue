@@ -19,7 +19,7 @@
 
   function edit(plan: Plan) {
     store.select(plan);
-    router.push("/plans/new");
+    router.push("/planner/new");
   }
 </script>
 
@@ -29,11 +29,11 @@
     <template v-else-if="store.error">{{ store.error }}</template>
     <template v-else>
       <ObjectList :data="store.plans" @delete="remove" @edit="edit">
-        <template #content="content">
-          <h2>{{ content.obj.day }}</h2>
+        <template #content="{ obj }">
+          <h2>{{ obj.day }}: {{ obj.recipie.name }} ({{ obj.portions }})</h2>
         </template>
       </ObjectList>
-      <NewThing to="/plans/new" />
+      <NewThing to="/planner/new" />
     </template>
   </main>
 </template>

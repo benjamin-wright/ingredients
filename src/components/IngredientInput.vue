@@ -30,6 +30,7 @@ const modelValue = defineModel<RecipieIngredient>({ required: true });
         <input
           v-model="modelValue.quantity"
           type="number"
+          pattern="[0-9]*"
           id="{{ id }}"
           name="{{ name || id }}"
           :required="required"

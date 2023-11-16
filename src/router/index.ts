@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import IngredientsView from '../views/IngredientsView.vue'
-import NewIngredientView from '../views/NewIngredientView.vue'
+import IngredientsNewView from '../views/IngredientsNewView.vue'
 import RecipiesView from '../views/RecipiesView.vue'
-import NewRecipieNameView from '../views/NewRecipieNameView.vue'
-import NewRecipieIngredientsView from '../views/NewRecipieIngredientsView.vue'
-import NewRecipieStepsView from '../views/NewRecipieStepsView.vue'
+import RecipiesNewNameView from '../views/RecipiesNewNameView.vue'
+import RecipiesNewIngredientsView from '../views/RecipiesNewIngredientsView.vue'
+import RecipiesNewStepsView from '../views/RecipiesNewStepsView.vue'
 import PlannerView from '../views/PlannerView.vue'
+import PlannerNewView from '../views/PlannerNewView.vue'
 import ListView from '../views/ListView.vue'
 
 const router = createRouter({
@@ -25,7 +26,7 @@ const router = createRouter({
     {
       path: '/ingredients/new',
       name: 'new-ingredient',
-      component: NewIngredientView
+      component: IngredientsNewView
     },
     {
       path: '/recipies',
@@ -35,22 +36,27 @@ const router = createRouter({
     {
       path: '/recipies/new/name',
       name: 'new-recipie-name',
-      component: NewRecipieNameView
+      component: RecipiesNewNameView
     },
     {
       path: '/recipies/new/ingredients',
       name: 'new-recipie-ingredients',
-      component: NewRecipieIngredientsView
+      component: RecipiesNewIngredientsView
     },
     {
       path: '/recipies/new/steps',
       name: 'new-recipie-steps',
-      component: NewRecipieStepsView
+      component: RecipiesNewStepsView
     },
     {
       path: '/planner',
       name: 'planner',
       component: PlannerView
+    },
+    {
+      path: '/planner/new',
+      name: 'new-planner',
+      component: PlannerNewView
     },
     {
       path: '/list',

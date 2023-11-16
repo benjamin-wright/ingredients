@@ -31,8 +31,8 @@
     <template v-else-if="store.error">{{ store.error }}</template>
     <template v-else>
       <ObjectList :data="store.recipies" @delete="remove" @edit="edit" dropdown>
-        <template #content="data">
-          <h2 :title="data.obj.name">{{ data.obj.name }}</h2>
+        <template #content="content">
+          <h2 :title="content.obj.name">{{ content.obj.name }}</h2>
         </template>
         <template #select-dropdown="data">
           <article>
