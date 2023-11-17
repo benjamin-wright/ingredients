@@ -6,11 +6,14 @@ export interface IListable {
 const props = defineProps<{
   data: T[]
   dropdown?: boolean
+  reorder?: boolean
 }>()
 
 const emit = defineEmits<{
   (event: "delete", object: T): void
   (event: "edit", object: T): void
+  (event: "move-up", object: T): void
+  (event: "move-down", object: T): void
 }>()
 
 let selected: HTMLElement | null = null;
@@ -41,19 +44,39 @@ function remove(object: T) {
 }
 
 function edit(object: T) {
-  emit("edit", object)
+  emit("edit", object);
 
   selected?.classList.remove("selected");
   selected?.classList.remove("drop");
   selected = null;
+}
+
+function moveUp(object: T) {
+  emit("move-up", object);
+}
+
+function moveDown(object: T) {
+  emit("move-down", object);
 }
 </script>
 
 <template>
   <div class="object-list">
     <TransitionGroup name="list">
-      <div @click="select($event)" v-for="obj in data" :key="obj.id">
-        <div class="object">
+      <div
+        @click="select($event)"
+        v-for="obj in data"
+        :key="obj.id"
+      >
+        <div class="object" v-if="reorder">
+          <div class="buttons">
+            <button @click.stop="moveUp(obj)" >
+              <font-awesome-icon :icon="['fas', 'chevron-circle-down']" />
+            </button>
+            <button @click.stop="moveDown(obj)">
+              <font-awesome-icon :icon="['fas', 'chevron-circle-up']" />
+            </button>
+          </div>
           <slot :obj="obj" name="content">
             <h2>{{ obj.id }}</h2>
           </slot>
@@ -97,7 +120,6 @@ function edit(object: T) {
   }
 
   button {
-    display: none;
     padding: 0;
   }
 
@@ -114,6 +136,10 @@ function edit(object: T) {
   }
 
   .buttons {
+    display: none;
+  }
+
+  .selected .buttons {
     display: flex;
   }
 

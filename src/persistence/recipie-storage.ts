@@ -36,6 +36,17 @@ export class RecipieStorage {
         });
     }
 
+    clear(): Promise<void> {
+        return this.db.then(db => {
+            const req = db.transaction("recipies", "readwrite").objectStore("recipies").clear();
+
+            return new Promise<void>((resolve, reject) => {
+                req.onsuccess = () => resolve();
+                req.onerror = (event: any) => reject(new Error("Database error: " + event.target.errorCode));
+            });
+        });
+    }
+
     getAll(ingredients: IngredientType[]): Promise<Recipie[]> {
         return this.db.then(db => {
             const req = db.transaction("recipies", "readonly").objectStore("recipies").getAll() as IDBRequest<StoredRecipie[]>;

@@ -29,6 +29,12 @@ export const useRecipieStore = defineStore('recipies', {
 
             this.loading = false;
         },
+        async clear() {
+            await storage.clear();
+            this.recipies = [];
+            this.loading = false;
+            this.error = null;
+        },
         async new(name: string, description: string, portions: number, ingredients: RecipieIngredient[], steps: string[]) {
             const recipie = await storage.add(name, description, portions, ingredients, steps);
 

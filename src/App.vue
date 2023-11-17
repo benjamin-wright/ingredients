@@ -8,6 +8,7 @@ import EventsList from './components/EventsList.vue';
   <header>
     <nav>
       <NavTab to="/" content="H" />
+      <NavTab to="/categories" content="C" />
       <NavTab to="/ingredients" content="I" />
       <NavTab to="/recipies" content="R" />
       <NavTab to="/planner" content="P" />

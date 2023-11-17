@@ -33,6 +33,9 @@ export const useEventsStore = defineStore('events', {
         events: [] as Event[]
     }),
     actions: {
+        clear() {
+            this.events = [];
+        },
         add(event: Event) {
             nextId++;
             event.id = nextId;

@@ -1,21 +1,15 @@
 export default class Category {
     public id: number
+    public position: number
     public name: string
 
-    constructor(id: number, name: string) {
-        this.id = id
-        this.name = name
+    constructor(id: number, position: number, name: string) {
+        this.id = id;
+        this.position = position;
+        this.name = name;
     }
 
     static Compare(a: Category, b: Category): number {
-        if (a.name < b.name) {
-            return -1;
-        }
-
-        if (a.name > b.name) {
-            return 1;
-        }
-
-        return 0;
+        return a.position - b.position;
     }
 }

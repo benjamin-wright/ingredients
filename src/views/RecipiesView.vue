@@ -27,17 +27,17 @@
 
 <template>
   <main>
-    <template v-if="store.loading">Loading...</template>
-    <template v-else-if="store.error">{{ store.error }}</template>
+    <template v-if="store.error">{{ store.error }}</template>
+    <template v-else-if="store.loading">Loading...</template>
     <template v-else>
       <ObjectList :data="store.recipies" @delete="remove" @edit="edit" dropdown>
-        <template #content="content">
-          <h2 :title="content.obj.name">{{ content.obj.name }}</h2>
+        <template #content="{ obj }">
+          <h2 :title="obj.name">{{ obj.name }}</h2>
         </template>
-        <template #select-dropdown="data">
+        <template #select-dropdown="{ obj }">
           <article>
             <p>Ingredients:</p>
-            <p v-for="ingredient in data.obj.ingredients" :key="ingredient.ingredient.id">
+            <p v-for="ingredient in obj.ingredients" :key="ingredient.ingredient.id">
               - {{ ingredient.toString() }}
             </p>
           </article>

@@ -71,13 +71,13 @@ button.delete {
   color: var(--color-highlight);
 }
 
-button[type="submit"], button[type="reset"] {
+button[type="submit"], button.submit, button[type="reset"] {
   color: var(--color-background);
   border: none;
   border-radius: 0.25rem;
 }
 
-button[type="submit"] {
+button[type="submit"], button.submit {
   background-color: var(--color-text-ok);
 }
 

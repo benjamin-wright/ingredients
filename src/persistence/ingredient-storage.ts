@@ -1,4 +1,17 @@
+import Category from "@/models/Category";
 import IngredientType from "@/models/IngredientType";
+
+class StoredIngredientType {
+    public id: number;
+    public name: string;
+    public category: number;
+
+    constructor(id: number, name: string, category: number) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+    }
+}
 
 export class IngredientStorage {
     private db: Promise<IDBDatabase>;
@@ -19,12 +32,31 @@ export class IngredientStorage {
         });
     }
 
-    getAll(): Promise<IngredientType[]> {
+    clear(): Promise<void> {
         return this.db.then(db => {
-            const req = db.transaction("ingredients", "readonly").objectStore("ingredients").getAll() as IDBRequest<IngredientType[]>;
+            const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").clear();
+
+            return new Promise<void>((resolve, reject) => {
+                req.onsuccess = () => resolve();
+                req.onerror = (event: any) => reject(new Error("Database error: " + event.target.errorCode));
+            });
+        });
+    }
+
+    getAll(categories: Category[]): Promise<IngredientType[]> {
+        return this.db.then(db => {
+            const req = db.transaction("ingredients", "readonly").objectStore("ingredients").getAll() as IDBRequest<StoredIngredientType[]>;
 
             return new Promise((resolve, reject) => {
-                req.onsuccess = (event: any) => resolve(event.target.result);
+                req.onsuccess = (event: any) => {
+                    const stored = event.target.result as StoredIngredientType[];
+                    const converted = stored.map(s => {
+                        const category = categories.find(c => c.id === s.category) as Category;
+                        return new IngredientType(s.id, s.name, category);
+                    });
+
+                    resolve(converted);
+                };
                 req.onerror = (event: any) => reject(new Error("Database error: " + event.target.errorCode));
             });
         });
@@ -34,7 +66,8 @@ export class IngredientStorage {
         return this.db.then(db => {
             const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").add({
                 id: ingredient.id,
-                name: ingredient.name
+                name: ingredient.name,
+                category: ingredient.category.id
             });
 
             return new Promise((resolve, reject) => {
@@ -44,12 +77,15 @@ export class IngredientStorage {
         });
     }
 
-    add(name: string): Promise<IngredientType> {
+    add(name: string, category: Category): Promise<IngredientType> {
         return this.db.then(db => {
-            const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").add({ name });
+            const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").add({
+                name,
+                category: category.id
+            });
 
             return new Promise((resolve, reject) => {
-                req.onsuccess = (event: any) => resolve(new IngredientType(event.target.result, name));
+                req.onsuccess = (event: any) => resolve(new IngredientType(event.target.result, name, category));
                 req.onerror = (event: any) => reject(new Error("Database error: " + event.target.errorCode));
             });
         });
@@ -59,7 +95,8 @@ export class IngredientStorage {
         return this.db.then(db => {
             const req = db.transaction("ingredients", "readwrite").objectStore("ingredients").put({
                 id: ingredient.id,
-                name: ingredient.name
+                name: ingredient.name,
+                category: ingredient.category.id
             });
 
             return new Promise((resolve, reject) => {

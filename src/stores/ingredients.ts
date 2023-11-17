@@ -1,6 +1,8 @@
-import { defineStore } from 'pinia'
-import { IngredientStorage } from '@/persistence/ingredient-storage'
-import IngredientType from '@/models/IngredientType'
+import { defineStore } from 'pinia';
+import { IngredientStorage } from '@/persistence/ingredient-storage';
+import { useCategoriesStore } from './categories';
+import IngredientType from '@/models/IngredientType';
+import Category from '@/models/Category';
 import { useEventsStore, Event } from './events';
 
 const storage = new IngredientStorage();
@@ -21,8 +23,17 @@ export const useIngredientsStore = defineStore('ingredients', {
                 return;
             }
 
-            const ingredients = await storage.getAll();
+            const categories = useCategoriesStore();
+            await categories.load();
+
+            const ingredients = await storage.getAll(categories.categories);
             this.ingredients = ingredients.sort(IngredientType.Compare);
+            this.loading = false;
+        },
+        async clear() {
+            await storage.clear();
+            this.selected = null;
+            this.ingredients = [];
             this.loading = false;
         },
         select(ingredient: IngredientType) {
@@ -43,8 +54,8 @@ export const useIngredientsStore = defineStore('ingredients', {
                 this.ingredients.sort(IngredientType.Compare);
             }));
         },
-        async add(name: string) {
-            const ingredient = await storage.add(name);
+        async add(name: string, category: Category) {
+            const ingredient = await storage.add(name, category);
             this.ingredients.push(ingredient);
             this.ingredients.sort(IngredientType.Compare);
         },
@@ -52,6 +63,7 @@ export const useIngredientsStore = defineStore('ingredients', {
             await storage.put(ingredient);
             const index = this.ingredients.findIndex(i => i.id === ingredient.id);
             this.ingredients[index].name = ingredient.name;
+            this.ingredients[index].category = ingredient.category;
             this.ingredients.sort(IngredientType.Compare);
         }
     }

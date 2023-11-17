@@ -31,6 +31,13 @@ export const usePlanStore = defineStore('plans', {
 
             this.loading = false;
         },
+        async clear() {
+            await storage.clear();
+            this.plans = [];
+            this.loading = false;
+            this.error = null;
+            this.selected = null;
+        },
         select(plan: Plan) {
             this.selected = plan;
         },

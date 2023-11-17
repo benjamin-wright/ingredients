@@ -27,6 +27,17 @@ export class PlanStorage {
         });
     }
 
+    clear(): Promise<void> {
+        return this.db.then(db => {
+            const req = db.transaction("plans", "readwrite").objectStore("plans").clear();
+
+            return new Promise<void>((resolve, reject) => {
+                req.onsuccess = () => resolve();
+                req.onerror = (event: any) => reject(new Error("Database error: " + event.target.errorCode));
+            });
+        });
+    }
+
     getAll(recipies: Recipie[]): Promise<Plan[]> {
         return this.db.then(db => {
             const req = db.transaction("plans", "readonly").objectStore("plans").getAll() as IDBRequest<StoredPlan[]>;
