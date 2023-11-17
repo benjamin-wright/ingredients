@@ -5,12 +5,15 @@
   import FormTemplate from "@/components/FormTemplate.vue";
   import IngredientType from "@/models/IngredientType";
   import StringInput from "../components/StringInput.vue";
+  import Category from "@/models/Category";
+  import type ObjectSelect from "@/components/ObjectSelect.vue";
 
   const router = useRouter();
   const store = useIngredientsStore();
   const selected = store.selected;
 
   let ingredient = selected?.name || "";
+  let category = selected?.category || new Category(0, "None");
   const title = `${ selected ? "Edit" : "New" } Ingredient`
 
   onMounted(() => {
@@ -25,7 +28,8 @@
     if (selected) {
       await store.update(new IngredientType(
         selected.id,
-        ingredient
+        ingredient,
+        category
       ));
     } else {
       await store.add(ingredient);
@@ -41,5 +45,10 @@
 <template>
   <FormTemplate :title="title" @cancel="cancel" @submit="submit" >
     <StringInput id="ingredient" name="ingredient" label="Name" v-model="ingredient" required />
+    <ObjectSelect id="category" name="category" label="Category" :options="[]" v-model="category" required>
+      <template #default="{ option }">
+        <span>{{ option.name }}</span>
+      </template>
+    </ObjectSelect>
   </FormTemplate>
 </template>

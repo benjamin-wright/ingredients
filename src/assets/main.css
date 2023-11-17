@@ -106,3 +106,7 @@ fieldset {
   padding: 0;
   border: none;
 }
+
+input, select {
+  font-size: 1em;
+}
