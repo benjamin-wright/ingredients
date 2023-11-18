@@ -44,7 +44,7 @@ export class CategoryStorage {
 
     new(name: string, position: number): Promise<Category> {
         return this.db.then(db => {
-            const req = db.transaction("categories", "readwrite").objectStore("categories").add({ name });
+            const req = db.transaction("categories", "readwrite").objectStore("categories").add({ name, position });
 
             return new Promise((resolve, reject) => {
                 req.onsuccess = (event: any) => resolve(new Category(event.target.result, position, name));

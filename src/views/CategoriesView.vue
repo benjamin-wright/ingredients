@@ -22,8 +22,8 @@
     router.push("/categories/new");
   }
 
-  function swap(category: Category, direction: "up" | "down") {
-    console.log(category, direction);
+  function swap(category: Category, direction: number) {
+    store.move(category, direction);
   }
 </script>
 
@@ -36,8 +36,8 @@
         :data="store.categories"
         @delete="remove"
         @edit="edit"
-        @move-up="(obj: Category) => swap(obj, 'up')"
-        @move-down="(obj: Category) => swap(obj, 'down')"
+        @move-up="(obj: Category) => swap(obj, 1)"
+        @move-down="(obj: Category) => swap(obj, -1)"
         reorder
       >
         <template #content="content">

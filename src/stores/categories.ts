@@ -31,6 +31,23 @@ export const useCategoriesStore = defineStore('categories', {
         deselect() {
             this.selected = null;
         },
+        async move(category: Category, direction: number) {
+            const index = this.categories.findIndex(a => a.id === category.id);
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= this.categories.length) {
+                return;
+            }
+
+            const other = this.categories[newIndex];
+            const temp = other.position;
+            other.position = category.position;
+            category.position = temp;
+
+            await storage.put(category);
+            await storage.put(other);
+
+            this.categories.sort(Category.Compare);
+        },
         sort() {
             this.categories.sort(Category.Compare);
             this.categories.forEach((_, idx) => this.categories[idx].position = idx);

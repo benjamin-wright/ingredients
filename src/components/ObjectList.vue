@@ -1,4 +1,6 @@
 <script setup lang="ts" generic="T extends IListable">
+import { ref } from 'vue';
+
 export interface IListable {
   id: number
 }
@@ -17,10 +19,12 @@ const emit = defineEmits<{
 }>()
 
 let selected: HTMLElement | null = null;
+let resize = ref(false);
 
 function select(event: MouseEvent) {
   selected?.classList.remove("selected");
   selected?.classList.remove("drop");
+  resize.value = false;
 
   const element = event.currentTarget as HTMLElement;
   if (selected == element) {
@@ -51,6 +55,10 @@ function edit(object: T) {
   selected = null;
 }
 
+function onResize() {
+  resize.value = true;
+}
+
 function moveUp(object: T) {
   emit("move-up", object);
 }
@@ -63,29 +71,32 @@ function moveDown(object: T) {
 <template>
   <div class="object-list">
     <TransitionGroup name="list">
-      <div
+      <div class="parent"
         @click="select($event)"
         v-for="obj in data"
         :key="obj.id"
       >
-        <div class="object" v-if="reorder">
-          <div class="buttons">
-            <button @click.stop="moveUp(obj)" >
-              <font-awesome-icon :icon="['fas', 'chevron-circle-down']" />
-            </button>
-            <button @click.stop="moveDown(obj)">
-              <font-awesome-icon :icon="['fas', 'chevron-circle-up']" />
-            </button>
-          </div>
+        <div class="object">
           <slot :obj="obj" name="content">
             <h2>{{ obj.id }}</h2>
           </slot>
-          <div class="buttons">
+          <div class="buttons" v-if="!resize">
             <button @click.stop="edit(obj)">
               <font-awesome-icon :icon="['fas', 'pencil']" />
             </button>
             <button class="delete" @click.stop="remove(obj)">
               <font-awesome-icon :icon="['fas', 'trash']" />
+            </button>
+            <button @click.stop="onResize()" v-if="reorder">
+              <font-awesome-icon :icon="['fas', 'up-down']" />
+            </button>
+          </div>
+          <div class="buttons" v-if="resize">
+            <button class="up" @click.stop="moveUp(obj)" >
+              <font-awesome-icon :icon="['fas', 'chevron-circle-down']" />
+            </button>
+            <button class="down" @click.stop="moveDown(obj)">
+              <font-awesome-icon :icon="['fas', 'chevron-circle-up']" />
             </button>
           </div>
         </div>
@@ -114,6 +125,10 @@ function moveDown(object: T) {
     border-radius: 0.3em;
   }
 
+  .object.reorder:only-child {
+
+  }
+
   .drop .object {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -121,6 +136,7 @@ function moveDown(object: T) {
 
   button {
     padding: 0;
+    width: 1em;
   }
 
   button:hover {
@@ -137,19 +153,20 @@ function moveDown(object: T) {
 
   .buttons {
     display: none;
+    gap: 0.75em;
   }
 
   .selected .buttons {
     display: flex;
   }
 
-  .buttons > :nth-child(1) {
-    margin-right: 0.75em;
-  }
-
   h2 {
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  h2.centered {
+    text-align: center;
   }
 
   .select-dropdown {
@@ -164,5 +181,13 @@ function moveDown(object: T) {
     border-radius: 0.3em;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+  }
+
+  .parent:first-child .down {
+    display: none;
+  }
+
+  .parent:last-child .up {
+    display: none;
   }
 </style>
