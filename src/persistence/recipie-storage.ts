@@ -1,4 +1,4 @@
-import type IngredientType from "@/models/IngredientType";
+import IngredientType from "@/models/IngredientType";
 import Recipie from "@/models/Recipie";
 import RecipieIngredient from "@/models/RecipieIngredient";
 

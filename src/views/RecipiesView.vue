@@ -40,6 +40,7 @@
             <p v-for="ingredient in obj.ingredients" :key="ingredient.ingredient.id">
               - {{ ingredient.toString() }}
             </p>
+            <p>Serves: {{ obj.portions }}</p>
           </article>
         </template>
       </ObjectList>

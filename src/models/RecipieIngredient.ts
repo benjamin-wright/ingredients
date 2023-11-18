@@ -1,5 +1,5 @@
 import type IngredientType from "./IngredientType";
-import { QuantityUnit } from "./QuantityUnit";
+import { QuantityUnit, humanise } from "./QuantityUnit";
 
 export default class RecipieIngredient {
     public ingredient: IngredientType
@@ -13,6 +13,6 @@ export default class RecipieIngredient {
     }
 
     toString(): string {
-        return `${this.quantity} ${QuantityUnit[this.unit]}s ${this.ingredient.name}`;
+        return `${humanise(this.unit, this.quantity)} ${this.ingredient.name}`;
     }
 }

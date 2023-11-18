@@ -21,6 +21,7 @@ function decrement() {
 <template>
   <fieldset>
     <div class="row">
+      <label>{{ label }}:</label>
       <button @click.prevent="decrement()">
         <font-awesome-icon :icon="['fas', 'minus-square']" />
       </button>

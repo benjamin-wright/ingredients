@@ -1,5 +1,6 @@
 export enum QuantityUnit {
     Unit = 1,
+    Tin,
     Gram,
     Kilogram,
     Ounce,
@@ -11,7 +12,8 @@ export enum QuantityUnit {
     Cup,
     Pint,
     Quart,
-    Gallon
+    Gallon,
+    Pinch,
 }
 
 export function quantityUnits(): string[] {
@@ -20,4 +22,14 @@ export function quantityUnits(): string[] {
 
 export function quantityUnitFromString(unit: string): QuantityUnit {
     return QuantityUnit[unit as keyof typeof QuantityUnit]
+}
+
+export function humanise(unit: QuantityUnit, quantity: number): string {
+    if (unit === QuantityUnit.Unit) {
+        return `${quantity}`;
+    }
+
+    const unitString = QuantityUnit[unit];
+    const plural = quantity !== 1 ? "s" : "";
+    return `${quantity} ${unitString}${plural}`;
 }

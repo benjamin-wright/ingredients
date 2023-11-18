@@ -10,6 +10,7 @@ export const useNewRecipieStore = defineStore('new-recipie', {
         id: 0,
         name: '',
         description: '',
+        portions: 1,
         ingredients: [] as RecipieIngredient[],
         steps: [] as {content: string, id: number}[]
     }),
@@ -20,21 +21,23 @@ export const useNewRecipieStore = defineStore('new-recipie', {
             this.name = recipie.name;
             this.description = recipie.description;
             this.ingredients = recipie.ingredients;
+            this.portions = recipie.portions;
             this.steps = recipie.steps.map((s: string, i: number) => ({content: s, id: i}));
         },
         async submit() {
             const store = useRecipieStore();
             if (this.edit) {
-                await store.update(this.id, this.name, this.description, 1, this.ingredients, this.steps.map(s => s.content));
+                await store.update(this.id, this.name, this.description, this.portions, this.ingredients, this.steps.map(s => s.content));
                 this.clear();
                 return;
             }
             
-            await store.new(this.name, this.description, 1, this.ingredients, this.steps.map(s => s.content));
+            await store.new(this.name, this.description, this.portions, this.ingredients, this.steps.map(s => s.content));
             this.clear();
         },
         clear() {
             this.edit = false;
+            this.portions = 1;
             this.id = 0;
             this.name = '';
             this.description = '';
