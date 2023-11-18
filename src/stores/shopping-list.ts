@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ShoppingListStorage } from '@/persistence/shopping-list-storage';
 import { useIngredientsStore } from './ingredients';
 import { useDinnerPlanStore } from './dinner-plans';
+import { useNonDinnerPlanStore } from './non-dinner-plans';
 import { useEventsStore, Event } from './events';
 import ShoppingListItem from '@/models/ShoppingListItem';
 
@@ -39,10 +40,26 @@ export const useShoppingListStore = defineStore('shopping-list', {
             const ingredients = useIngredientsStore();
             await ingredients.load();
 
-            const plans = useDinnerPlanStore();
-            await plans.load();
+            const dinnerPlans = useDinnerPlanStore();
+            await dinnerPlans.load();
 
-            for (const plan of plans.plans) {
+            for (const plan of dinnerPlans.plans) {
+                for (const ingredients of plan.getIngredients()) {
+                    const existing = this.items.find(i => i.item.id === ingredients.ingredient.id);
+                    if (existing) {
+                        existing.quantity += ingredients.quantity;
+                        await storage.update(existing);
+                    } else {
+                        const item = await storage.new(ingredients.ingredient, ingredients.quantity, ingredients.unit);
+                        this.items.push(item);
+                    }
+                }
+            }
+
+            const nonDinnerPlans = useNonDinnerPlanStore();
+            await nonDinnerPlans.load();
+
+            for (const plan of nonDinnerPlans.plans) {
                 for (const ingredients of plan.getIngredients()) {
                     const existing = this.items.find(i => i.item.id === ingredients.ingredient.id);
                     if (existing) {

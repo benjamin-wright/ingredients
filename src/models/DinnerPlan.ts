@@ -12,13 +12,13 @@ export enum PlanDay {
 }
 
 const days = [
+    PlanDay.Saturday,
+    PlanDay.Sunday,
     PlanDay.Monday,
     PlanDay.Tuesday,
     PlanDay.Wednesday,
     PlanDay.Thursday,
     PlanDay.Friday,
-    PlanDay.Saturday,
-    PlanDay.Sunday
 ];
 
 export default class DinnerPlan {

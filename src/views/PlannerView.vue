@@ -2,41 +2,82 @@
   import { onMounted } from "vue";
   import { useRouter } from 'vue-router';
   import { useDinnerPlanStore } from "@/stores/dinner-plans";
+  import { useNonDinnerPlanStore } from "@/stores/non-dinner-plans";
   import ObjectList from "@/components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
   import DinnerPlan from "@/models/DinnerPlan";
+  import NonDinnerPlan from "@/models/NonDinnerPlan";
+  import { Meal } from "@/models/NonDinnerPlan";
 
   const router = useRouter();
-  const store = useDinnerPlanStore();
+  const dinnerStore = useDinnerPlanStore();
+  const nonDinnerStore = useNonDinnerPlanStore();
+
+  const breakfasts = nonDinnerStore.plans.filter(plan => plan.meal == Meal.Breakfast);
+  const lunches = nonDinnerStore.plans.filter(plan => plan.meal == Meal.Lunch);
 
   onMounted(() => {
-    store.load();
+    dinnerStore.load();
+    nonDinnerStore.load();
   });
 
-  async function remove(plan: DinnerPlan) {
-    await store.remove(plan);
+  async function remove(plan: DinnerPlan | NonDinnerPlan) {
+    if (plan instanceof DinnerPlan) {
+      await dinnerStore.remove(plan as DinnerPlan);
+    } else {
+      await nonDinnerStore.remove(plan as NonDinnerPlan);
+    }
   }
 
-  function edit(plan: DinnerPlan) {
-    store.select(plan);
-    router.push("/planner/dinners/new");
+  function edit(plan: DinnerPlan | NonDinnerPlan) {
+    if (plan instanceof DinnerPlan) {
+      dinnerStore.select(plan as DinnerPlan);
+      router.push(`/planner/dinners/new`);
+    } else {
+      nonDinnerStore.select(plan as NonDinnerPlan);
+      router.push(`/planner/${plan.meal == Meal.Breakfast ? "breakfasts" : "lunches"}/new`);
+    }
   }
 </script>
 
 <template>
   <main>
-    <template v-if="store.loading">Loading...</template>
-    <template v-else-if="store.error">{{ store.error }}</template>
+    <template v-if="dinnerStore.loading">Loading...</template>
+    <template v-else-if="dinnerStore.error">{{ dinnerStore.error }}</template>
     <template v-else>
       <section>
         <h1>Breakfast</h1>
+        <ObjectList :data="breakfasts" @delete="remove" @edit="edit" dropdown>
+          <template #content="{ obj }">
+            <h2>{{ obj.recipie.name }}</h2>
+          </template>
+          <template #select-dropdown="{ obj }">
+            <article>
+              <p>Days: {{ obj.days }}</p>
+              <p>People: {{ obj.people }}</p>
+            </article>
+          </template>
+        </ObjectList>
+        <NewThing to="/planner/breakfasts/new" />
       </section>
       <section>
         <h1>Lunch</h1>
+        <ObjectList :data="lunches" @delete="remove" @edit="edit" dropdown>
+          <template #content="{ obj }">
+            <h2>{{ obj.recipie.name }}</h2>
+          </template>
+          <template #select-dropdown="{ obj }">
+            <article>
+              <p>Days: {{ obj.days }}</p>
+              <p>People: {{ obj.people }}</p>
+            </article>
+          </template>
+        </ObjectList>
+        <NewThing to="/planner/lunches/new" />
       </section>
       <section>
         <h1>Dinner</h1>
-        <ObjectList :data="store.plans" @delete="remove" @edit="edit" dropdown>
+        <ObjectList :data="dinnerStore.plans" @delete="remove" @edit="edit" dropdown>
           <template #content="{ obj }">
             <h2>{{ obj.day }}: {{ obj.recipie.name }}</h2>
           </template>
