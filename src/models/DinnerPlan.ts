@@ -21,7 +21,7 @@ const days = [
     PlanDay.Sunday
 ];
 
-export default class Plan {
+export default class DinnerPlan {
     public id: number
     public day: PlanDay
     public recipie: Recipie
@@ -38,7 +38,7 @@ export default class Plan {
         return this.recipie.getIngredients(this.portions);
     }
 
-    static Compare(a: Plan, b: Plan): number {
+    static Compare(a: DinnerPlan, b: DinnerPlan): number {
         // compare days based on their index in the days array
         const dayA = days.indexOf(a.day);
         const dayB = days.indexOf(b.day);

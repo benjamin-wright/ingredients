@@ -1,15 +1,15 @@
 <script setup lang="ts">
   import { onMounted, onUnmounted } from "vue";
-  import { usePlanStore } from "../stores/plans";
+  import { useDinnerPlanStore } from "../stores/dinner-plans";
   import { useRecipieStore } from "../stores/recipies";
   import { useRouter } from 'vue-router';
-  import { PlanDay } from "@/models/Plan";
+  import { PlanDay } from "@/models/DinnerPlan";
   import FormTemplate from "@/components/FormTemplate.vue";
   import NumberInput from "../components/NumberInput.vue";
   import ObjectSelect from "../components/ObjectSelect.vue";
 
   const router = useRouter();
-  const store = usePlanStore();
+  const store = useDinnerPlanStore();
   const recipies = useRecipieStore();
   const selected = store.selected;
 
@@ -60,3 +60,4 @@
     <NumberInput id="portions" name="portions" label="Portions" v-model="portions" required />
   </FormTemplate>
 </template>
+@/models/DinnerPlan

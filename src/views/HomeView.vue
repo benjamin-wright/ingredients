@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { usePlanStore } from '@/stores/plans';
+  import { useDinnerPlanStore } from '@/stores/dinner-plans';
   import { useNewRecipieStore } from '@/stores/new-recipie';
   import { useRecipieStore } from '@/stores/recipies';
   import { useIngredientsStore } from '@/stores/ingredients';
@@ -7,7 +7,7 @@
   import { useEventsStore } from '@/stores/events';
 
   async function clear() {
-    await usePlanStore().clear();
+    await useDinnerPlanStore().clear();
     await useNewRecipieStore().clear();
     await useRecipieStore().clear();
     await useIngredientsStore().clear();

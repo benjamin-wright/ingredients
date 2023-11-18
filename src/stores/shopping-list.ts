@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
 import { ShoppingListStorage } from '@/persistence/shopping-list-storage';
 import { useIngredientsStore } from './ingredients';
+import { useDinnerPlanStore } from './dinner-plans';
 import { useEventsStore, Event } from './events';
-import type ShoppingListItem from '@/models/ShoppingListItem';
+import ShoppingListItem from '@/models/ShoppingListItem';
 
 const storage = new ShoppingListStorage();
 
@@ -33,6 +34,26 @@ export const useShoppingListStore = defineStore('shopping-list', {
             this.items = [];
             this.loading = false;
             this.error = null;
+        },
+        async generate() {
+            const ingredients = useIngredientsStore();
+            await ingredients.load();
+
+            const plans = useDinnerPlanStore();
+            await plans.load();
+
+            for (const plan of plans.plans) {
+                for (const ingredients of plan.getIngredients()) {
+                    const existing = this.items.find(i => i.item.id === ingredients.ingredient.id);
+                    if (existing) {
+                        existing.quantity += ingredients.quantity;
+                        await storage.update(existing);
+                    } else {
+                        const item = await storage.new(ingredients.ingredient, ingredients.quantity, ingredients.unit);
+                        this.items.push(item);
+                    }
+                }
+            }
         },
         async add(item: ShoppingListItem) {
             await storage.add(item);

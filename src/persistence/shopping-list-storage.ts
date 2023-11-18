@@ -1,6 +1,22 @@
 import IngredientType from "@/models/IngredientType";
-import type { QuantityUnit } from "@/models/QuantityUnit";
+import { QuantityUnit } from "@/models/QuantityUnit";
 import ShoppingListItem from "@/models/ShoppingListItem";
+
+class StoredItem {
+    id: number;
+    item: number;
+    quantity: number;
+    unit: QuantityUnit;
+    need: boolean;
+
+    constructor(id: number, item: number, quantity: number, unit: QuantityUnit, need: boolean) {
+        this.id = id;
+        this.item = item;
+        this.quantity = quantity;
+        this.unit = unit;
+        this.need = need;
+    }
+}
 
 export class ShoppingListStorage {
     private db: Promise<IDBDatabase>;
@@ -38,9 +54,14 @@ export class ShoppingListStorage {
 
             return new Promise((resolve, reject) => {
                 req.onsuccess = (event: any) => {
-                    const stored = event.target.result as ShoppingListItem[]; 
+                    const stored = event.target.result as StoredItem[]; 
                     const converted = stored.map(s => {
-                        return new ShoppingListItem(s.id, ingredients.find(ing => ing.id === s.item.id) as IngredientType, s.quantity, s.unit);
+                        return new ShoppingListItem(
+                            s.id,
+                            ingredients.find(ing => ing.id === s.item) as IngredientType,
+                            s.quantity,
+                            s.unit
+                        );
                     });
                     resolve(converted);
                 };
@@ -51,7 +72,13 @@ export class ShoppingListStorage {
 
     add(item: ShoppingListItem): Promise<void> {
         return this.db.then(db => {
-            const req = db.transaction("shopping-list", "readwrite").objectStore("shopping-list").add(item);
+            const req = db.transaction("shopping-list", "readwrite").objectStore("shopping-list").add({
+                id: item.id,
+                item: item.item.id,
+                quantity: item.quantity,
+                unit: item.unit,
+                need: item.need
+            });
 
             return new Promise<void>((resolve, reject) => {
                 req.onsuccess = () => resolve();
@@ -80,7 +107,13 @@ export class ShoppingListStorage {
 
     update(item: ShoppingListItem): Promise<void> {
         return this.db.then(db => {
-            const req = db.transaction("shopping-list", "readwrite").objectStore("shopping-list").put(item);
+            const req = db.transaction("shopping-list", "readwrite").objectStore("shopping-list").put({
+                id: item.id,
+                item: item.item.id,
+                quantity: item.quantity,
+                unit: item.unit,
+                need: item.need
+            });
 
             return new Promise<void>((resolve, reject) => {
                 req.onsuccess = () => resolve();

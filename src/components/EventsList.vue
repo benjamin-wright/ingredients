@@ -26,7 +26,7 @@
 </script>
 
 <template>
-    <section>
+    <section class="events">
         <TransitionGroup name="list" tag="ul">
             <li :class="getClass(event)" @click.stop="click(event)" v-for="event, id in eventsList" :key="id">
                 <p>{{ event.message }}</p>
@@ -65,7 +65,7 @@
     }
 }
 
-section {
+.events {
     position: fixed;
     bottom: 0.5em;
     right: 0.5em;

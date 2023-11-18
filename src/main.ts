@@ -6,9 +6,17 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faPencil, faTrash, faCirclePlus, faSquareMinus, faSquarePlus, faCircleXmark, faUndo, faUpDown, faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons'
+import {
+    faPencil, faTrash, faCirclePlus, faSquareMinus, faSquarePlus,
+    faCircleXmark, faUndo, faUpDown, faChevronCircleDown, faChevronCircleUp,
+    faSquare, faCheckSquare
+} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faPencil, faTrash, faCirclePlus, faSquareMinus, faSquarePlus, faCircleXmark, faUndo, faUpDown, faChevronCircleDown, faChevronCircleUp);
+library.add(
+    faPencil, faTrash, faCirclePlus, faSquareMinus, faSquarePlus,
+    faCircleXmark, faUndo, faUpDown, faChevronCircleDown, faChevronCircleUp,
+    faSquare, faCheckSquare
+);
 
 import App from './App.vue'
 import router from './router'

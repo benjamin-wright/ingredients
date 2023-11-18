@@ -9,7 +9,7 @@ import RecipiesNewNameView from '../views/RecipiesNewNameView.vue'
 import RecipiesNewIngredientsView from '../views/RecipiesNewIngredientsView.vue'
 import RecipiesNewStepsView from '../views/RecipiesNewStepsView.vue'
 import PlannerView from '../views/PlannerView.vue'
-import PlannerNewView from '../views/PlannerNewView.vue'
+import PlannerNewDinnerView from '../views/PlannerNewDinnerView.vue'
 import ListView from '../views/ListView.vue'
 
 const router = createRouter({
@@ -66,9 +66,9 @@ const router = createRouter({
       component: PlannerView
     },
     {
-      path: '/planner/new',
-      name: 'new-planner',
-      component: PlannerNewView
+      path: '/planner/dinners/new',
+      name: 'new-dinner-planner',
+      component: PlannerNewDinnerView
     },
     {
       path: '/list',
