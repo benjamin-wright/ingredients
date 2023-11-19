@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onMounted } from "vue";
+  import { onMounted, computed } from "vue";
   import { useRouter } from 'vue-router';
   import { useDinnerPlanStore } from "@/stores/dinner-plans";
   import { useNonDinnerPlanStore } from "@/stores/non-dinner-plans";
@@ -13,8 +13,8 @@
   const dinnerStore = useDinnerPlanStore();
   const nonDinnerStore = useNonDinnerPlanStore();
 
-  const breakfasts = nonDinnerStore.plans.filter(plan => plan.meal == Meal.Breakfast);
-  const lunches = nonDinnerStore.plans.filter(plan => plan.meal == Meal.Lunch);
+  const breakfasts = computed(() => nonDinnerStore.plans.filter(plan => plan.meal == Meal.Breakfast));
+  const lunches = computed(() => nonDinnerStore.plans.filter(plan => plan.meal == Meal.Lunch));
 
   onMounted(() => {
     dinnerStore.load();
@@ -38,6 +38,11 @@
       router.push(`/planner/${plan.meal == Meal.Breakfast ? "breakfasts" : "lunches"}/new`);
     }
   }
+
+  function reset() {
+    dinnerStore.clear();
+    nonDinnerStore.clear();
+  }
 </script>
 
 <template>
@@ -45,50 +50,53 @@
     <template v-if="dinnerStore.loading">Loading...</template>
     <template v-else-if="dinnerStore.error">{{ dinnerStore.error }}</template>
     <template v-else>
-      <section>
-        <h1>Breakfast</h1>
-        <ObjectList :data="breakfasts" @delete="remove" @edit="edit" dropdown>
-          <template #content="{ obj }">
-            <h2>{{ obj.recipie.name }}</h2>
-          </template>
-          <template #select-dropdown="{ obj }">
-            <article>
-              <p>Days: {{ obj.days }}</p>
-              <p>People: {{ obj.people }}</p>
-            </article>
-          </template>
-        </ObjectList>
-        <NewThing to="/planner/breakfasts/new" />
-      </section>
-      <section>
-        <h1>Lunch</h1>
-        <ObjectList :data="lunches" @delete="remove" @edit="edit" dropdown>
-          <template #content="{ obj }">
-            <h2>{{ obj.recipie.name }}</h2>
-          </template>
-          <template #select-dropdown="{ obj }">
-            <article>
-              <p>Days: {{ obj.days }}</p>
-              <p>People: {{ obj.people }}</p>
-            </article>
-          </template>
-        </ObjectList>
-        <NewThing to="/planner/lunches/new" />
-      </section>
-      <section>
-        <h1>Dinner</h1>
-        <ObjectList :data="dinnerStore.plans" @delete="remove" @edit="edit" dropdown>
-          <template #content="{ obj }">
-            <h2>{{ obj.day }}: {{ obj.recipie.name }}</h2>
-          </template>
-          <template #select-dropdown="{ obj }">
-            <article>
-              <p>Portions: {{ obj.portions }}</p>
-            </article>
-          </template>
-        </ObjectList>
-        <NewThing to="/planner/dinners/new" />
-      </section>
+      <div class="big-window">
+        <section>
+          <h1>Breakfast</h1>
+          <ObjectList :data="breakfasts" @delete="remove" @edit="edit" dropdown>
+            <template #content="{ obj }">
+              <h2>{{ obj.recipie.name }}</h2>
+            </template>
+            <template #select-dropdown="{ obj }">
+              <article>
+                <p>Days: {{ obj.days }}</p>
+                <p>People: {{ obj.people }}</p>
+              </article>
+            </template>
+          </ObjectList>
+          <NewThing to="/planner/breakfasts/new" />
+        </section>
+        <section>
+          <h1>Lunch</h1>
+          <ObjectList :data="lunches" @delete="remove" @edit="edit" dropdown>
+            <template #content="{ obj }">
+              <h2>{{ obj.recipie.name }}</h2>
+            </template>
+            <template #select-dropdown="{ obj }">
+              <article>
+                <p>Days: {{ obj.days }}</p>
+                <p>People: {{ obj.people }}</p>
+              </article>
+            </template>
+          </ObjectList>
+          <NewThing to="/planner/lunches/new" />
+        </section>
+        <section>
+          <h1>Dinner</h1>
+          <ObjectList :data="dinnerStore.plans" @delete="remove" @edit="edit" dropdown>
+            <template #content="{ obj }">
+              <h2>{{ obj.day }}: {{ obj.recipie.name }}</h2>
+            </template>
+            <template #select-dropdown="{ obj }">
+              <article>
+                <p>Portions: {{ obj.portions }}</p>
+              </article>
+            </template>
+          </ObjectList>
+          <NewThing to="/planner/dinners/new" />
+        </section>
+      </div>
+      <button type="reset" @click.stop="reset()">Reset</button>
     </template>
   </main>
 </template>

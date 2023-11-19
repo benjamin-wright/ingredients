@@ -14,14 +14,13 @@ const modelValue = defineModel<string>({ required: true })
 <template>
   <fieldset>
     <div class="row">
-      <div class="grower" v-if="multiline">
+      <div class="grower" :data-replicated-value="modelValue" v-if="multiline">
         <textarea
           :placeholder="label"
           v-model="modelValue"
           id="{{ id }}"
           name="{{ name || id }}"
           :required="required"
-          oninput="this.parentNode.dataset.replicatedValue = this.value"
         ></textarea>
       </div>
       <input

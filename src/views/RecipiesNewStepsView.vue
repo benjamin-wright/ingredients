@@ -4,6 +4,7 @@
   import FormTemplate from "@/components/FormTemplate.vue";
   import StringInput from "@/components/StringInput.vue";
   import NewThing from "@/components/NewThing.vue";
+  import LabelIcon from "@/components/LabelIcon.vue";
 
   const router = useRouter();
   const store = useNewRecipieStore();
@@ -33,17 +34,21 @@
 <template>
   <FormTemplate :title="title" cancelLabel="Back" @cancel="cancel" @submit="submit">
     <TransitionGroup name="list">
-      <StringInput
-          v-for="step, idx in store.steps"
-          :key="step.id"
-          :label="`Step ${idx + 1}`"
-          v-model="store.steps[idx].content"
-          :id="'step-' + idx"
-          :name="'step-' + idx"
-          :remove="() => remove(idx)"
-          required
-          multiline
-      />
+      <div class="horizontal" v-for="step, idx in store.steps" :key="step.id">
+        <LabelIcon :value="idx + 1" />
+        <StringInput
+            class="input"
+            :label="`Step ${idx + 1}`"
+            v-model="store.steps[idx].content"
+            :id="'step-' + idx"
+            :name="'step-' + idx"
+            required
+            multiline
+        />
+        <button class="delete" @click.prevent="remove(idx)">
+          <font-awesome-icon :icon="['fas', 'minus-square']" />
+        </button>
+      </div>
     </TransitionGroup>
     <NewThing @click="add" />
   </FormTemplate>
@@ -57,7 +62,7 @@
   align-items: stretch;
 }
 
-.input-row *:first-child {
+.input {
   flex-grow: 1;
 }
 
