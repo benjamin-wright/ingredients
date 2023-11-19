@@ -2,28 +2,43 @@
   import { onMounted, computed, ref } from "vue";
   import { useShoppingListStore } from '@/stores/shopping-list';
   import { useCategoriesStore } from "@/stores/categories";
-  import type ShoppingListItem from "@/models/ShoppingListItem";
+  import { useCustomListStore } from "@/stores/custom-list";
+  import ShoppingListItem from "@/models/ShoppingListItem";
+  import CustomListItem from "@/models/CustomListItem";
+  import NewThing from "@/components/NewThing.vue";
+  import PopUp from "@/components/PopUp.vue";
 
   const store = useShoppingListStore();
   const categories = useCategoriesStore();
+  const custom = useCustomListStore();
   let collapsed = ref({} as Record<string, boolean>);
+  let need = ref(true);
+  let popup = ref(false);
 
   onMounted(() => {
     store.load();
     categories.load();
+    custom.load();
   });
 
   async function reset() {
+    popup.value = !popup.value;
     await store.clear();
+    await custom.clear();
     await store.generate();
   }
 
   const categorisedItems = computed(() => categories.categories.reduce((map: Record<string, ShoppingListItem[]>, category) => {
-    map[category.name] = store.items.filter(item => item.item.category.id === category.id && item.need);
+    map[category.name] = store.items.filter(item => item.item.category.id === category.id && item.need === need.value);
     return map;
   }, {}));
 
-  const nonEmptyCategories = computed(() => categories.categories.filter(category => categorisedItems.value[category.name].length > 0));
+  const categorisedCustomItems = computed(() => categories.categories.reduce((map: Record<string, CustomListItem[]>, category) => {
+    map[category.name] = custom.items.filter(item => item.category.id === category.id && item.need === need.value);
+    return map;
+  }, {}));
+
+  const nonEmptyCategories = computed(() => categories.categories.filter(category => categorisedItems.value[category.name].length > 0 || categorisedCustomItems.value[category.name].length > 0));
 
   function collapse(category: string) {
     collapsed.value[category] = true;
@@ -35,6 +50,10 @@
 
   function check(item: ShoppingListItem) {
     store.toggle(item.id, !item.need);
+  }
+
+  function checkCustom(item: CustomListItem) {
+    custom.toggle(item.id, !item.need);
   }
 </script>
 
@@ -61,10 +80,23 @@
                 <font-awesome-icon :icon="['fas', item.need ? 'square' : 'check-square']" />
               </button>
             </li>
+            <li class="checkbox" v-for="item in categorisedCustomItems[category.name]" :key="item.id">
+              <label>{{ item.name }}</label>
+              <button @click.stop="checkCustom(item)">
+                <font-awesome-icon :icon="['fas', item.need ? 'square' : 'check-square']" />
+              </button>
+            </li>
           </ul>
         </li>
+        <li v-if="need">
+          <NewThing to="/list/custom" />
+        </li>
       </ul>
-      <button type="reset" @click.stop="reset()">Reset</button>
+      <div class="button-pair">
+        <button type="button" @click.stop="need = !need">{{ need ? "Got" : "Need" }}</button>
+        <button type="reset" @click.stop="popup = !popup">Reset</button>
+      </div>
+      <PopUp v-if="popup" message="Are you sure?" @submit="reset()" @cancel="popup = !popup" />
     </template>
   </main>
 </template>
@@ -79,6 +111,16 @@
   background: var(--color-background-soft);
   border-radius: 0.25em;
   padding: 0 0.5em;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 
 </style>

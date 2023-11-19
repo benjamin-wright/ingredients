@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onMounted, computed } from "vue";
+  import { onMounted, computed, ref } from "vue";
   import { useRouter } from 'vue-router';
   import { useDinnerPlanStore } from "@/stores/dinner-plans";
   import { useNonDinnerPlanStore } from "@/stores/non-dinner-plans";
@@ -8,6 +8,7 @@
   import DinnerPlan from "@/models/DinnerPlan";
   import NonDinnerPlan from "@/models/NonDinnerPlan";
   import { Meal } from "@/models/NonDinnerPlan";
+  import PopUp from "@/components/PopUp.vue";
 
   const router = useRouter();
   const dinnerStore = useDinnerPlanStore();
@@ -15,6 +16,7 @@
 
   const breakfasts = computed(() => nonDinnerStore.plans.filter(plan => plan.meal == Meal.Breakfast));
   const lunches = computed(() => nonDinnerStore.plans.filter(plan => plan.meal == Meal.Lunch));
+  const popup = ref(false);
 
   onMounted(() => {
     dinnerStore.load();
@@ -40,6 +42,7 @@
   }
 
   function reset() {
+    popup.value = !popup.value;
     dinnerStore.clear();
     nonDinnerStore.clear();
   }
@@ -96,7 +99,8 @@
           <NewThing to="/planner/dinners/new" />
         </section>
       </div>
-      <button type="reset" @click.stop="reset()">Reset</button>
+      <button type="reset" @click.stop="popup = !popup">Reset</button>
+      <PopUp v-if="popup" message="Delete you meal plans?" @submit="reset()" @cancel="popup = !popup" /> 
     </template>
   </main>
 </template>
