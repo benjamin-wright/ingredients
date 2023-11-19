@@ -134,3 +134,15 @@ section {
   flex-direction: column;
   gap: 0.5em;
 }
+
+.tight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  flex-wrap: nowrap;
+}
+
+.tight-list > * {
+  padding: 0;
+  margin: 0;
+}

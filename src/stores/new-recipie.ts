@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type RecipieIngredient from '@/models/RecipieIngredient';
 import { useRecipieStore } from './recipies';
+import { Event, useEventsStore } from './events';
 import type Recipie from '@/models/Recipie';
 
 export const useNewRecipieStore = defineStore('new-recipie', {
@@ -23,6 +24,25 @@ export const useNewRecipieStore = defineStore('new-recipie', {
             this.ingredients = recipie.ingredients;
             this.portions = recipie.portions;
             this.steps = recipie.steps.map((s: string, i: number) => ({content: s, id: i}));
+        },
+        addStep() {
+            this.steps.push({content: '', id: this.steps.length});
+        },
+        removeStep(id: number) {
+            const idx = this.steps.findIndex(s => s.id === id);
+            const step = this.steps[idx];
+            this.steps.splice(idx, 1);
+
+            const events = useEventsStore();
+            events.add(new Event(`Removed step ${id + 1}`, async () => {
+                this.steps.splice(idx, 0, step);
+            }));
+        },
+        swapStep(a: number, b: number) {
+            const step = this.steps[a];
+            const other = this.steps[b];
+            this.steps[a] = other;
+            this.steps[b] = step;
         },
         async submit() {
             const store = useRecipieStore();
