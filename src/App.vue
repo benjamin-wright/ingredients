@@ -15,7 +15,6 @@ import EventsList from './components/EventsList.vue';
       <NavTab to="/list" content="L" />
     </nav>
   </header>
-
   <RouterView />
   <EventsList />
 </template>

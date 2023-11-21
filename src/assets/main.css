@@ -54,6 +54,12 @@ ul {
   margin: 0
 }
 
+em {
+  font-style: normal;
+  font-weight: bold;
+  color: var(--color-text-ok)
+}
+
 main {
   display: flex;
   flex-direction: column;

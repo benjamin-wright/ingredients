@@ -54,6 +54,7 @@
     <template v-else-if="dinnerStore.error">{{ dinnerStore.error }}</template>
     <template v-else>
       <div class="big-window">
+        <h1>Meal Plans</h1>
         <section>
           <h1>Breakfast</h1>
           <ObjectList :data="breakfasts" @delete="remove" @edit="edit" dropdown>

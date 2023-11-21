@@ -7,6 +7,7 @@
   import CustomListItem from "@/models/CustomListItem";
   import NewThing from "@/components/NewThing.vue";
   import PopUp from "@/components/PopUp.vue";
+  import ExpanderButton from "@/components/ExpanderButton.vue";
 
   const store = useShoppingListStore();
   const categories = useCategoriesStore();
@@ -40,14 +41,6 @@
 
   const nonEmptyCategories = computed(() => categories.categories.filter(category => categorisedItems.value[category.name].length > 0 || categorisedCustomItems.value[category.name].length > 0));
 
-  function collapse(category: string) {
-    collapsed.value[category] = true;
-  }
-
-  function expand(category: string) {
-    collapsed.value[category] = false;
-  }
-
   function check(item: ShoppingListItem) {
     store.toggle(item.id, !item.need);
   }
@@ -62,16 +55,14 @@
     <template v-if="store.loading">Loading...</template>
     <template v-else-if="store.error">{{ store.error }}</template>
     <template v-else>
+      <h1>Shopping List</h1>
       <ul class="big-window">
         <li v-for="category in nonEmptyCategories" :key="category.id">
           <span class="horizontal">
-            <button v-if="collapsed[category.name]" @click.stop="expand(category.name)">
-              <font-awesome-icon :icon="['fas', 'plus-square']" />
-            </button>
-            <button v-else @click.stop="collapse(category.name)">
-              <font-awesome-icon :icon="['fas', 'minus-square']" />
-            </button>
-            <h2>{{ category.name }}{{ collapsed[category.name] ? ` (${categorisedItems[category.name].length})` : '' }}</h2>
+            <ExpanderButton v-model="collapsed[category.name]" />
+            <h2 @click.prevent="collapsed[category.name] = !collapsed[category.name]">
+              {{ category.name }}{{ collapsed[category.name] ? ` (${categorisedItems[category.name].length + categorisedCustomItems[category.name].length})` : '' }}
+            </h2>
           </span>
           <ul v-if="!collapsed[category.name]">
             <li class="checkbox" v-for="item in categorisedItems[category.name]" :key="item.id">

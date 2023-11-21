@@ -3,6 +3,7 @@
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
+  --vt-c-white-warn: #e6baba;
   --vt-c-white-overlay: rgba(255, 255, 255, 0.8);
 
   --vt-c-red: #c43939;
@@ -10,6 +11,7 @@
   --vt-c-black: #181818;
   --vt-c-black-soft: #222222;
   --vt-c-black-mute: #282828;
+  --vt-c-black-warn: #2d1616;
   --vt-c-black-overlay: rgba(0, 0, 0, 0.8);
 
   --vt-c-indigo: #2c3e50;
@@ -34,6 +36,7 @@
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
+  --color-background-warn: var(--vt-c-white-warn);
   --color-background-overlay: var(--vt-c-white-overlay);
 
   --color-border: var(--vt-c-divider-light-2);
@@ -55,6 +58,7 @@
     --color-background-soft: var(--vt-c-black-soft);
     --color-background-high: var(--vt-c-indigo);
     --color-background-mute: var(--vt-c-black-mute);
+    --color-background-warn: var(--vt-c-black-warn);
     --color-background-overlay: var(--vt-c-black-overlay);
 
     --color-border: var(--vt-c-divider-dark-2);

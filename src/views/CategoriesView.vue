@@ -32,6 +32,7 @@
     <template v-if="store.loading">Loading...</template>
     <template v-else-if="store.error">{{ store.error }}</template>
     <template v-else>
+      <h1>Categories</h1>
       <ObjectList
         :data="store.categories"
         @delete="remove"

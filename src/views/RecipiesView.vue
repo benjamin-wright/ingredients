@@ -30,6 +30,7 @@
     <template v-if="store.error">{{ store.error }}</template>
     <template v-else-if="store.loading">Loading...</template>
     <template v-else>
+      <h1>Recipies</h1>
       <ObjectList :data="store.recipies" @delete="remove" @edit="edit" dropdown>
         <template #content="{ obj }">
           <h2 :title="obj.name">{{ obj.name }}</h2>

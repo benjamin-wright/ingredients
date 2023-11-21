@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { defineEmits, defineProps } from "vue";
-
 const props = defineProps<{
   message: string
 }>();
@@ -40,5 +38,9 @@ const emits = defineEmits(["cancel", "submit"]);
         background: var(--color-background);
         padding: 2em;
         border-radius: 1em;
+    }
+
+    h1 {
+        font-size: 1.5em;
     }
 </style>

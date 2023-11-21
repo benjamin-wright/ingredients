@@ -28,6 +28,7 @@
     <template v-if="store.loading">Loading...</template>
     <template v-else-if="store.error">{{ store.error }}</template>
     <template v-else>
+      <h1>Ingredients</h1>
       <ObjectList :data="store.ingredients" @delete="remove" @edit="edit">
         <template #content="content">
           <h2>{{ content.obj.name }}</h2>

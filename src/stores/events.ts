@@ -37,6 +37,7 @@ export const useEventsStore = defineStore('events', {
             this.events = [];
         },
         add(event: Event) {
+            console.log(`Added event ${event.message}`);
             nextId++;
             event.id = nextId;
             event.timeout = setTimeout(() => {
