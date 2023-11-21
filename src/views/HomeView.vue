@@ -20,7 +20,12 @@ import ExpanderButton from '@/components/ExpanderButton.vue';
   }
 
   const popup = ref(false);
-  const expanded = ref(false);
+  const expanded = ref({
+    'usage': false,
+    'installSafari': false,
+    'installAndroid': false,
+    'destructive': false,
+  });
 </script>
 
 <template>
@@ -34,10 +39,10 @@ import ExpanderButton from '@/components/ExpanderButton.vue';
 
       <section>
         <div class="horizontal">
-          <ExpanderButton v-model="expanded" />
-          <h2 @click.prevent="expanded = !expanded">How to use it</h2>
+          <ExpanderButton v-model="expanded.usage" />
+          <h2 @click.prevent="expanded.usage = !expanded.usage">Usage</h2>
         </div>
-        <div v-if="expanded">
+        <div v-if="expanded.usage">
           <p>The app is split into five sections that can be accessed from the menu at the top of the screen:</p>
           <dl>
             <dt>Categories: <em>C</em></dt>
@@ -70,15 +75,65 @@ import ExpanderButton from '@/components/ExpanderButton.vue';
         </div>
       </section>
 
-      <section class="danger">
-        <h2>Destructive stuff</h2>
+      <section>
+        <div class="horizontal">
+          <ExpanderButton v-model="expanded.installSafari" />
+          <h2 @click.prevent="expanded.installSafari = !expanded.installSafari">Install on iOS</h2>
+        </div>
+        <div v-if="expanded.installSafari">
+          <p>
+            If you're using an iPhone or iPad, you can install this app as a PWA (Progressive Web App) by following these steps:
+          </p>
+          <ol>
+            <li>Open Safari</li>
+            <li>Go to <a href="https://nomnom.pongle.hub.co.uk">https://nomnom.pongle-hub.co.uk</a></li>
+            <li>Click the <em>Share</em> button</li>
+            <li>Click <em>Add to Home Screen</em></li>
+            <li>Click <em>Add</em></li>
+          </ol>
+          <p>
+            This will install the app on your device, and you can use it like any other app.
+            It will even work offline!
+          </p>
+        </div>
+      </section>
 
-        <p>
-          If you want to start again, you can use the button below to clear all the data from the app.
-          This will delete all your categories, ingredients, recipies, meal plans and shopping lists, so handle with care!
-        </p>
-    
-        <button type="reset" @click.prevent="popup = !popup">Reset</button>
+      <section>
+        <div class="horizontal">
+          <ExpanderButton v-model="expanded.installAndroid" />
+          <h2 @click.prevent="expanded.installAndroid = !expanded.installAndroid">Install on Android</h2>
+        </div>
+        <div v-if="expanded.installAndroid">
+          <p>
+            If you're using an Android device, you can install this app as a PWA (Progressive Web App) by following these steps:
+          </p>
+          <ol>
+            <li>Open Chrome</li>
+            <li>Go to <a href="https://nomnom.pongle-hub.co.uk">https://nomnom.pongle-hub.co.uk</a></li>
+            <li>Click the <em>More</em> button (three dots in the top right)</li>
+            <li>Click <em>Add to Home Screen</em></li>
+            <li>Click <em>Add</em></li>
+          </ol>
+          <p>
+            This will install the app on your device, and you can use it like any other app.
+            It will even work offline!
+          </p>
+        </div>
+      </section>
+
+      <section class="danger">
+        <div class="horizontal">
+          <ExpanderButton v-model="expanded.destructive" />
+          <h2 @click.prevent="expanded.destructive = !expanded.destructive">Destructive stuff</h2>
+        </div>
+        <div v-if="expanded.destructive">
+          <p>
+            If you want to start again, you can use the button below to clear all the data from the app.
+            This will delete all your categories, ingredients, recipies, meal plans and shopping lists, so handle with care!
+          </p>
+          <br />
+          <button type="reset" @click.prevent="popup = !popup">Reset</button>
+        </div>
         <PopUp v-if="popup" message="This will permanently delete all your data. Are you sure?" @submit="clear()" @cancel="popup = !popup" />
       </section>
 
