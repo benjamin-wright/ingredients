@@ -70,10 +70,12 @@ export const useCategoriesStore = defineStore('categories', {
                 this.sort();
             }));
         },
-        async add(name: string) {
+        async add(name: string): Promise<number> {
             const category = await storage.new(name, this.categories.length);
             this.categories.push(category);
             this.sort();
+
+            return category.id;
         },
         async update(category: Category) {
             await storage.put(category);

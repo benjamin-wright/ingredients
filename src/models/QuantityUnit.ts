@@ -1,5 +1,5 @@
 export enum QuantityUnit {
-    Unit = 1,
+    Count = 1,
     Tin,
     Gram,
     Kilogram,
@@ -25,7 +25,7 @@ export function quantityUnitFromString(unit: string): QuantityUnit {
 }
 
 export function humanise(unit: QuantityUnit, quantity: number): string {
-    if (unit === QuantityUnit.Unit) {
+    if (unit === QuantityUnit.Count) {
         return `${quantity}`;
     }
 

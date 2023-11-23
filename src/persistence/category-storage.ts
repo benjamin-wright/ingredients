@@ -10,8 +10,7 @@ export class CategoryStorage {
             request.onupgradeneeded = (event: any) => {
                 const db = event.currentTarget.result;
                 if (!db.objectStoreNames.contains("categories")) {
-                    const store = db.createObjectStore("categories", { keyPath: "id", autoIncrement: true });
-                    store.add({ name: "None" });
+                    db.createObjectStore("categories", { keyPath: "id", autoIncrement: true });
                 }
             }
 

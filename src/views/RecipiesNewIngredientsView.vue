@@ -31,7 +31,7 @@
   }
 
   function add() {
-    store.ingredients.push(new RecipieIngredient(ingredients.ingredients[0], QuantityUnit.Unit, 0));
+    store.ingredients.push(new RecipieIngredient(ingredients.ingredients[0], QuantityUnit.Count, 0));
   }
 </script>
 
@@ -40,8 +40,11 @@
     <TransitionGroup name="list">
       <fieldset v-for="ingredient, idx in store.ingredients" :key="idx">
         <div>
+          <button @click.prevent="router.push('/ingredients/new?return=' + encodeURIComponent(router.currentRoute.value.fullPath))">
+            <font-awesome-icon :icon="['fas', 'plus-square']" />
+          </button>
           <select class="big" v-model="store.ingredients[idx].ingredient" id="ingredient-{{ idx }}" name="ingredient-{{ idx }}" required >
-              <option v-for="opt in ingredients.ingredients" :key="opt.id" :value="opt">{{ opt.name }}</option>
+            <option v-for="opt in ingredients.ingredients" :key="opt.id" :value="opt">{{ opt.name }}</option>
           </select>
           <div class="row">
             <input

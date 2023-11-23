@@ -8,8 +8,11 @@ defineProps<{
   id: string,
   name: string,
   required?: boolean,
-  label?: string
+  label?: string,
+  add?: boolean
 }>()
+
+const emits = defineEmits(['new']);
 
 const modelValue = defineModel<T>({ required: true })
 </script>
@@ -21,7 +24,10 @@ const modelValue = defineModel<T>({ required: true })
       <option v-for="option in options" :key="option.id" :value="option">
         <slot :option="option" />
       </option>
-    </select>  
+    </select>
+    <button v-if="add"  @click.prevent="emits('new')">
+      <font-awesome-icon :icon="['fas', 'plus-square']" />
+    </button>
   </div>
 </template>
 
@@ -35,5 +41,9 @@ const modelValue = defineModel<T>({ required: true })
 
 .row select {
   flex-grow: 1;
+}
+
+button {
+  padding-right: 0;
 }
 </style>

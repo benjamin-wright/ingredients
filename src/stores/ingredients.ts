@@ -54,10 +54,11 @@ export const useIngredientsStore = defineStore('ingredients', {
                 this.ingredients.sort(IngredientType.Compare);
             }));
         },
-        async add(name: string, category: Category) {
+        async add(name: string, category: Category): Promise<number> {
             const ingredient = await storage.add(name, category);
             this.ingredients.push(ingredient);
             this.ingredients.sort(IngredientType.Compare);
+            return ingredient.id;
         },
         async update(ingredient: IngredientType) {
             await storage.put(ingredient);

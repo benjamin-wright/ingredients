@@ -52,7 +52,7 @@
 <template>
   <FormTemplate :title="title" @cancel="cancel" @submit="submit" >
     <StringInput id="item" name="item" label="Name" v-model="item" required />
-    <ObjectSelect id="category" name="category" label="Category" v-model="category" :options="categories.categories" required >
+    <ObjectSelect id="category" name="category" label="Category" v-model="category" :options="categories.categories" add @new="router.push('/categories/new?return=' + encodeURIComponent(router.currentRoute.value.fullPath))" required >
       <template #default="{ option }">
         {{ option.name }}
       </template>
