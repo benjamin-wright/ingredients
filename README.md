@@ -46,5 +46,5 @@ make publish
 
 - Persisted state for every new resource page, to make switching between pages easier
 - New resource page state to use ids to reference sub-resources, to make restore work properly
-- Swap IndexedDB for a WASM-based SQLite DB
+- Swap IndexedDB for a WASM-based SQLite DB -> https://github.com/DallasHoff/sqlocal/tree/main
 - new ingredient triggered for a specific recipie item should be set on return
