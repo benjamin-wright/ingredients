@@ -5,7 +5,7 @@
   import FormTemplate from "@/components/FormTemplate.vue";
   import StringInput from "../components/StringInput.vue";
   import Category from "@/models/Category";
-  import URL from "@/models/URL";
+  import URL from "@/utils/URL";
 
   const router = useRouter();
   const store = useCategoriesStore();
@@ -64,4 +64,4 @@
   <FormTemplate :title="title" :cancel-label="returnTo ? 'Return' : undefined" @cancel="navigate" @submit="submit" >
     <StringInput id="category" name="category" label="Name" v-model="category" required />
   </FormTemplate>
-</template>
+</template>@/utils/URL

@@ -20,6 +20,7 @@ library.add(
 
 import App from './App.vue'
 import router from './router'
+import Database from './database/database'
 
 const app = createApp(App)
 
@@ -31,3 +32,5 @@ app.use(pinia)
 app.use(router)
 
 app.mount('#app')
+
+const db = new Database();

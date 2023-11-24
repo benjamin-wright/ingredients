@@ -7,7 +7,7 @@ import { describe, test, expect } from "vitest";
 describe("RecipieIngredient", () => {
     describe("toString", () => {
         test("Should omit quantity if unit is Unit", () => {
-            const ingredient = new RecipieIngredient(new IngredientType(1, "ingredient", new Category(1, 1, "category")), QuantityUnit.Unit, 1);
+            const ingredient = new RecipieIngredient(new IngredientType(1, "ingredient", new Category(1, 1, "category")), QuantityUnit.Count, 1);
             expect(ingredient.toString()).toBe("1 ingredient");
         });
 

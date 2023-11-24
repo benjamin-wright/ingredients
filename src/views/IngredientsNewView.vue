@@ -8,7 +8,7 @@
   import ObjectSelect from "@/components/ObjectSelect.vue";
   import { useCategoriesStore } from "@/stores/categories";
   import Category from "@/models/Category";
-  import URL from "@/models/URL";
+  import URL from "@/utils/URL";
 
   const router = useRouter();
   const store = useIngredientsStore();
@@ -124,4 +124,4 @@
     text-indent: 1px;
     text-overflow: '';
   }
-</style>
+</style>@/utils/URL
