@@ -30,7 +30,7 @@ export default defineConfig({
         enabled: true
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ts,vue,json}']
+        globPatterns: ['**/*.{js,css,html,ts,vue,json,sql}']
       }
     }),
     {

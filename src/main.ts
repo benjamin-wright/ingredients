@@ -20,7 +20,7 @@ library.add(
 
 import App from './App.vue'
 import router from './router'
-import Database from './database/database'
+import { query } from './database/database'
 
 const app = createApp(App)
 
@@ -33,5 +33,4 @@ app.use(router)
 
 app.mount('#app')
 
-const db = new Database();
-db.init();
+query('SELECT * FROM categories', {}, (row) => ({ id: row[0] as number })).then(rows => console.log(rows));
