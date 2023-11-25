@@ -7,7 +7,7 @@
     "playwright.config.*"
   ],
   "compilerOptions": {
-    "lib": ["ES2015"],
+    "lib": ["ES2020"],
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",

@@ -1,30 +1,46 @@
-// import sqlite3InitModule, { type OpfsDatabase, type SqlValue, type Sqlite3Static } from '@sqlite.org/sqlite-wasm';
+import { sqlite3Worker1Promiser, type ExecOptions } from '@sqlite.org/sqlite-wasm';
 
-import worker from './worker?worker&url';
+declare module '@sqlite.org/sqlite-wasm' {
+  export function sqlite3Worker1Promiser(...args: any): any
+}
 
-type Query = {
-
+type Promiser = {
+  (
+    action: string, options: ExecOptions & {dbId: any}
+  ): Promise<any>
 }
 
 export default class Database {
-  private worker: Worker;
-  private queries: Query[];
+  private promiser: Promiser;
+  private dbId: any;
 
   constructor() {
-    this.queries = [];
-    this.worker = new Worker(worker, { type: 'module' });
-    this.worker.onmessage = this.received.bind(this);
-    this.worker.onerror = (event) => {
-      console.error(event);
-    }
-    this.worker.onmessageerror = (event) => {
-      console.error(event);
-    }
-
+    this.promiser = () => Promise.reject('Database not initialized');
   }
 
-  private received(event: MessageEvent<any>) {
-    console.log(event.data);
+  async init(): Promise<void> {
+    console.log('Loading and initializing SQLite3 module...');
+
+    const promiser = await new Promise<any>((resolve) => {
+      const _promiser = sqlite3Worker1Promiser({
+        onready: () => {
+          resolve(_promiser);
+        },
+      });
+    });
+
+    console.log('Opening database...');
+
+    const response = await promiser('open', {
+      filename: 'file:ingredients.sqlite3?vfs=opfs',
+    });
+    const { dbId } = response;
+    this.dbId = dbId;
+
+    console.log(
+      'OPFS is available, created persisted database at',
+      response.result.filename.replace(/^file:(.*?)\?vfs=opfs$/, '$1'),
+    );
   }
 }
 

@@ -34,3 +34,4 @@ app.use(router)
 app.mount('#app')
 
 const db = new Database();
+db.init();
