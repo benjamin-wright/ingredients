@@ -20,7 +20,6 @@ library.add(
 
 import App from './App.vue'
 import router from './router'
-import { query } from './database/database'
 
 const app = createApp(App)
 
@@ -32,5 +31,3 @@ app.use(pinia)
 app.use(router)
 
 app.mount('#app')
-
-query('SELECT * FROM categories', {}, (row) => ({ id: row[0] as number })).then(rows => console.log(rows));

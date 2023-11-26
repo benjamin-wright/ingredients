@@ -153,6 +153,6 @@ const database = (async () => {
   return db;
 })();
 
-export async function query<T>(sql: string, bind?: any[], reader?: (rows: any[]) => T): Promise<T[]> {
+export async function query<T>(sql: string, bind?: any[], reader?: (values: any[]) => T): Promise<T[]> {
   return database.then(db => db.exec(sql, bind, reader));
 }

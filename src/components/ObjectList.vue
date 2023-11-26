@@ -125,10 +125,6 @@ function moveDown(object: T) {
     border-radius: 0.3em;
   }
 
-  .object.reorder:only-child {
-
-  }
-
   .drop .object {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;

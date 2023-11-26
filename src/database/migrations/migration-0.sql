@@ -1,23 +1,45 @@
 CREATE TABLE "categories" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
+    "position" INTEGER NOT NULL DEFAULT 0,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "quantity_units" (
+CREATE TABLE "unit_kind" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
-    "singular" TEXT NOT NULL,
-    "plural" TEXT NOT NULL,
-    "is_unit" BOOLEAN NOT NULL DEFAULT 0,
+    "kind" TEXT NOT NULL UNIQUE,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO "unit_kind" ("kind") VALUES ('mass'), ('volume'), ('collective');
+
+CREATE TABLE "units" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL UNIQUE,
+    "singular" TEXT NOT NULL,
+    "plural" TEXT NOT NULL,
+    "kind_id" INTEGER NOT NULL,
+    "conversion" REAL NOT NULL DEFAULT 1,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY ("kind_id") REFERENCES "unit_kind" ("id") ON DELETE CASCADE
+);
+
+INSERT INTO "units"
+("name", "singular", "plural", "kind_id", "conversion")
+VALUES
+('grams', 'g', 'g', 1, 1),
+('kilograms', 'kg', 'kg', 1, 1000),
+('millilitres', 'ml', 'ml', 2, 1),
+('litres', 'l', 'l', 2, 1000),
+('count', '', '', 3, 1),
+('can', 'can', 'cans', 3, 1)
 
 CREATE TABLE "ingredients" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
     "category_id" INTEGER NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -26,7 +48,7 @@ CREATE TABLE "ingredients" (
 
 CREATE TABLE "recipies" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
     "description" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -87,7 +109,7 @@ CREATE TABLE "shopping_list_items" (
 
 CREATE TABLE "shopping_list_custom_items" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
     "quantity" REAL NOT NULL,
     "quantity_unit_id" INTEGER NOT NULL,
     "got" BOOLEAN NOT NULL DEFAULT 0,
