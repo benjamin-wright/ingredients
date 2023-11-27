@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { type Unit, UnitType } from '@/models/Unit';
+import { type Unit, UnitKind, addUnit, updateUnit } from '@/database/models/unit';
 
 export const useNewUnitStore = defineStore('new-unit', {
     persist: true,
@@ -7,7 +7,9 @@ export const useNewUnitStore = defineStore('new-unit', {
         edit: false,
         id: 0,
         name: '',
-        type: UnitType.Mass,
+        singular: '',
+        plural: '',
+        kind: UnitKind.Mass,
         conversion: 1
     }),
     actions: {
@@ -15,16 +17,26 @@ export const useNewUnitStore = defineStore('new-unit', {
             this.edit = true;
             this.id = unit.id;
             this.name = unit.name;
-            this.type = unit.type;
+            this.singular = unit.singular;
+            this.plural = unit.plural;
+            this.kind = unit.kind;
             this.conversion = unit.conversion;
         },
         async submit() {
+            if (this.edit) {
+                await updateUnit(this.id, this.name, this.singular, this.plural, this.kind, this.conversion);
+                return this.id;
+            } else {
+                return await addUnit(this.name, this.singular, this.plural, this.kind, this.conversion);
+            }
         },
         clear() {
             this.edit = false;
             this.id = 0;
             this.name = '';
-            this.type = UnitType.Mass;
+            this.singular = '';
+            this.plural = '';
+            this.kind = UnitKind.Mass;
             this.conversion = 1;
         }
     },

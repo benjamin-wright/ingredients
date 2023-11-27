@@ -14,8 +14,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (event: "delete", object: T): void
   (event: "edit", object: T): void
-  (event: "move-up", object: T): void
-  (event: "move-down", object: T): void
+  (event: "swap", object1: T, object2: T): void
 }>()
 
 let selected: HTMLElement | null = null;
@@ -59,13 +58,6 @@ function onResize() {
   resize.value = true;
 }
 
-function moveUp(object: T) {
-  emit("move-up", object);
-}
-
-function moveDown(object: T) {
-  emit("move-down", object);
-}
 </script>
 
 <template>
@@ -73,7 +65,7 @@ function moveDown(object: T) {
     <TransitionGroup name="list">
       <div class="parent"
         @click="select($event)"
-        v-for="obj in data"
+        v-for="(obj, idx) in data"
         :key="obj.id"
       >
         <div class="object">
@@ -92,10 +84,10 @@ function moveDown(object: T) {
             </button>
           </div>
           <div class="buttons" v-if="resize">
-            <button class="up" @click.stop="moveUp(obj)" >
+            <button class="up" @click.stop="emit('swap', obj, data[idx+1])" >
               <font-awesome-icon :icon="['fas', 'chevron-circle-down']" />
             </button>
-            <button class="down" @click.stop="moveDown(obj)">
+            <button class="down" @click.stop="emit('swap', obj, data[idx-1])">
               <font-awesome-icon :icon="['fas', 'chevron-circle-up']" />
             </button>
           </div>

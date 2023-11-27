@@ -25,7 +25,7 @@
 <template>
   <main>
     <h2>{{ title }}</h2>
-    <form ref="form" @submit.prevent="submit">
+    <form ref="form" class="multi-input" @submit.prevent="submit">
       <slot></slot>
     </form>
     <div class="button-pair">

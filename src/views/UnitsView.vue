@@ -3,17 +3,22 @@
   import { useRouter } from 'vue-router';
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
-  import { getUnits, deleteUnit, type Unit } from "@/models/Unit";
+  import { getUnits, deleteUnit, type Unit } from "@/database/models/unit";
   import { useNewUnitStore } from "@/stores/new-unit";
 
   const router = useRouter();
   const store = useNewUnitStore();
  
   const loading = ref(true);
+  const error = ref("" as any);
   const units = ref([] as Unit[]);
 
   onMounted(async () => {
-    units.value = await getUnits();
+    try {
+      units.value = await getUnits();
+    } catch (err: any) {
+      error.value = err;
+    }
     loading.value = false;
   });
 
@@ -30,6 +35,7 @@
 <template>
   <main>
     <template v-if="loading">Loading...</template>
+    <template v-else-if="error">Error: {{ error }}</template>
     <template v-else>
       <h1>Units</h1>
       <ObjectList
@@ -51,4 +57,4 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-</style>
+</style>@/database/models/Unit@/database/models/unit

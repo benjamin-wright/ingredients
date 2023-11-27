@@ -7,21 +7,28 @@
   import { useRecipieStore } from '@/stores/recipies';
   import { useIngredientsStore } from '@/stores/ingredients';
   import { useCategoriesStore } from '@/stores/categories';
-  import { useEventsStore } from '@/stores/events';
+  import { useEventsStore, Event } from '@/stores/events';
   import { clearAll } from '@/persistence/clear';
   import PopUp from '@/components/PopUp.vue';
-import ExpanderButton from '@/components/ExpanderButton.vue';
+  import ExpanderButton from '@/components/ExpanderButton.vue';
+  import { reset } from '@/database/database';
 
   async function clear() {
-    await useDinnerPlanStore().clear();
-    await useNonDinnerPlanStore().clear();
-    await useCustomListStore().clear();
-    await useNewRecipieStore().clear();
-    await useRecipieStore().clear();
-    await useIngredientsStore().clear();
-    await useCategoriesStore().clear();
-    useEventsStore().clear();
-    await clearAll();
+    try {
+      await useDinnerPlanStore().clear();
+      await useNonDinnerPlanStore().clear();
+      await useCustomListStore().clear();
+      await useNewRecipieStore().clear();
+      await useRecipieStore().clear();
+      await useIngredientsStore().clear();
+      await useCategoriesStore().clear();
+      useEventsStore().clear();
+      await reset();
+    } catch (err: any) {
+      const events = useEventsStore();
+      events.add(new Event('error: Failed to reset database: ' + err.message, async () => {}));
+    }
+
     popup.value = false;
 
     window.location.reload();

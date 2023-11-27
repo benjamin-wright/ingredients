@@ -1,15 +1,15 @@
 <script setup lang="ts">
   import { onMounted, onUnmounted, computed } from "vue";
   import { useRouter } from 'vue-router';
-  import { useCategoriesStore } from "@/stores/categories";
   import FormTemplate from "@/components/FormTemplate.vue";
   import StringInput from "../components/StringInput.vue";
-  import Category from "@/models/Category";
   import URL from "@/utils/URL";
+  import { type Category } from "@/database/models/category";
+  import { useNewCategoryStore } from "@/stores/new-category";
 
   const router = useRouter();
-  const store = useCategoriesStore();
-  const selected = store.selected;
+  const store = useNewCategoryStore();
+
   const returnTo = computed(() => {
     let returnTo = router.currentRoute.value.query.return;
     if (Array.isArray(returnTo)) {
@@ -19,30 +19,14 @@
     return returnTo;
   });
 
-  let category = selected?.name || "";
-  const title = `${ selected ? "Edit" : "New" } Category`
-
-  onMounted(async () => {
-    await store.load();
-  });
+  const title = `${ store.edit ? "Edit" : "New" } Category`
 
   onUnmounted(() => {
-    store.deselect();
+    store.clear();
   });
 
   async function submit() {
-    let id: number;
-    if (selected) {
-      await store.update(new Category(
-        selected.id,
-        selected.position,
-        category
-      ));
-
-      id = selected.id;
-    } else {
-      id = await store.add(category);
-    }
+    const id = await store.submit();
     navigate(id);
   }
 
@@ -62,6 +46,6 @@
 
 <template>
   <FormTemplate :title="title" :cancel-label="returnTo ? 'Return' : undefined" @cancel="navigate" @submit="submit" >
-    <StringInput id="category" name="category" label="Name" v-model="category" required />
+    <StringInput id="category" name="category" label="Name" v-model="store.name" required />
   </FormTemplate>
 </template>@/utils/URL

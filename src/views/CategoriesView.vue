@@ -1,20 +1,24 @@
 <script setup lang="ts">
-  import { onMounted } from "vue";
+  import { onMounted, ref } from "vue";
   import { useRouter } from 'vue-router';
-  import { useCategoriesStore } from "../stores/categories";
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
-  import Category from "@/models/Category";
+  import { getCategories, deleteCategory, swapCategories, type Category } from "@/database/models/category";
+  import { useNewCategoryStore } from "@/stores/new-category";
 
   const router = useRouter();
-  const store = useCategoriesStore();
+  const store = useNewCategoryStore();
 
-  onMounted(() => {
-    store.load();
+  const loading = ref(true);
+  const categories = ref([] as Category[]);
+
+  onMounted(async () => {
+    categories.value = await getCategories();
+    loading.value = false;
   });
 
   async function remove(category: Category) {
-    await store.remove(category);
+    await deleteCategory(category.id);
   }
 
   function edit(category: Category) {
@@ -22,23 +26,22 @@
     router.push("/categories/new");
   }
 
-  function swap(category: Category, direction: number) {
-    store.move(category, direction);
+  async function swap(category1: Category, category2: Category) {
+    await swapCategories(category1, category2);
+    categories.value = await getCategories();
   }
 </script>
 
 <template>
   <main>
-    <template v-if="store.loading">Loading...</template>
-    <template v-else-if="store.error">{{ store.error }}</template>
+    <template v-if="loading">Loading...</template>
     <template v-else>
       <h1>Categories</h1>
       <ObjectList
-        :data="store.categories"
+        :data="categories"
         @delete="remove"
         @edit="edit"
-        @move-up="(obj: Category) => swap(obj, 1)"
-        @move-down="(obj: Category) => swap(obj, -1)"
+        @swap="swap"
         reorder
       >
         <template #content="content">
