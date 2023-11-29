@@ -19,6 +19,7 @@
 
   async function remove(category: Category) {
     await deleteCategory(category.id);
+    categories.value.splice(categories.value.indexOf(category), 1);
   }
 
   function edit(category: Category) {

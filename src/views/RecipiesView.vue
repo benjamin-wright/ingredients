@@ -1,37 +1,38 @@
 <script setup lang="ts">
-  import { onMounted } from "vue";
+  import { onMounted, ref } from "vue";
   import { useRouter } from 'vue-router';
-  import { useRecipieStore } from "../stores/recipies";
-  import { useNewRecipieStore } from "../stores/new-recipie";
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
-  import type Recipie from "@/models/Recipie";
+  import { type Recipie, getRecipies, deleteRecipie } from "@/database/models/recipie";
+  import { useNewRecipieStore } from "@/stores/new-recipie";
 
-  const store = useRecipieStore();
+  const store = useNewRecipieStore();
   const router = useRouter();
+  
+  const recipies = ref([] as Recipie[]);
+  const loading = ref(true);
 
-  onMounted(() => {
-    store.load();
+  onMounted(async () => {
+    recipies.value = await getRecipies();
+    loading.value = false;
   });
 
   async function remove(recipie: Recipie) {
-    await store.remove(recipie);
+    await deleteRecipie(recipie.id);
   }
 
   function edit(recipie: Recipie) {
-    const newRecipieStore = useNewRecipieStore();
-    newRecipieStore.load(recipie);
-    router.push("/recipies/new/name");
+    store.select(recipie);
+    router.push("/recipies/new");
   }
 </script>
 
 <template>
   <main>
-    <template v-if="store.error">{{ store.error }}</template>
-    <template v-else-if="store.loading">Loading...</template>
+    <template v-if="loading">Loading...</template>
     <template v-else>
       <h1>Recipies</h1>
-      <ObjectList :data="store.recipies" @delete="remove" @edit="edit" dropdown>
+      <ObjectList :data="recipies" @delete="remove" @edit="edit" dropdown>
         <template #content="{ obj }">
           <h2 :title="obj.name">{{ obj.name }}</h2>
         </template>
@@ -41,7 +42,7 @@
             <p v-for="ingredient in obj.ingredients" :key="ingredient.ingredient.id">
               - {{ ingredient.toString() }}
             </p>
-            <p>Serves: {{ obj.portions }}</p>
+            <p>Serves: {{ obj.servings }}</p>
           </article>
         </template>
       </ObjectList>

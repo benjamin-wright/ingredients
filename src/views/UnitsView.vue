@@ -24,6 +24,7 @@
 
   async function remove(unit: Unit) {
     await deleteUnit(unit.id);
+    units.value.splice(units.value.indexOf(unit), 1);
   }
 
   function edit(unit: Unit) {

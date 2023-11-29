@@ -1,10 +1,9 @@
 <script setup lang="ts">
-  import { onMounted, onUnmounted, computed } from "vue";
+  import { onUnmounted, computed } from "vue";
   import { useRouter } from 'vue-router';
   import FormTemplate from "@/components/FormTemplate.vue";
   import StringInput from "../components/StringInput.vue";
   import URL from "@/utils/URL";
-  import { type Category } from "@/database/models/category";
   import { useNewCategoryStore } from "@/stores/new-category";
 
   const router = useRouter();

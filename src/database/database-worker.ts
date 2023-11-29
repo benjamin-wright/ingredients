@@ -2,6 +2,7 @@ import initSqlJs from '@jlongster/sql.js'
 import { SQLiteFS } from 'absurd-sql'
 import IndexedDBBackend from 'absurd-sql/dist/indexeddb-backend'
 import absurdSqlWasmUrl from '@jlongster/sql.js/dist/sql-wasm.wasm?url'
+import { type ExecRequest } from './request-types'
 
 async function run() {
   const SQL = await initSqlJs({ locateFile: () => absurdSqlWasmUrl })
@@ -27,7 +28,43 @@ async function run() {
 
   // listen for messages
   onmessage = async (event: MessageEvent<any>) => {
-    console.log(event.data);
+    switch (event.data.type) {
+      case 'exec':
+        onExec(db, event.data)
+        break
+      default:
+        console.error('Unknown message type', event.data)
+    }
+  }
+}
+
+function execResult(id: number, data: any) {
+  postMessage({
+    type: 'exec',
+    requestId: id,
+    result: data,
+  })
+}
+
+function execError(id: number, error: string) {
+  postMessage({
+    type: 'exec',
+    requestId: id,
+    error,
+  })
+}
+
+function onExec(db: any, request: ExecRequest) {
+  try {
+    db.exec('BEGIN TRANSACTION');
+    const rows = db.exec(
+      request.sql,
+      request.bind
+    );
+    db.exec('COMMIT');
+    execResult(request.requestId, rows);
+  } catch (err: any) {
+    execError(request.requestId, err.message);
   }
 }
 

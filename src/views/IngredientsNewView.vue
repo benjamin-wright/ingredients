@@ -1,19 +1,18 @@
 <script setup lang="ts">
   import { onMounted, onUnmounted, ref, computed } from "vue";
-  import { useIngredientsStore } from "../stores/ingredients";
   import { useRouter } from 'vue-router';
   import FormTemplate from "@/components/FormTemplate.vue";
-  import IngredientType from "@/models/IngredientType";
   import StringInput from "../components/StringInput.vue";
   import ObjectSelect from "@/components/ObjectSelect.vue";
-  import { useCategoriesStore } from "@/stores/categories";
-  import Category from "@/models/Category";
   import URL from "@/utils/URL";
 
+  import { useNewIngredientStore } from "@/stores/new-ingredient";
+  import { type Category, getCategories } from "@/database/models/category";
+  import { type Ingredient } from "@/database/models/ingredient";
+
   const router = useRouter();
-  const store = useIngredientsStore();
-  const categories = useCategoriesStore();
-  const selected = store.selected;
+  const store = useNewIngredientStore();
+
   const returnTo = computed(() => {
     let returnTo = router.currentRoute.value.query.return;
     if (Array.isArray(returnTo)) {
@@ -23,49 +22,25 @@
     return returnTo;
   });
 
-  let ingredient = selected?.name || "";
-  let category = ref(getCategory());
-  const title = `${ selected ? "Edit" : "New" } Ingredient`
+  const loading = ref(true);
+  const title = `${ store.edit ? "Edit" : "New" } Ingredient`;
+  const categories = ref([] as Category[]);
 
   onMounted(async () => {
-    await categories.load();
-    await store.load();
-
-    category.value = getCategory();
+    categories.value = await getCategories();
+    const selected = categories.value.find(category => category.id === store.categoryId);
+    if (!selected && categories.value.length > 0) {
+      store.categoryId = categories.value[0].id;
+    }
+    loading.value = false;
   });
 
   onUnmounted(() => {
-    store.deselect();
+    store.clear();
   });
 
-  function getCategory(): Category {
-    if (router.currentRoute.value.query.category) {
-      try {
-        const id = parseInt(router.currentRoute.value.query.category as string);
-        const category = categories.categories.find(cat => cat.id == id);
-        if (category) {
-          return category;
-        }
-      } catch (err) {
-        console.error(`Failed to parse category id: ${err}`);
-      }
-    }
-
-    return selected?.category || categories.categories[0]
-  }
-
   async function submit() {
-    let id: number;
-    if (selected) {
-      await store.update(new IngredientType(
-        selected.id,
-        ingredient,
-        category.value
-      ));
-      id = selected.id;
-    } else {
-      id = await store.add(ingredient, category.value);
-    }
+    const id = await store.submit();
     navigate(id);
   }
 
@@ -83,14 +58,16 @@
 </script>
 
 <template>
-  <FormTemplate :title="title" :cancel-label="returnTo ? 'Return' : undefined" @cancel="navigate" @submit="submit" >
-    <StringInput id="ingredient" name="ingredient" label="Name" v-model="ingredient" required />
+  <template v-if="loading">Loading...</template>
+  <FormTemplate v-else :title="title" :cancel-label="returnTo ? 'Return' : undefined" @cancel="navigate" @submit="submit" >
+    <StringInput id="ingredient" name="ingredient" label="Name" v-model="store.name" required />
     <ObjectSelect
       id="category"
       name="category"
       label="Category"
-      :options="categories.categories"
-      v-model="category"
+      :options="categories"
+      v-model="store.categoryId"
+      :to-value="category => category.id"
       add
       required
       @new="router.push('/categories/new?return=' + encodeURIComponent(router.currentRoute.value.fullPath))"
@@ -124,4 +101,4 @@
     text-indent: 1px;
     text-overflow: '';
   }
-</style>@/utils/URL
+</style>

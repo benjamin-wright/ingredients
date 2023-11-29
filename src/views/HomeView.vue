@@ -24,14 +24,13 @@
       await useCategoriesStore().clear();
       useEventsStore().clear();
       await reset();
+
+      popup.value = false;
+      window.location.reload();
     } catch (err: any) {
       const events = useEventsStore();
       events.add(new Event('error: Failed to reset database: ' + err.message, async () => {}));
     }
-
-    popup.value = false;
-
-    window.location.reload();
   }
 
   const popup = ref(false);
