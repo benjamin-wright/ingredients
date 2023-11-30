@@ -38,15 +38,15 @@
         </template>
         <template #select-dropdown="{ obj }">
           <article>
-            <p>Ingredients:</p>
-            <p v-for="ingredient in obj.ingredients" :key="ingredient.ingredient.id">
-              - {{ ingredient.toString() }}
-            </p>
+            <!-- <p>Ingredients:</p> -->
+            <!-- <p v-for="ingredient in obj.ingredients" :key="ingredient.id">
+              - {{ ingredient.name }}: {{ ingredient.amount }} {{ ingredient.amount === 1 ? ingredient.unit.singular : ingredient.unit.plural }}
+            </p> -->
             <p>Serves: {{ obj.servings }}</p>
           </article>
         </template>
       </ObjectList>
-      <NewThing to="/recipies/new/name" />
+      <NewThing to="/recipies/new" />
     </template>
   </main>
 </template>

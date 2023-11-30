@@ -1,33 +1,36 @@
 <script setup lang="ts">
-  import { onMounted } from "vue";
-  import { useNewRecipieStore } from "@/stores/new-recipie";
-  import { useIngredientsStore } from "@/stores/ingredients";
+  import { onMounted, ref } from "vue";
   import { useRouter } from 'vue-router';
   import FormTemplate from "@/components/FormTemplate.vue";
-  import {
-    quantityUnitFromString,
-    quantityUnits
-  } from '@/models/QuantityUnit';
-  import RecipieIngredient from "@/models/RecipieIngredient";
   import NewThing from "@/components/NewThing.vue";
-  import { QuantityUnit } from "@/models/QuantityUnit";
+
+  import { getRecipieIngredients, type RecipieIngredient } from "@/database/models/recipie-ingredient";
 
   const router = useRouter();
-  const ingredients = useIngredientsStore();
-  const store = useNewRecipieStore();
+  const recipieId = getId();
+  const ingredients = ref([] as RecipieIngredient[]);
 
-  const title = `${store.edit ? 'Edit' : 'New'} Recipie Ingredients`;
+  const title = "Recipie Ingredients";
+
+  function getId(): number {
+    const id = router.currentRoute.value.params.id;
+    if (Array.isArray(id)) {
+      return parseInt(id[0]);
+    } else {
+      return parseInt(id);
+    }
+  }
 
   onMounted(async () => {
-    await ingredients.load();
+    ingredients.value = await getRecipieIngredients(recipieId);
   });
 
   async function submit() {
-    router.push("/recipies/new/steps");
+    router.push(`/recipies/${recipieId}/steps`);
   }
 
   function cancel() {
-    router.push("/recipies/new/name");
+    router.push("/recipies");
   }
 
   function add() {
@@ -38,7 +41,7 @@
 <template>
   <FormTemplate :title="title" cancelLabel="Back" submitLabel="Next" @cancel="cancel" @submit="submit">
     <TransitionGroup name="list">
-      <fieldset v-for="ingredient, idx in store.ingredients" :key="idx">
+      <fieldset v-for="ingredient in ingredients" :key="ingredient.id">
         <div>
           <button @click.prevent="router.push('/ingredients/new?return=' + encodeURIComponent(router.currentRoute.value.fullPath))">
             <font-awesome-icon :icon="['fas', 'plus-square']" />

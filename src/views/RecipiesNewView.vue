@@ -11,7 +11,8 @@
   const title = `${store.edit ? 'Edit' : 'New'} Recipie`
 
   async function submit() {
-    router.push("/recipies/new/ingredients");
+    const id = await store.submit();
+    router.push(`/recipies/${id}/ingredients`);
   }
 
   function cancel() {
@@ -24,6 +25,6 @@
   <FormTemplate :title="title" submitLabel="Next" @cancel="cancel" @submit="submit">
     <StringInput id="name" name="name" label="Name" v-model="store.name" required />
     <StringInput id="description" name="description" label="Description" v-model="store.description" required multiline />
-    <NumberInput id="servings" name="servings" label="Servings" v-model="store.portions" required />
+    <NumberInput id="servings" name="servings" label="Servings" v-model="store.servings" required />
   </FormTemplate>
 </template>

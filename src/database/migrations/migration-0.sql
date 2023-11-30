@@ -46,14 +46,16 @@ CREATE TABLE "recipies" (
 );
 
 CREATE TABLE "recipie_ingredients" (
-    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "recipie_id" INTEGER NOT NULL,
     "ingredient_id" INTEGER NOT NULL,
     "quantity" REAL NOT NULL,
+    "unit_id" INTEGER NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("recipie_id", "ingredient_id"),
     FOREIGN KEY ("recipie_id") REFERENCES "recipies" ("id") ON DELETE CASCADE,
-    FOREIGN KEY ("ingredient_id") REFERENCES "ingredients" ("id") ON DELETE CASCADE
+    FOREIGN KEY ("ingredient_id") REFERENCES "ingredients" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("unit_id") REFERENCES "units" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "recipie_steps" (
