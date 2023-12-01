@@ -9,7 +9,7 @@ export type Recipie = {
 
 export async function getRecipies(): Promise<Recipie[]> {
     const recipies = await query(
-        /*sql*/`SELECT id, name, description, servings FROM recipies`,
+        /*sql*/`SELECT id, name, description, servings FROM recipies ORDER BY name ASC`,
         [], (values) => {
             return {
                 id: values[0] as number,

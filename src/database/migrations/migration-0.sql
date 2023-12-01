@@ -92,21 +92,21 @@ CREATE TABLE "shopping_list_items" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "ingredient_id" INTEGER NOT NULL,
     "quantity" REAL NOT NULL,
-    "quantity_unit_id" INTEGER NOT NULL,
+    "unit_id" INTEGER NOT NULL,
     "got" BOOLEAN NOT NULL DEFAULT 0,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY ("ingredient_id") REFERENCES "ingredients" ("id") ON DELETE CASCADE,
-    FOREIGN KEY ("quantity_unit_id") REFERENCES "quantity_units" ("id") ON DELETE CASCADE
+    FOREIGN KEY ("unit_id") REFERENCES "units" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "shopping_list_custom_items" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL UNIQUE,
     "quantity" REAL NOT NULL,
-    "quantity_unit_id" INTEGER NOT NULL,
+    "unit_id" INTEGER NOT NULL,
     "got" BOOLEAN NOT NULL DEFAULT 0,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY ("quantity_unit_id") REFERENCES "quantity_units" ("id") ON DELETE CASCADE
+    FOREIGN KEY ("unit_id") REFERENCES "units" ("id") ON DELETE CASCADE
 );

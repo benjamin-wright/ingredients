@@ -1,14 +1,11 @@
 <script setup lang="ts">
   import { onMounted, ref } from "vue";
   import { useRouter } from 'vue-router';
-  import { useNewIngredientStore } from "../stores/new-ingredient";
   import { type Ingredient, getIngredients, deleteIngredient } from "@/database/models/ingredient";
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
 
   const router = useRouter();
-  const store = useNewIngredientStore();
-
   const loading = ref(true);
   const ingredients = ref([] as Ingredient[]);
 
@@ -23,8 +20,7 @@
   }
 
   function edit(ingredient: Ingredient) {
-    store.select(ingredient);
-    router.push("/ingredients/new");
+    router.push(`/ingredients/${ingredient.id}`);
   }
 </script>
 

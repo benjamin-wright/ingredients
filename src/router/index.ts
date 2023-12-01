@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import IngredientsView from '../views/IngredientsView.vue'
-import IngredientsNewView from '../views/IngredientsNewView.vue'
+import IngredientsEditView from '../views/IngredientsEditView.vue'
 import UnitsView from '../views/UnitsView.vue'
-import UnitsNewView from '../views/UnitsNewView.vue'
+import UnitsEditView from '../views/UnitsEditView.vue'
 import CategoriesView from '../views/CategoriesView.vue'
 import CategoriesEditView from '../views/CategoriesEditView.vue'
 import RecipiesView from '../views/RecipiesView.vue'
@@ -32,7 +32,12 @@ const router = createRouter({
     {
       path: '/units/new',
       name: 'new-units',
-      component: UnitsNewView
+      component: UnitsEditView
+    },
+    {
+      path: '/units/:id',
+      name: 'edit-units',
+      component: UnitsEditView
     },
     {
       path: '/categories',
@@ -57,7 +62,12 @@ const router = createRouter({
     {
       path: '/ingredients/new',
       name: 'new-ingredient',
-      component: IngredientsNewView
+      component: IngredientsEditView
+    },
+    {
+      path: '/ingredients/:id',
+      name: 'edit-ingredient',
+      component: IngredientsEditView
     },
     {
       path: '/recipies',

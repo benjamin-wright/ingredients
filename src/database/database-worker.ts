@@ -24,6 +24,7 @@ async function run() {
   db.exec(`
     PRAGMA journal_mode=MEMORY;
     PRAGMA page_size=8192;
+    PRAGMA foreign_keys=ON;
   `)
 
   // listen for messages
@@ -31,6 +32,9 @@ async function run() {
     switch (event.data.type) {
       case 'exec':
         onExec(db, event.data)
+        break
+      case 'close':
+        db.close()
         break
       default:
         console.error('Unknown message type', event.data)
@@ -56,12 +60,12 @@ function execError(id: number, error: string) {
 
 function onExec(db: any, request: ExecRequest) {
   try {
-    db.exec('BEGIN TRANSACTION');
+    // db.exec('BEGIN TRANSACTION');
     const rows = db.exec(
       request.sql,
       request.bind
     );
-    db.exec('COMMIT');
+    // db.exec('COMMIT');
     execResult(request.requestId, rows);
   } catch (err: any) {
     execError(request.requestId, err.message);

@@ -29,7 +29,7 @@
       window.location.reload();
     } catch (err: any) {
       const events = useEventsStore();
-      events.add(new Event('error: Failed to reset database: ' + err.message, async () => {}));
+      events.add(new Event('error: Failed to reset database: ' + err, async () => {}));
     }
   }
 

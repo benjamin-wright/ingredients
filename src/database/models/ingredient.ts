@@ -21,6 +21,21 @@ export async function getIngredients(): Promise<Ingredient[]> {
     return ingredients;
 }
 
+export async function getIngredient(id: number): Promise<Ingredient> {
+    const ingredients = await query(
+        /*sql*/`SELECT id, name, category_id FROM ingredients WHERE id = ?`,
+        [id], (values) => {
+            return {
+                id: values[0] as number,
+                name: values[1] as string,
+                categoryId: values[2] as number,
+            };
+        }
+    );
+
+    return ingredients[0];
+}
+
 export async function deleteIngredient(id: number): Promise<void> {
     await query(
         /*sql*/`DELETE FROM ingredients WHERE id = ?`,

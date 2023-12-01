@@ -2,7 +2,7 @@ import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
 import hash from '@/utils/hash';
 import migration0 from './migrations/migration-0.sql?raw';
 import DBWorker from './database-worker.ts?worker';
-import { type ExecResponse, type ExecRequest, type QueryResult } from './request-types';
+import { type ExecResponse, type ExecRequest } from './request-types';
 
 type Request<T> = {
   resolve: (value: T[]) => void;
@@ -87,15 +87,13 @@ class Database {
   }
 
   async reset(): Promise<void> {
-    const tables = await this.exec('SELECT name FROM sqlite_master WHERE type = ?', ['table'], (row) => row[0] as string);
-    for (const table of tables) {
-      if (table === 'sqlite_sequence') {
-        continue;
-      }
-
-      await this.exec(`DROP TABLE ${table}`);
-    }
-    console.log(tables);
+    this.worker.postMessage({ type: 'close' });
+    const request = window.indexedDB.deleteDatabase('db.sqlite');
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(new Error('Error deleting database'));
+      request.onblocked = () => reject(new Error('Blocked deleting database'));
+    });
   }
 
   async migrate(migrations: string[]): Promise<void> {

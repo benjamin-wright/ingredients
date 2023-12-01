@@ -4,10 +4,8 @@
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
   import { getUnits, deleteUnit, type Unit } from "@/database/models/unit";
-  import { useNewUnitStore } from "@/stores/new-unit";
 
   const router = useRouter();
-  const store = useNewUnitStore();
  
   const loading = ref(true);
   const error = ref("" as any);
@@ -28,8 +26,7 @@
   }
 
   function edit(unit: Unit) {
-    store.select(unit);
-    router.push("/units/new");
+    router.push(`/units/${unit.id}`);
   }
 </script>
 
@@ -59,4 +56,4 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-</style>@/database/models/Unit@/database/models/unit
+</style>

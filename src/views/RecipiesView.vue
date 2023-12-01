@@ -4,9 +4,7 @@
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
   import { type Recipie, getRecipies, deleteRecipie } from "@/database/models/recipie";
-  import { useNewRecipieStore } from "@/stores/new-recipie";
 
-  const store = useNewRecipieStore();
   const router = useRouter();
   
   const recipies = ref([] as Recipie[]);
@@ -19,6 +17,7 @@
 
   async function remove(recipie: Recipie) {
     await deleteRecipie(recipie.id);
+    recipies.value.splice(recipies.value.indexOf(recipie), 1);
   }
 
   function edit(recipie: Recipie) {

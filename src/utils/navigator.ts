@@ -22,7 +22,7 @@ export class Navigator {
     }
 
     get isReturner(): boolean {
-        return this.returnTo !== null;
+        return !!this.returnTo;
     }
 
     navigate(params?: Record<string, string>) {

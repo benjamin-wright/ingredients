@@ -17,8 +17,8 @@
   onMounted(async () => {
     if (categoryId.value !== null) {
       category.value = await getCategory(categoryId.value);
-      loading.value = false;
     }
+    loading.value = false;
   });
 
   const title = `${ categoryId.value !== null ? "Edit" : "New" } Category`
@@ -39,7 +39,9 @@
 </script>
 
 <template>
+  <template v-if="loading">loading...</template>
   <FormTemplate
+    v-else
     :title="title"
     :cancel-label="navigator.isReturner ? 'Return' : undefined"
     @cancel="() => navigator.navigate()"
