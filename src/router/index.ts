@@ -7,7 +7,7 @@ import UnitsNewView from '../views/UnitsNewView.vue'
 import CategoriesView from '../views/CategoriesView.vue'
 import CategoriesNewView from '../views/CategoriesNewView.vue'
 import RecipiesView from '../views/RecipiesView.vue'
-import RecipiesNewView from '../views/RecipiesNewView.vue'
+import RecipieEditView from '../views/RecipieEditView.vue'
 import RecipieIngredientsView from '../views/RecipieIngredientsView.vue'
 import RecipiesNewStepsView from '../views/RecipiesNewStepsView.vue'
 import PlannerView from '../views/PlannerView.vue'
@@ -62,7 +62,12 @@ const router = createRouter({
     {
       path: '/recipies/new',
       name: 'new-recipie',
-      component: RecipiesNewView
+      component: RecipieEditView
+    },
+    {
+      path: '/recipies/:id',
+      name: 'edit-recipie',
+      component: RecipieEditView
     },
     {
       path: '/recipies/:id/ingredients',

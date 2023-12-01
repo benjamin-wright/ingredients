@@ -5,10 +5,12 @@
   import NewThing from "@/components/NewThing.vue";
 
   import { getRecipieIngredients, type RecipieIngredient } from "@/database/models/recipie-ingredient";
+  import ObjectList from "@/components/ObjectList.vue";
 
   const router = useRouter();
   const recipieId = getId();
   const ingredients = ref([] as RecipieIngredient[]);
+  const loading = ref(true);
 
   const title = "Recipie Ingredients";
 
@@ -23,10 +25,11 @@
 
   onMounted(async () => {
     ingredients.value = await getRecipieIngredients(recipieId);
+    loading.value = false;
   });
 
   async function submit() {
-    router.push(`/recipies/${recipieId}/steps`);
+    router.push(`/recipies`);
   }
 
   function cancel() {
@@ -34,13 +37,20 @@
   }
 
   function add() {
-    store.ingredients.push(new RecipieIngredient(ingredients.ingredients[0], QuantityUnit.Count, 0));
+    // store.ingredients.push(new RecipieIngredient(ingredients.ingredients[0], QuantityUnit.Count, 0));
   }
 </script>
 
 <template>
-  <FormTemplate :title="title" cancelLabel="Back" submitLabel="Next" @cancel="cancel" @submit="submit">
-    <TransitionGroup name="list">
+  <template v-if="loading">loading...</template>
+  <main v-else>
+    <FormTemplate cancelLabel="Back" :title="title" @cancel="cancel" no-submit>
+      <ObjectList :data="ingredients" :get-id="i => i.ingredientId" />
+      <NewThing to="/recipies/{{ recipieId }}/ingredients/new" />
+    </FormTemplate>
+  </main>
+  <!-- <FormTemplate :title="title" cancelLabel="Back" submitLabel="Next" @cancel="cancel" @submit="submit">
+    <TransitionGroup class="col1-3" name="list">
       <fieldset v-for="ingredient in ingredients" :key="ingredient.id">
         <div>
           <button @click.prevent="router.push('/ingredients/new?return=' + encodeURIComponent(router.currentRoute.value.fullPath))">
@@ -69,7 +79,7 @@
       </fieldset>
     </TransitionGroup>
     <NewThing @click="add" />
-  </FormTemplate>
+  </FormTemplate> -->
 </template>
 
 <style scoped>

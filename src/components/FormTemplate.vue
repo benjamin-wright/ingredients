@@ -4,6 +4,7 @@
 
   const props = defineProps<{
     title: string
+    noSubmit?: boolean
     submitLabel?: string
     cancelLabel?: string
   }>()
@@ -30,7 +31,7 @@
     </form>
     <div class="button-pair">
       <button :type=resetType @click.prevent="$emit('cancel')">{{ cancelLabel || "Cancel" }}</button>
-      <button :type=submitType @click.prevent="submit">{{ submitLabel || "Save" }}</button>
+      <button v-if="!noSubmit" :type=submitType @click.prevent="submit">{{ submitLabel || "Save" }}</button>
     </div>
   </main>
 </template>

@@ -40,6 +40,7 @@
       <h1>Categories</h1>
       <ObjectList
         :data="categories"
+        :get-id="c => c.id"
         @delete="remove"
         @edit="edit"
         @swap="swap"

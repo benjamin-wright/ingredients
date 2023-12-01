@@ -9,13 +9,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
     faPencil, faTrash, faCirclePlus, faSquareMinus, faSquarePlus,
     faCircleXmark, faUndo, faUpDown, faChevronCircleDown, faChevronCircleUp,
-    faSquare, faCheckSquare, faEllipsis
+    faSquare, faCheckSquare, faEllipsis, faList, faListOl
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
     faPencil, faTrash, faCirclePlus, faSquareMinus, faSquarePlus,
     faCircleXmark, faUndo, faUpDown, faChevronCircleDown, faChevronCircleUp,
-    faSquare, faCheckSquare, faEllipsis
+    faSquare, faCheckSquare, faEllipsis, faList, faListOl
 );
 
 import App from './App.vue'

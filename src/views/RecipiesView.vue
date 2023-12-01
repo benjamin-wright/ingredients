@@ -22,8 +22,7 @@
   }
 
   function edit(recipie: Recipie) {
-    store.select(recipie);
-    router.push("/recipies/new");
+    router.push(`/recipies/${recipie.id}`);
   }
 </script>
 
@@ -32,17 +31,22 @@
     <template v-if="loading">Loading...</template>
     <template v-else>
       <h1>Recipies</h1>
-      <ObjectList :data="recipies" @delete="remove" @edit="edit" dropdown>
+      <ObjectList :data="recipies" :get-id="r => r.id" @delete="remove" @edit="edit" dropdown>
         <template #content="{ obj }">
           <h2 :title="obj.name">{{ obj.name }}</h2>
         </template>
         <template #select-dropdown="{ obj }">
-          <article>
-            <!-- <p>Ingredients:</p> -->
-            <!-- <p v-for="ingredient in obj.ingredients" :key="ingredient.id">
-              - {{ ingredient.name }}: {{ ingredient.amount }} {{ ingredient.amount === 1 ? ingredient.unit.singular : ingredient.unit.plural }}
-            </p> -->
-            <p>Serves: {{ obj.servings }}</p>
+          <article class="grid">
+            <p class="col1-2">Serves: {{ obj.servings }}</p>
+            <p class="col1-2">Ingredients:</p>
+            <ul class="col1">
+              <li v-for="ingredient in [1, 2, 3]" :key="ingredient">
+              - {{ ingredient }}: a thing
+              </li>
+            </ul>
+            <button class="col2" @click.prevent="router.push(`/recipies/${obj.id}/ingredients`)">
+              <font-awesome-icon :icon="['fas', 'pencil']" />
+            </button>
           </article>
         </template>
       </ObjectList>
@@ -59,5 +63,18 @@
 
   article {
     padding: 0.5em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  .col1 {
+    grid-column: 1;
+  }
+
+  .col1-2 {
+    grid-column: 1 / 3;
   }
 </style>

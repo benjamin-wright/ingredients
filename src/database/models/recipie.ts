@@ -23,6 +23,22 @@ export async function getRecipies(): Promise<Recipie[]> {
     return recipies;
 }
 
+export async function getRecipie(id: number): Promise<Recipie> {
+    const recipies = await query(
+        /*sql*/`SELECT id, name, description, servings FROM recipies WHERE id = ?`,
+        [id], (values) => {
+            return {
+                id: values[0] as number,
+                name: values[1] as string,
+                description: values[2] as string,
+                servings: values[3] as number,
+            };
+        }
+    );
+
+    return recipies[0];
+}
+
 export async function deleteRecipie(id: number): Promise<void> {
     await query(
         /*sql*/`DELETE FROM recipies WHERE id = ?`,

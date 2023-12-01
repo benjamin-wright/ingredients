@@ -1,14 +1,11 @@
-<script setup lang="ts" generic="T extends IListable">
+<script setup lang="ts" generic="T">
 import { ref } from 'vue';
-
-export interface IListable {
-  id: number
-}
 
 const props = defineProps<{
   data: T[]
   dropdown?: boolean
   reorder?: boolean
+  getId: (object: T) => number
 }>()
 
 const emit = defineEmits<{
@@ -66,11 +63,11 @@ function onResize() {
       <div class="parent"
         @click="select($event)"
         v-for="(obj, idx) in data"
-        :key="obj.id"
+        :key="getId(obj)"
       >
         <div class="object">
           <slot :obj="obj" name="content">
-            <h2>{{ obj.id }}</h2>
+            <h2>{{ getId(obj) }}</h2>
           </slot>
           <div class="buttons" v-if="!resize">
             <button @click.stop="edit(obj)">

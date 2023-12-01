@@ -41,6 +41,7 @@
       <h1>Units</h1>
       <ObjectList
         :data="units"
+        :get-id="u => u.id"
         @delete="remove"
         @edit="edit"
       >

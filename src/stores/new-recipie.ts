@@ -15,6 +15,7 @@ export const useNewRecipieStore = defineStore('new-recipie', {
             this.edit = true;
             this.id = recipie.id;
             this.name = recipie.name;
+            this.description = recipie.description;
             this.servings = recipie.servings;
         },
         async submit(): Promise<number> {
