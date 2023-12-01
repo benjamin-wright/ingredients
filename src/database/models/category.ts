@@ -21,6 +21,21 @@ export async function getCategories(): Promise<Category[]> {
     return categories;
 }
 
+export async function getCategory(id: number): Promise<Category> {
+    const categories = await query(
+        /*sql*/`SELECT id, position, name FROM categories WHERE id = ?`,
+        [id], (values) => {
+            return {
+                id: values[0] as number,
+                position: values[1] as number,
+                name: values[2] as string,
+            };
+        }
+    );
+
+    return categories[0];
+}
+
 export async function deleteCategory(id: number): Promise<void> {
     await query(
         /*sql*/`DELETE FROM categories WHERE id = ?`,

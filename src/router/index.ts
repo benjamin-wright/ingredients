@@ -5,7 +5,7 @@ import IngredientsNewView from '../views/IngredientsNewView.vue'
 import UnitsView from '../views/UnitsView.vue'
 import UnitsNewView from '../views/UnitsNewView.vue'
 import CategoriesView from '../views/CategoriesView.vue'
-import CategoriesNewView from '../views/CategoriesNewView.vue'
+import CategoriesEditView from '../views/CategoriesEditView.vue'
 import RecipiesView from '../views/RecipiesView.vue'
 import RecipieEditView from '../views/RecipieEditView.vue'
 import RecipieIngredientsView from '../views/RecipieIngredientsView.vue'
@@ -42,7 +42,12 @@ const router = createRouter({
     {
       path: '/categories/new',
       name: 'new-categories',
-      component: CategoriesNewView
+      component: CategoriesEditView
+    },
+    {
+      path: '/categories/:id',
+      name: 'edit-categories',
+      component: CategoriesEditView
     },
     {
       path: '/ingredients',

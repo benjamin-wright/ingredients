@@ -4,10 +4,8 @@
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
   import { getCategories, deleteCategory, swapCategories, type Category } from "@/database/models/category";
-  import { useNewCategoryStore } from "@/stores/new-category";
 
   const router = useRouter();
-  const store = useNewCategoryStore();
 
   const loading = ref(true);
   const categories = ref([] as Category[]);
@@ -20,11 +18,6 @@
   async function remove(category: Category) {
     await deleteCategory(category.id);
     categories.value.splice(categories.value.indexOf(category), 1);
-  }
-
-  function edit(category: Category) {
-    store.select(category);
-    router.push("/categories/new");
   }
 
   async function swap(category1: Category, category2: Category) {
@@ -42,7 +35,7 @@
         :data="categories"
         :get-id="c => c.id"
         @delete="remove"
-        @edit="edit"
+        @edit="c => router.push(`/categories/${c.id}`)"
         @swap="swap"
         reorder
       >
