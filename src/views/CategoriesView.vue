@@ -37,6 +37,7 @@
         @delete="remove"
         @edit="c => router.push(`/categories/${c.id}`)"
         @swap="swap"
+        confirmation-message="This will also delete all ingredients in this category."
         reorder
       >
         <template #content="content">

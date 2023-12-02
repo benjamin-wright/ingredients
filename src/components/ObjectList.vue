@@ -1,10 +1,12 @@
 <script setup lang="ts" generic="T">
 import { ref } from 'vue';
+import PopUp from './PopUp.vue';
 
 const props = defineProps<{
   data: T[]
   dropdown?: boolean
   reorder?: boolean
+  confirmationMessage?: string
   getId: (object: T) => number
 }>()
 
@@ -15,7 +17,9 @@ const emit = defineEmits<{
 }>()
 
 let selected: HTMLElement | null = null;
+let deleteObject: T | null = null;
 let resize = ref(false);
+let popup = ref(false);
 
 function select(event: MouseEvent) {
   selected?.classList.remove("selected");
@@ -36,6 +40,23 @@ function select(event: MouseEvent) {
 }
 
 function remove(object: T) {
+  if (props.confirmationMessage) {
+    popup.value = true;
+    deleteObject = object;
+    return;
+  }
+  removeEvent(object);
+}
+
+function confirm() {
+  popup.value = false;
+  if (!deleteObject) {
+    return;
+  }
+  removeEvent(deleteObject);
+}
+
+function removeEvent(object: T) {
   emit("delete", object);
 
   selected?.classList.remove("selected");
@@ -95,6 +116,12 @@ function onResize() {
       </div>
     </TransitionGroup>
   </div>
+  <PopUp
+    v-if="popup"
+    :message="confirmationMessage || 'Are you sure?'"
+    @submit="confirm()"
+    @cancel="popup = false"
+  />
 </template>
 
 <style scoped>

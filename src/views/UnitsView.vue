@@ -41,6 +41,7 @@
         :get-id="u => u.id"
         @delete="remove"
         @edit="edit"
+        confirmation-message="This will also delete all recipies that use this unit."
       >
         <template #content="{ obj }">
           <h2>{{ obj.name }}</h2>

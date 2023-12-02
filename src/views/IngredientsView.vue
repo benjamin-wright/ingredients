@@ -29,7 +29,13 @@
     <template v-if="loading">Loading...</template>
     <template v-else>
       <h1>Ingredients</h1>
-      <ObjectList :data="ingredients" :get-id="i => i.id" @delete="remove" @edit="edit">
+      <ObjectList
+        :data="ingredients"
+        :get-id="i => i.id"
+        @delete="remove"
+        @edit="edit"
+        confirmation-message="This will also delete all recipies that use this ingredient."
+      >
         <template #content="content">
           <h2>{{ content.obj.name }}</h2>
         </template>
