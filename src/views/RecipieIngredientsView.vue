@@ -4,15 +4,19 @@
   import FormTemplate from "@/components/FormTemplate.vue";
   import NewThing from "@/components/NewThing.vue";
 
+  import { getRecipie, type Recipie } from "@/database/models/recipie";
   import { getRecipieIngredients, type RecipieIngredient } from "@/database/models/recipie-ingredient";
   import ObjectList from "@/components/ObjectList.vue";
 
   const router = useRouter();
   const recipieId = getId();
+  const recipie = ref({
+    id: recipieId,
+    name: "",
+    servings: 0,
+  } as Recipie);
   const ingredients = ref([] as RecipieIngredient[]);
   const loading = ref(true);
-
-  const title = "Recipie Ingredients";
 
   function getId(): number {
     const id = router.currentRoute.value.params.id;
@@ -25,30 +29,25 @@
 
   onMounted(async () => {
     ingredients.value = await getRecipieIngredients(recipieId);
+    recipie.value = await getRecipie(recipieId);
     loading.value = false;
   });
 
-  async function submit() {
-    router.push(`/recipies`);
-  }
-
-  function cancel() {
+  function back() {
     router.push("/recipies");
-  }
-
-  function add() {
-    // store.ingredients.push(new RecipieIngredient(ingredients.ingredients[0], QuantityUnit.Count, 0));
   }
 </script>
 
 <template>
   <template v-if="loading">loading...</template>
-  <main v-else>
-    <FormTemplate cancelLabel="Back" :title="title" @cancel="cancel" no-submit>
-      <ObjectList :data="ingredients" :get-id="i => i.ingredientId" />
-      <NewThing to="/recipies/{{ recipieId }}/ingredients/new" />
-    </FormTemplate>
-  </main>
+  <FormTemplate v-else cancelLabel="Back" :title="recipie.name + ' ingredients'" @cancel="back" no-submit>
+    <ObjectList class="col1-3" :data="ingredients" :get-id="i => i.ingredientId" @edit="obj => router.push(`/recipies/${obj.recipieId}/ingredients/${obj.ingredientId}`)">
+      <template #content="{ obj }">
+        <h2>{{ obj.name }}: {{ obj.quantity }}{{ obj.quantity == 1 ? obj.unitSingular : obj.unitPlural }}</h2>
+      </template>
+    </ObjectList>
+    <NewThing class="col1-3" :to="`/recipies/${recipieId }/ingredients/new`" />
+  </FormTemplate>
   <!-- <FormTemplate :title="title" cancelLabel="Back" submitLabel="Next" @cancel="cancel" @submit="submit">
     <TransitionGroup class="col1-3" name="list">
       <fieldset v-for="ingredient in ingredients" :key="ingredient.id">

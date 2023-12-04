@@ -38,5 +38,10 @@ export class Navigator {
         } else {
           this.router.push(this.default);
         }
-      }
+    }
+
+    navigateAndReturn(newPath: string) {
+        const returnTo = encodeURIComponent(this.router.currentRoute.value.fullPath);
+        this.router.push(`${newPath}?return=${returnTo}`);
+    }
 }

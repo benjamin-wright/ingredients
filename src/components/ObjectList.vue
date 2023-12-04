@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { ref } from 'vue';
+import { ref, type Ref } from 'vue';
 import PopUp from './PopUp.vue';
 
 const props = defineProps<{
@@ -18,10 +18,11 @@ const emit = defineEmits<{
 
 let selected: HTMLElement | null = null;
 let deleteObject: T | null = null;
+let selectedObject: Ref<T | null> = ref(null);
 let resize = ref(false);
 let popup = ref(false);
 
-function select(event: MouseEvent) {
+function select(event: MouseEvent, object: T) {
   selected?.classList.remove("selected");
   selected?.classList.remove("drop");
   resize.value = false;
@@ -33,6 +34,7 @@ function select(event: MouseEvent) {
   }
 
   selected = element;
+  selectedObject.value = object;
   element.classList.add("selected");
   if (props.dropdown) {
     element.classList.add("drop");
@@ -79,10 +81,10 @@ function onResize() {
 </script>
 
 <template>
-  <div class="object-list">
+  <div class="object-list" v-bind="$attrs">
     <TransitionGroup name="list">
       <div class="parent"
-        @click="select($event)"
+        @click="select($event, obj)"
         v-for="(obj, idx) in data"
         :key="getId(obj)"
       >
@@ -91,26 +93,26 @@ function onResize() {
             <h2>{{ getId(obj) }}</h2>
           </slot>
           <div class="buttons" v-if="!resize">
-            <button @click.stop="edit(obj)">
+            <button @click.prevent="edit(obj)">
               <font-awesome-icon :icon="['fas', 'pencil']" />
             </button>
-            <button class="delete" @click.stop="remove(obj)">
+            <button class="delete" @click.prevent="remove(obj)">
               <font-awesome-icon :icon="['fas', 'trash']" />
             </button>
-            <button @click.stop="onResize()" v-if="reorder">
+            <button @click.prevent="onResize()" v-if="reorder">
               <font-awesome-icon :icon="['fas', 'up-down']" />
             </button>
           </div>
           <div class="buttons" v-if="resize">
-            <button class="up" @click.stop="emit('swap', obj, data[idx+1])" >
+            <button class="up" @click.prevent="emit('swap', obj, data[idx+1])" >
               <font-awesome-icon :icon="['fas', 'chevron-circle-down']" />
             </button>
-            <button class="down" @click.stop="emit('swap', obj, data[idx-1])">
+            <button class="down" @click.prevent="emit('swap', obj, data[idx-1])">
               <font-awesome-icon :icon="['fas', 'chevron-circle-up']" />
             </button>
           </div>
         </div>
-        <div class="select-dropdown">
+        <div v-if="obj === selectedObject" class="select-dropdown">
           <slot :obj="obj" name="select-dropdown" />
         </div>
       </div>

@@ -4,15 +4,21 @@
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
   import { type Recipie, getRecipies, deleteRecipie } from "@/database/models/recipie";
+  import { type RecipieIngredient, getRecipieIngredients } from "@/database/models/recipie-ingredient";
 
   const router = useRouter();
   
   const recipies = ref([] as Recipie[]);
+  const ingredients = ref({} as Record<number, RecipieIngredient[]>);
   const loading = ref(true);
 
   onMounted(async () => {
     recipies.value = await getRecipies();
     loading.value = false;
+
+    for (const recipie of recipies.value) {
+      ingredients.value[recipie.id] = await getRecipieIngredients(recipie.id);
+    }
   });
 
   async function remove(recipie: Recipie) {
@@ -39,8 +45,8 @@
             <p class="col1-2">Serves: {{ obj.servings }}</p>
             <p class="col1-2">Ingredients:</p>
             <ul class="col1">
-              <li v-for="ingredient in [1, 2, 3]" :key="ingredient">
-              - {{ ingredient }}: a thing
+              <li v-for="ingredient in ingredients[obj.id]" :key="ingredient.ingredientId">
+              - {{ ingredient.name }}: {{ ingredient.quantity }}{{ ingredient.quantity == 1 ? ingredient.unitSingular : ingredient.unitPlural  }}
               </li>
             </ul>
             <button class="col2" @click.prevent="router.push(`/recipies/${obj.id}/ingredients`)">

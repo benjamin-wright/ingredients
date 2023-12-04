@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 
 defineProps<{
   id: string
@@ -7,7 +8,13 @@ defineProps<{
   required?: boolean
 }>()
 
-const modelValue = defineModel<number>({ required: true, local: true })
+const modelValue = defineModel<number>({ required: true, local: true });
+const convertedValue = computed({
+  get: () => modelValue.value,
+  set: (value) => {
+    modelValue.value = Number(value);
+  },
+});
 
 function increment() {
   modelValue.value++;
@@ -26,7 +33,7 @@ function decrement() {
     </button>
     <input
       :placeholder="label"
-      v-model="modelValue"
+      v-model="convertedValue"
       type="text"
       inputmode="decimal"
       :id="id"
