@@ -40,7 +40,7 @@
     router.push("/recipies");
   }
 
-  async function remove(ingredient: RecipieIngredient) {
+  function remove(ingredient: RecipieIngredient) {
     toDelete = ingredient;
     popup.value = true;
   }
@@ -52,7 +52,8 @@
   
   async function confirmRemove() {
     if (toDelete) {
-      await remove(toDelete);
+      await deleteRecipieIngredient(toDelete.recipieId, toDelete.ingredientId);
+      ingredients.value.splice(ingredients.value.indexOf(toDelete), 1);
     }
 
     toDelete = null;
@@ -82,37 +83,6 @@
     @submit="() => confirmRemove()"
     :message="`Are you sure you want to remove ${toDelete?.name}?`"
   />
-  <!-- <FormTemplate :title="title" cancelLabel="Back" submitLabel="Next" @cancel="cancel" @submit="submit">
-    <TransitionGroup class="col1-3" name="list">
-      <fieldset v-for="ingredient in ingredients" :key="ingredient.id">
-        <div>
-          <button @click.prevent="router.push('/ingredients/new?return=' + encodeURIComponent(router.currentRoute.value.fullPath))">
-            <font-awesome-icon :icon="['fas', 'plus-square']" />
-          </button>
-          <select class="big" v-model="store.ingredients[idx].ingredient" id="ingredient-{{ idx }}" name="ingredient-{{ idx }}" required >
-            <option v-for="opt in ingredients.ingredients" :key="opt.id" :value="opt">{{ opt.name }}</option>
-          </select>
-          <div class="row">
-            <input
-              v-model="store.ingredients[idx].quantity"
-              type="number"
-              inputmode="decimal"
-              id="ingredient-{{ idx }}-count"
-              name="ingredient-{{ idx }}-count"
-              required
-            />
-            <select v-model="store.ingredients[idx].unit" id="ingredient-{{ idx }}-unit" name="ingredient-{{ idx }}-unit" required >
-                <option v-for="unit in quantityUnits()" :key="unit" :value="quantityUnitFromString(unit)">{{ unit }}</option>
-            </select>
-          </div>
-        </div>    
-        <button class="delete" @click.prevent="store.ingredients.splice(idx, 1)">
-          <font-awesome-icon :icon="['fas', 'minus-square']" />
-        </button>
-      </fieldset>
-    </TransitionGroup>
-    <NewThing @click="add" />
-  </FormTemplate> -->
 </template>
 
 <style scoped>
