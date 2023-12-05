@@ -43,15 +43,15 @@
         <template #select-dropdown="{ obj }">
           <article class="grid">
             <p class="col1-2">Serves: {{ obj.servings }}</p>
-            <p class="col1-2">Ingredients:</p>
-            <ul class="col1">
+            <h3 class="col1">Ingredients:</h3>
+            <button class="col2" @click.prevent="router.push(`/recipies/${obj.id}/ingredients`)">
+              <font-awesome-icon :icon="['fas', 'list']" />
+            </button>
+            <ul class="col1-2">
               <li v-for="ingredient in ingredients[obj.id]" :key="ingredient.ingredientId">
               - {{ ingredient.name }}: {{ ingredient.quantity }}{{ ingredient.quantity == 1 ? ingredient.unitSingular : ingredient.unitPlural  }}
               </li>
             </ul>
-            <button class="col2" @click.prevent="router.push(`/recipies/${obj.id}/ingredients`)">
-              <font-awesome-icon :icon="['fas', 'pencil']" />
-            </button>
           </article>
         </template>
       </ObjectList>
@@ -73,6 +73,7 @@
   .grid {
     display: grid;
     grid-template-columns: 1fr auto;
+    align-items: center;
   }
 
   .col1 {

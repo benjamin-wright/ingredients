@@ -3,9 +3,10 @@
   import { useRouter } from 'vue-router';
   import FormTemplate from "@/components/FormTemplate.vue";
   import NewThing from "@/components/NewThing.vue";
+  import PopUp from "@/components/PopUp.vue";
 
   import { getRecipie, type Recipie } from "@/database/models/recipie";
-  import { getRecipieIngredients, type RecipieIngredient } from "@/database/models/recipie-ingredient";
+  import { getRecipieIngredients, deleteRecipieIngredient, type RecipieIngredient } from "@/database/models/recipie-ingredient";
   import ObjectList from "@/components/ObjectList.vue";
 
   const router = useRouter();
@@ -17,6 +18,8 @@
   } as Recipie);
   const ingredients = ref([] as RecipieIngredient[]);
   const loading = ref(true);
+  let toDelete: RecipieIngredient | null = null;
+  const popup = ref(false);
 
   function getId(): number {
     const id = router.currentRoute.value.params.id;
@@ -36,18 +39,49 @@
   function back() {
     router.push("/recipies");
   }
+
+  async function remove(ingredient: RecipieIngredient) {
+    toDelete = ingredient;
+    popup.value = true;
+  }
+
+  async function cancelRemove() {
+    toDelete = null;
+    popup.value = false;
+  }
+  
+  async function confirmRemove() {
+    if (toDelete) {
+      await remove(toDelete);
+    }
+
+    toDelete = null;
+    popup.value = false;
+  }
 </script>
 
 <template>
   <template v-if="loading">loading...</template>
   <FormTemplate v-else cancelLabel="Back" :title="recipie.name + ' ingredients'" @cancel="back" no-submit>
-    <ObjectList class="col1-3" :data="ingredients" :get-id="i => i.ingredientId" @edit="obj => router.push(`/recipies/${obj.recipieId}/ingredients/${obj.ingredientId}`)">
+    <ObjectList
+      class="col1-3"
+      :data="ingredients"
+      :get-id="i => i.ingredientId"
+      @edit="obj => router.push(`/recipies/${obj.recipieId}/ingredients/${obj.ingredientId}`)"
+      @delete="remove"
+    >
       <template #content="{ obj }">
         <h2>{{ obj.name }}: {{ obj.quantity }}{{ obj.quantity == 1 ? obj.unitSingular : obj.unitPlural }}</h2>
       </template>
     </ObjectList>
     <NewThing class="col1-3" :to="`/recipies/${recipieId }/ingredients/new`" />
   </FormTemplate>
+  <PopUp
+    v-if="popup"
+    @cancel="() => cancelRemove()"
+    @submit="() => confirmRemove()"
+    :message="`Are you sure you want to remove ${toDelete?.name}?`"
+  />
   <!-- <FormTemplate :title="title" cancelLabel="Back" submitLabel="Next" @cancel="cancel" @submit="submit">
     <TransitionGroup class="col1-3" name="list">
       <fieldset v-for="ingredient in ingredients" :key="ingredient.id">
