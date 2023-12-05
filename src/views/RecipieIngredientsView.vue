@@ -45,7 +45,7 @@
     popup.value = true;
   }
 
-  async function cancelRemove() {
+  function clear() {
     toDelete = null;
     popup.value = false;
   }
@@ -56,8 +56,7 @@
       ingredients.value.splice(ingredients.value.indexOf(toDelete), 1);
     }
 
-    toDelete = null;
-    popup.value = false;
+    clear();
   }
 </script>
 
@@ -79,7 +78,7 @@
   </FormTemplate>
   <PopUp
     v-if="popup"
-    @cancel="() => cancelRemove()"
+    @cancel="() => clear()"
     @submit="() => confirmRemove()"
     :message="`Are you sure you want to remove ${toDelete?.name}?`"
   />
