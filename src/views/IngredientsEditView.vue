@@ -28,8 +28,10 @@
     if (ingredientId.value !== null) {
       ingredient.value = await getIngredient(ingredientId.value);
       ingredient.value.categoryId = categoryId.value || ingredient.value.categoryId
-    } else {
+    } else if (categories.value.length) {
       ingredient.value.categoryId = categoryId.value || categories.value[0].id;
+    } else {
+      ingredient.value.categoryId = categoryId.value || 0;
     }
     loading.value = false;
   });

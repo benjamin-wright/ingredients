@@ -49,8 +49,12 @@
     if (ingredientId.value !== null) {
       ingredient.value = await getRecipieIngredient(recipie.value.id, ingredientId.value);
     } else {
-      ingredient.value.ingredientId |= ingredients.value[0].id;
-      ingredient.value.unitId |= units.value[0].id;
+      if (ingredients.value.length) {
+        ingredient.value.ingredientId |= ingredients.value[0].id;
+      }
+      if (units.value.length) {
+        ingredient.value.unitId |= units.value[0].id;
+      }
     }
 
     loading.value = false;

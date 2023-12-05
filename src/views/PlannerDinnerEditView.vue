@@ -1,25 +1,21 @@
 <script setup lang="ts">
-  import { onMounted, onUnmounted } from "vue";
-  import { useDinnerPlanStore } from "../stores/dinner-plans";
-  import { useRecipieStore } from "../stores/recipies";
+  import { onMounted, onUnmounted, computed, ref } from "vue";
   import { useRouter } from 'vue-router';
-  import { PlanDay } from "@/models/DinnerPlan";
   import FormTemplate from "@/components/FormTemplate.vue";
   import NumberInput from "../components/NumberInput.vue";
   import ObjectSelect from "../components/ObjectSelect.vue";
+  
+  import { idFromPath } from "@/utils/computed";
+  import { type Recipie } from "@/database/models/recipie";
 
   const router = useRouter();
-  const store = useDinnerPlanStore();
-  const recipies = useRecipieStore();
-  const selected = store.selected;
-
-  let day = selected?.day || PlanDay.Monday;
-  let portions = selected?.portions || 1;
-  let recipie = selected?.recipie || recipies.recipies[0];
-  const title = `${ selected ? "Edit" : "New" } Dinner`
+  const dinnerId = computed(idFromPath(router, "id"));
+  const loading = ref(true);
+  const recipied = ref([] as Recipie[]);
+  const title = `${ dinnerId.value !== null ? "Edit" : "New" } Dinner`
 
   onMounted(() => {
-    store.load();
+
   });
 
   onUnmounted(() => {

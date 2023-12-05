@@ -12,7 +12,7 @@ import RecipieIngredientsView from '../views/RecipieIngredientsView.vue'
 import RecipieIngredientEditView from '../views/RecipieIngredientEditView.vue'
 import PlannerView from '../views/PlannerView.vue'
 import PlannerNewNonDinnerView from '../views/PlannerNewNonDinnerView.vue'
-import PlannerNewDinnerView from '../views/PlannerNewDinnerView.vue'
+import PlannerDinnerEditView from '../views/PlannerDinnerEditView.vue'
 import ListView from '../views/ListView.vue'
 import ListCustomView from '../views/ListCustomView.vue'
 
@@ -111,8 +111,13 @@ const router = createRouter({
     },
     {
       path: '/planner/dinners/new',
-      name: 'new-dinner-planner',
-      component: PlannerNewDinnerView
+      name: 'new-planner-dinner',
+      component: PlannerDinnerEditView
+    },
+    {
+      path: '/planner/dinners/:id',
+      name: 'edit-planner-dinner',
+      component: PlannerDinnerEditView
     },
     {
       path: '/list',
