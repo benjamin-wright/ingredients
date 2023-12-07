@@ -6,6 +6,14 @@ export enum UnitKind {
     Collective
 }
 
+export function getUnitKinds(): UnitKind[] {
+    return [
+        UnitKind.Mass,
+        UnitKind.Volume,
+        UnitKind.Collective,
+    ];
+}
+
 export type Unit = {
     id: number;
     name: string;

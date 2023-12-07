@@ -1,14 +1,12 @@
 <script setup lang="ts">
-  import { onMounted, computed, ref } from "vue";
-  import { useRouter } from 'vue-router';
+  import { onMounted, ref } from "vue";
 
   import ObjectList from "@/components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
   import PopUp from "@/components/PopUp.vue";
-  
+
   import { type DinnerPlan, getDinnerPlans } from "@/database/models/dinner-plans";
 
-  // const router = useRouter();
   const popup = ref(false);
   const loading = ref(true);
 
@@ -56,7 +54,7 @@
         </section>
       </div>
       <button type="reset" @click.stop="popup = !popup">Reset</button>
-      <PopUp v-if="popup" message="Delete you meal plans?" @submit="console.log(`reset`)" @cancel="popup = !popup" /> 
+      <PopUp v-if="popup" message="Delete you meal plans?" @submit="console.log(`reset`)" @cancel="popup = !popup" />
     </template>
   </main>
 </template>

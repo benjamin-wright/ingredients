@@ -7,7 +7,7 @@
   import EnumSelect from "@/components/EnumSelect.vue";
   import { Navigator } from "@/utils/navigator";
   import { idFromPath } from "@/utils/computed";
-  import { UnitKind, addUnit, updateUnit, getUnit } from "@/database/models/unit";
+  import { UnitKind, getUnitKinds, addUnit, updateUnit, getUnit } from "@/database/models/unit";
 
   const router = useRouter();
   const navigator = new Navigator({
@@ -63,7 +63,7 @@
     <StringInput id="name" name="name" label="Name" v-model="unit.name" required />
     <StringInput id="singular" name="singular" label="Singular" v-model="unit.singular" />
     <StringInput id="plural" name="plural" label="Plural" v-model="unit.plural" />
-    <EnumSelect id="kind" name="kind" label="Kind" :options="[UnitKind.Mass, UnitKind.Volume, UnitKind.Collective]" :convert="(u: UnitKind) => UnitKind[u]" v-model="unit.kind" required />
+    <EnumSelect id="kind" name="kind" label="Kind" :options="getUnitKinds()" :convert="(u: UnitKind) => UnitKind[u]" v-model="unit.kind" required />
     <NumberInput v-if="unit.kind !== UnitKind.Collective" id="conversion" name="conversion" :label="conversionLabel()" v-model="unit.conversion" required />
   </FormTemplate>
 </template>

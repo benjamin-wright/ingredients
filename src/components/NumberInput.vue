@@ -39,6 +39,7 @@ function decrement() {
       :id="id"
       :name="name || id"
       :required="required"
+      size="1"
     />
     <button @click.prevent="increment()">
       <font-awesome-icon :icon="['fas', 'plus-square']" />

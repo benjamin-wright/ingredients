@@ -10,6 +10,18 @@ export enum Day {
     Friday,
 }
 
+export function getDays(): Day[] {
+    return [
+        Day.Saturday,
+        Day.Sunday,
+        Day.Monday,
+        Day.Tuesday,
+        Day.Wednesday,
+        Day.Thursday,
+        Day.Friday,
+    ];
+}
+
 export type DinnerPlan = {
     id: number;
     day: Day;
@@ -74,7 +86,7 @@ export async function updateDinnerPlan(id: number, day: Day, servings: number, r
     );
 }
 
-export async function addDinnerPlan(day: Day, servings: number, recipieId: number): Promise<number> {
+export async function addDinnerPlan(day: number, servings: number, recipieId: number): Promise<number> {
     const result = await query(
         'INSERT INTO dinner_plans (day, servings, recipie_id) VALUES (?, ?, ?) RETURNING id',
         [day, servings, recipieId],
