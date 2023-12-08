@@ -82,7 +82,6 @@ CREATE TABLE "breakfast_plans" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "servings" INTEGER,
     "recipie_id" INTEGER NOT NULL,
-    "description" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY ("recipie_id") REFERENCES "recipies" ("id") ON DELETE CASCADE
@@ -92,7 +91,6 @@ CREATE TABLE "lunch_plans" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "servings" INTEGER,
     "recipie_id" INTEGER NOT NULL,
-    "description" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY ("recipie_id") REFERENCES "recipies" ("id") ON DELETE CASCADE

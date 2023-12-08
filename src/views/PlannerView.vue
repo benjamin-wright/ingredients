@@ -1,11 +1,14 @@
 <script setup lang="ts">
   import { onMounted, ref } from "vue";
+  import { useRouter } from 'vue-router';
 
   import ObjectList from "@/components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
   import PopUp from "@/components/PopUp.vue";
 
-  import { type DinnerPlan, getDinnerPlans } from "@/database/models/dinner-plans";
+  import { type DinnerPlan, Day, getDinnerPlans, deleteDinnerPlan } from "@/database/models/dinner-plans";
+
+  const router = useRouter();
 
   const popup = ref(false);
   const loading = ref(true);
@@ -16,6 +19,11 @@
     dinners.value = await getDinnerPlans();
     loading.value = false;
   });
+
+  async function deletePlan(id: number) {
+    await deleteDinnerPlan(id);
+    dinners.value = dinners.value.filter(d => d.id !== id);
+  }
 </script>
 
 <template>
@@ -37,12 +45,12 @@
           <ObjectList
             :data="dinners"
             :get-id="d => d.id"
-            @delete="console.log(`delete ${$event}`)"
-            @edit="console.log(`edit ${$event}`)"
+            @delete="p => deletePlan(p.id)"
+            @edit="p => router.push(`/planner/dinners/${ p.id }`)"
             dropdown
           >
             <template #content="{ obj }">
-              <h2>{{ obj.day }}: {{ obj.recipieName }}</h2>
+              <h2>{{ Day[obj.day] }}: {{ obj.recipieName }}</h2>
             </template>
             <template #select-dropdown="{ obj }">
               <article>

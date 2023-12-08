@@ -16,7 +16,7 @@
   const recipies = ref([] as Recipie[]);
   const plan = ref({
     id: 0,
-    day: Day.Monday,
+    day: Day.Saturday,
     recipieId: 0,
     servings: 1,
   } as DinnerPlan);
@@ -38,9 +38,9 @@
 
   async function submit() {
     if (dinnerId.value === null) {
-      await addDinnerPlan(plan.value.day, plan.value.recipieId, plan.value.servings);
+      await addDinnerPlan(plan.value.day, plan.value.servings, plan.value.recipieId);
     } else {
-      await updateDinnerPlan(dinnerId.value, plan.value.day, plan.value.recipieId, plan.value.servings);
+      await updateDinnerPlan(dinnerId.value, plan.value.day, plan.value.servings, plan.value.recipieId);
     }
 
     router.push("/planner");
@@ -53,7 +53,7 @@
 
 <template>
   <FormTemplate :title="title" @cancel="cancel" @submit="submit" >
-    <EnumSelect id="kind" name="kind" label="Kind" :options="getDays()" :convert="(u: Day) => Day[u]" v-model="plan.day" required />
+    <EnumSelect id="day" name="day" label="Day" :options="getDays()" :convert="(u: Day) => Day[u]" v-model="plan.day" required />
     <ObjectSelect id="recipie" name="recipie" label="Recipie" :options="recipies" :to-value="r => r.id" v-model="plan.recipieId" required>
       <template #default="{ option }">
         <span>{{ option.name }}</span>
