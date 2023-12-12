@@ -11,7 +11,7 @@ import RecipieEditView from '../views/RecipieEditView.vue'
 import RecipieIngredientsView from '../views/RecipieIngredientsView.vue'
 import RecipieIngredientEditView from '../views/RecipieIngredientEditView.vue'
 import PlannerView from '../views/PlannerView.vue'
-import PlannerNewNonDinnerView from '../views/PlannerNewNonDinnerView.vue'
+import PlannerNonDinnerEditView from '../views/PlannerNonDinnerEditView.vue'
 import PlannerDinnerEditView from '../views/PlannerDinnerEditView.vue'
 import ListView from '../views/ListView.vue'
 import ListCustomView from '../views/ListCustomView.vue'
@@ -105,9 +105,28 @@ const router = createRouter({
       component: PlannerView
     },
     {
-      path: '/planner/:meal/new',
-      name: 'new-non-dinner-planner',
-      component: PlannerNewNonDinnerView
+      path: '/planner/breakfasts/new',
+      name: 'new-planner-breakfast',
+      component: PlannerNonDinnerEditView,
+      props: { mealType: 'breakfast' }
+    },
+    {
+      path: '/planner/breakfasts/:id',
+      name: 'edit-planner-breakfast',
+      component: PlannerNonDinnerEditView,
+      props: { mealType: 'breakfast' }
+    },
+    {
+      path: '/planner/lunches/new',
+      name: 'new-planner-lunch',
+      component: PlannerNonDinnerEditView,
+      props: { mealType: 'lunch' }
+    },
+    {
+      path: '/planner/lunches/:id',
+      name: 'edit-planner-lunch',
+      component: PlannerNonDinnerEditView,
+      props: { mealType: 'lunch' }
     },
     {
       path: '/planner/dinners/new',

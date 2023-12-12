@@ -95,3 +95,9 @@ export async function addDinnerPlan(day: number, servings: number, recipieId: nu
 
     return result[0];
 }
+
+export async function clearDinnerPlans(): Promise<void> {
+    await query(
+        'DELETE FROM dinner_plans'
+    );
+}

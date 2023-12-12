@@ -6,16 +6,21 @@
   import NewThing from "@/components/NewThing.vue";
   import PopUp from "@/components/PopUp.vue";
 
-  import { type DinnerPlan, Day, getDinnerPlans, deleteDinnerPlan } from "@/database/models/dinner-plans";
+  import { type DinnerPlan, Day, getDinnerPlans, deleteDinnerPlan, clearDinnerPlans } from "@/database/models/dinner-plans";
+  import { type NonDinnerPlan, getBreakfastPlans, getLunchPlans, deleteBreakfastPlan, deleteLunchPlan, clearNonDinnerPlans } from "@/database/models/non-dinner-plans";
 
   const router = useRouter();
 
   const popup = ref(false);
   const loading = ref(true);
 
+  const breakfasts = ref([] as NonDinnerPlan[]);
+  const lunches = ref([] as NonDinnerPlan[]);
   const dinners = ref([] as DinnerPlan[]);
 
   onMounted(async () => {
+    breakfasts.value = await getBreakfastPlans();
+    lunches.value = await getLunchPlans();
     dinners.value = await getDinnerPlans();
     loading.value = false;
   });
@@ -23,6 +28,25 @@
   async function deletePlan(id: number) {
     await deleteDinnerPlan(id);
     dinners.value = dinners.value.filter(d => d.id !== id);
+  }
+
+  async function deleteBreakfast(id: number) {
+    await deleteBreakfastPlan(id);
+    breakfasts.value = breakfasts.value.filter(d => d.id !== id);
+  }
+
+  async function deleteLunch(id: number) {
+    await deleteLunchPlan(id);
+    lunches.value = lunches.value.filter(d => d.id !== id);
+  }
+
+  async function clear() {
+    await clearDinnerPlans();
+    await clearNonDinnerPlans();
+    dinners.value = [];
+    breakfasts.value = [];
+    lunches.value = [];
+    popup.value = false;
   }
 </script>
 
@@ -34,10 +58,42 @@
         <h1>Meal Plans</h1>
         <section>
           <h1>Breakfast</h1>
+          <ObjectList
+            :data="breakfasts"
+            :get-id="d => d.id"
+            @delete="p => deleteBreakfast(p.id)"
+            @edit="p => router.push(`/planner/breakfasts/${ p.id }`)"
+            dropdown
+          >
+            <template #content="{ obj }">
+              <h2>{{ obj.recipieName }}</h2>
+            </template>
+            <template #select-dropdown="{ obj }">
+              <article>
+                <p>Servings: {{ obj.servings }}</p>
+              </article>
+            </template>
+          </ObjectList>
           <NewThing to="/planner/breakfasts/new" />
         </section>
         <section>
           <h1>Lunch</h1>
+          <ObjectList
+            :data="lunches"
+            :get-id="d => d.id"
+            @delete="p => deleteLunch(p.id)"
+            @edit="p => router.push(`/planner/lunches/${ p.id }`)"
+            dropdown
+          >
+            <template #content="{ obj }">
+              <h2>{{ obj.recipieName }}</h2>
+            </template>
+            <template #select-dropdown="{ obj }">
+              <article>
+                <p>Servings: {{ obj.servings }}</p>
+              </article>
+            </template>
+          </ObjectList>
           <NewThing to="/planner/lunches/new" />
         </section>
         <section>
@@ -62,7 +118,7 @@
         </section>
       </div>
       <button type="reset" @click.stop="popup = !popup">Reset</button>
-      <PopUp v-if="popup" message="Delete you meal plans?" @submit="console.log(`reset`)" @cancel="popup = !popup" />
+      <PopUp v-if="popup" message="Delete you meal plans?" @submit="clear()" @cancel="popup = !popup" />
     </template>
   </main>
 </template>

@@ -78,19 +78,11 @@ CREATE TABLE "dinner_plans" (
     FOREIGN KEY ("recipie_id") REFERENCES "recipies" ("id") ON DELETE CASCADE
 );
 
-CREATE TABLE "breakfast_plans" (
+CREATE TABLE "non_dinner_plans" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "servings" INTEGER,
+    "meal_type" INTEGER NOT NULL,
     "recipie_id" INTEGER NOT NULL,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY ("recipie_id") REFERENCES "recipies" ("id") ON DELETE CASCADE
-);
-
-CREATE TABLE "lunch_plans" (
-    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-    "servings" INTEGER,
-    "recipie_id" INTEGER NOT NULL,
+    "servings" INTEGER NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY ("recipie_id") REFERENCES "recipies" ("id") ON DELETE CASCADE

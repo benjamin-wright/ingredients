@@ -40,10 +40,11 @@
   async function submit() {
     if (recipieId !== null) {
       await updateRecipie(recipieId, recipie.value.name, recipie.value.description, recipie.value.servings);
+      router.push(`/recipies`);
     } else {
-      await addRecipie(recipie.value.name, recipie.value.description, recipie.value.servings);
+      const id = await addRecipie(recipie.value.name, recipie.value.description, recipie.value.servings);
+      router.push(`/recipies/${id}/ingredients`);
     }
-    router.push(`/recipies`);
   }
 
   function cancel() {
