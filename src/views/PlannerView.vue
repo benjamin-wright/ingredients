@@ -8,6 +8,7 @@
 
   import { type DinnerPlan, Day, getDinnerPlans, deleteDinnerPlan, clearDinnerPlans } from "@/database/models/dinner-plans";
   import { type NonDinnerPlan, getBreakfastPlans, getLunchPlans, deleteBreakfastPlan, deleteLunchPlan, clearNonDinnerPlans } from "@/database/models/non-dinner-plans";
+  import { type ExtraItem, getExtraItems, deleteExtraItem, clearExtraItems } from "@/database/models/extra-items";
 
   const router = useRouter();
 
@@ -17,11 +18,13 @@
   const breakfasts = ref([] as NonDinnerPlan[]);
   const lunches = ref([] as NonDinnerPlan[]);
   const dinners = ref([] as DinnerPlan[]);
+  const extras = ref([] as ExtraItem[]);
 
   onMounted(async () => {
     breakfasts.value = await getBreakfastPlans();
     lunches.value = await getLunchPlans();
     dinners.value = await getDinnerPlans();
+    extras.value = await getExtraItems();
     loading.value = false;
   });
 
@@ -40,12 +43,19 @@
     lunches.value = lunches.value.filter(d => d.id !== id);
   }
 
+  async function deleteExtra(id: number) {
+    await deleteExtraItem(id);
+    extras.value = extras.value.filter(d => d.id !== id);
+  }
+
   async function clear() {
     await clearDinnerPlans();
     await clearNonDinnerPlans();
-    dinners.value = [];
+    await clearExtraItems();
     breakfasts.value = [];
     lunches.value = [];
+    dinners.value = [];
+    extras.value = [];
     popup.value = false;
   }
 </script>
@@ -115,6 +125,20 @@
             </template>
           </ObjectList>
           <NewThing to="/planner/dinners/new" />
+        </section>
+        <section>
+          <h1>Extras</h1>
+          <ObjectList
+            :data="extras"
+            :get-id="e => e.id"
+            @delete="e => deleteExtra(e.id)"
+            @edit="e => router.push(`/planner/extras/${ e.id }`)"
+          >
+            <template #content="{ obj }">
+              <h2>{{ obj.name }}: {{ obj.quantity }}{{ obj.quantity === 1 ? obj.unitSingular : obj.unitPlural }}</h2>
+            </template>
+          </ObjectList>
+          <NewThing to="/planner/extras/new" />
         </section>
       </div>
       <button type="reset" @click.stop="popup = !popup">Reset</button>

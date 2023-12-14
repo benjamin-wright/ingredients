@@ -1,59 +1,30 @@
 <script setup lang="ts">
-  import { onMounted, computed, ref } from "vue";
-  import { useShoppingListStore } from '@/stores/shopping-list';
-  import { useCategoriesStore } from "@/stores/categories";
-  import { useCustomListStore } from "@/stores/custom-list";
-  import ShoppingListItem from "@/models/ShoppingListItem";
-  import CustomListItem from "@/models/CustomListItem";
+  import { onMounted, ref } from "vue";
+
   import NewThing from "@/components/NewThing.vue";
   import PopUp from "@/components/PopUp.vue";
   import ExpanderButton from "@/components/ExpanderButton.vue";
 
-  const store = useShoppingListStore();
-  const categories = useCategoriesStore();
-  const custom = useCustomListStore();
-  let collapsed = ref({} as Record<string, boolean>);
-  let need = ref(true);
-  let popup = ref(false);
+  const loading = ref(true);
+  const err = ref("");
+  const collapsed = ref({} as Record<string, boolean>);
+  const need = ref(true);
+  const popup = ref(false);
 
-  onMounted(() => {
-    store.load();
-    categories.load();
-    custom.load();
+  onMounted(async () => {
+
   });
 
   async function reset() {
     popup.value = !popup.value;
-    await store.clear();
-    await custom.clear();
-    await store.generate();
   }
 
-  const categorisedItems = computed(() => categories.categories.reduce((map: Record<string, ShoppingListItem[]>, category) => {
-    map[category.name] = store.items.filter(item => item.item.category.id === category.id && item.need === need.value);
-    return map;
-  }, {}));
-
-  const categorisedCustomItems = computed(() => categories.categories.reduce((map: Record<string, CustomListItem[]>, category) => {
-    map[category.name] = custom.items.filter(item => item.category.id === category.id && item.need === need.value);
-    return map;
-  }, {}));
-
-  const nonEmptyCategories = computed(() => categories.categories.filter(category => categorisedItems.value[category.name].length > 0 || categorisedCustomItems.value[category.name].length > 0));
-
-  function check(item: ShoppingListItem) {
-    store.toggle(item.id, !item.need);
-  }
-
-  function checkCustom(item: CustomListItem) {
-    custom.toggle(item.id, !item.need);
-  }
 </script>
 
 <template>
   <main>
-    <template v-if="store.loading">Loading...</template>
-    <template v-else-if="store.error">{{ store.error }}</template>
+    <template v-if="loading">Loading...</template>
+    <template v-else-if="err">{{ err }}</template>
     <template v-else>
       <h1>Shopping List</h1>
       <ul class="big-window">

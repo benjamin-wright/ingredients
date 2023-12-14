@@ -1,8 +1,12 @@
 import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
 import hash from '@/utils/hash';
-import migration0 from './migrations/migration-0.sql?raw';
 import DBWorker from './database-worker.ts?worker';
 import { type ExecResponse, type ExecRequest } from './request-types';
+
+import migration00 from './migrations/migration-00.sql?raw';
+import migration01 from './migrations/migration-01.sql?raw';
+import migration02 from './migrations/migration-02.sql?raw';
+import migration03 from './migrations/migration-03.sql?raw';
 
 type Request<T> = {
   resolve: (value: T[]) => void;
@@ -69,7 +73,7 @@ class Database {
         } else {
           request.resolve([]);
         }
-        
+
         break;
       }
       case '__absurd:spawn-idb-worker': {
@@ -163,7 +167,7 @@ const database = (async () => {
 })();
 
 const migrated = database.then(async (db) => {
-  await db.migrate([migration0]);
+  await db.migrate([migration00, migration01, migration02, migration03]);
   return db;
 });
 
