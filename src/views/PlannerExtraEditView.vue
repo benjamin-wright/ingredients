@@ -1,20 +1,62 @@
 <script setup lang="ts">
   import { onMounted, computed, ref } from "vue";
+  import { useRouter } from 'vue-router';
 
   import { type Unit, getUnits } from "@/database/models/unit";
+  import { type ExtraItem, getExtraItem, addExtraItem, updateExtraItem } from "@/database/models/extra-items";
+import { idFromPath } from "@/utils/computed";
 
-  const title = "New Extra";
+  const router = useRouter();
+  const loading = ref(true);
   const units = ref([] as Unit[]);
+  const itemId = computed(idFromPath(router, "id"));
+  const title = `${itemId.value ? 'Edit' : 'New' } Extra Item`;
+  const extraItem = ref({
+    id: 0,
+    name: "",
+    unitId: 0,
+    quantity: 1,
+  } as ExtraItem);
+
+  onMounted(async () => {
+    units.value = await getUnits();
+
+    if (itemId.value !== null) {
+      extraItem.value = await getExtraItem(itemId.value);
+    } else if (units.value.length) {
+      extraItem.value.unitId = units.value[0].id;
+    } else {
+      extraItem.value.unitId = 0;
+    }
+
+    loading.value = false;
+  });
+
+  function cancel() {
+    router.push("/planner");
+  }
+
+  async function submit() {
+    if (itemId.value === null) {
+      await addExtraItem(extraItem.value.name, extraItem.value.quantity, extraItem.value.unitId);
+    } else {
+      await updateExtraItem(itemId.value, extraItem.value.name, extraItem.value.quantity, extraItem.value.unitId);
+    }
+
+    router.push("/planner");
+  }
 </script>
 
 <template>
-  <FormTemplate :title="title" @cancel="cancel" @submit="submit" >
-    <EnumSelect id="day" name="day" label="Day" :options="getDays()" :convert="(u: Day) => Day[u]" v-model="plan.day" required />
-    <ObjectSelect id="recipie" name="recipie" label="Recipie" :options="recipies" :to-value="r => r.id" v-model="plan.recipieId" required>
+  <template v-if="loading">
+    <p>Loading...</p>
+  </template>
+  <FormTemplate v-else :title="title" @cancel="cancel" @submit="submit" >
+    <ObjectSelect id="unit" name="unit" label="Unit" :options="units" :to-value="u => u.id" v-model="extraItem.unitId" required>
       <template #default="{ option }">
         <span>{{ option.name }}</span>
       </template>
     </ObjectSelect>
-    <NumberInput id="servings" name="servings" label="Servings" v-model="plan.servings" required />
+    <NumberInput id="quantity" name="quantity" label="Quantity" v-model="extraItem.quantity" required />
   </FormTemplate>
 </template>
