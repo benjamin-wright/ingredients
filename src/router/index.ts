@@ -13,6 +13,7 @@ import RecipieIngredientEditView from '../views/RecipieIngredientEditView.vue'
 import PlannerView from '../views/PlannerView.vue'
 import PlannerNonDinnerEditView from '../views/PlannerNonDinnerEditView.vue'
 import PlannerDinnerEditView from '../views/PlannerDinnerEditView.vue'
+import PlannerExtraEditView from '../views/PlannerExtraEditView.vue'
 import ListView from '../views/ListView.vue'
 import ListCustomView from '../views/ListCustomView.vue'
 
@@ -137,6 +138,16 @@ const router = createRouter({
       path: '/planner/dinners/:id',
       name: 'edit-planner-dinner',
       component: PlannerDinnerEditView
+    },
+    {
+      path: '/planner/extras/new',
+      name: 'new-planner-extra',
+      component: PlannerExtraEditView
+    },
+    {
+      path: '/planner/extras/:id',
+      name: 'edit-planner-extra',
+      component: PlannerExtraEditView
     },
     {
       path: '/list',
