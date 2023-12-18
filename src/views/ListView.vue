@@ -1,15 +1,38 @@
 <script setup lang="ts">
-  import { onMounted, ref } from "vue";
+  import { onMounted, ref, computed } from "vue";
+
+  import { type ListItem } from "@/database/models/list";
 
   import NewThing from "@/components/NewThing.vue";
   import PopUp from "@/components/PopUp.vue";
   import ExpanderButton from "@/components/ExpanderButton.vue";
 
   const loading = ref(true);
-  const err = ref("");
-  const collapsed = ref({} as Record<string, boolean>);
   const need = ref(true);
   const popup = ref(false);
+
+  const items = ref([] as ListItem[]);
+  const categorisedItems = computed(() => {
+    const categories = new Map<string, ListItem[]>();
+    for (const item of items.value) {
+      if (!categories.has(item.category)) {
+        categories.set(item.category, []);
+      }
+      categories.get(item.category)?.push(item);
+    }
+    return categories;
+  });
+  const nonEmptyCategories = computed(() => {
+    const filtered: string[] = [];
+
+    for (const key in categorisedItems.value.keys()) {
+      if (categorisedItems.value.get(key)?.length) {
+        filtered.push(key);
+      }
+    }
+
+    return filtered;
+  });
 
   onMounted(async () => {
 
@@ -24,7 +47,6 @@
 <template>
   <main>
     <template v-if="loading">Loading...</template>
-    <template v-else-if="err">{{ err }}</template>
     <template v-else>
       <h1>Shopping List</h1>
       <ul class="big-window">

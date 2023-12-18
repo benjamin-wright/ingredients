@@ -123,7 +123,7 @@
           </ObjectList>
           <NewThing to="/planner/dinners/new" />
         </CollapsibleSection>
-        <CollapsibleSection title="Extras">
+        <CollapsibleSection title="Extras" expanded>
           <ObjectList
             :data="extras"
             :get-id="e => e.id"

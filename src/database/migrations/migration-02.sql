@@ -21,9 +21,11 @@ CREATE TABLE "non_dinner_plans" (
 CREATE TABLE "extra_items" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
+    "category_id" INTEGER NOT NULL,
     "quantity" REAL NOT NULL,
     "unit_id" INTEGER NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY ("category_id") REFERENCES "categories" ("id") ON DELETE CASCADE,
     FOREIGN KEY ("unit_id") REFERENCES "units" ("id") ON DELETE CASCADE
 )

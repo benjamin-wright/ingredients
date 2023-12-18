@@ -15,7 +15,6 @@ import PlannerNonDinnerEditView from '../views/PlannerNonDinnerEditView.vue'
 import PlannerDinnerEditView from '../views/PlannerDinnerEditView.vue'
 import PlannerExtraEditView from '../views/PlannerExtraEditView.vue'
 import ListView from '../views/ListView.vue'
-import ListCustomView from '../views/ListCustomView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -154,11 +153,6 @@ const router = createRouter({
       name: 'list',
       component: ListView
     },
-    {
-      path: '/list/custom',
-      name: 'list-custom',
-      component: ListCustomView
-    }
   ]
 })
 
