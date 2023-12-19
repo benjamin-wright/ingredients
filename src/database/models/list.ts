@@ -19,7 +19,7 @@ export async function getPlanIngredients(): Promise<ListItemInput[]> {
                     WHEN 1 THEN 1
                     WHEN 2 THEN 3
                     ELSE u.id
-                END
+                END as unit_id
             FROM (
                 SELECT dp.recipie_id, dp.servings FROM dinner_plans as dp
                 UNION
@@ -34,7 +34,7 @@ export async function getPlanIngredients(): Promise<ListItemInput[]> {
             LEFT JOIN
                 units as u ON ri.unit_id = u.id
             GROUP BY
-                i.name, i.category_id, u.kind;
+                i.name, i.category_id, unit_id;
         `,
         [], (values) => {
             return {
