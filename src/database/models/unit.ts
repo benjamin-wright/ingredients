@@ -82,3 +82,14 @@ export async function updateUnit(id: number, name: string, singular: string, plu
         [name, singular, plural, kind, conversion, id]
     );
 }
+
+export function getBaseUnit(units: Unit[], unit: Unit): Unit {
+    switch (unit.kind) {
+        case UnitKind.Mass:
+            return units.find((u: Unit) => u.name === "grams") as Unit;
+        case UnitKind.Volume:
+            return units.find((u: Unit) => u.name === "millilitres") as Unit;
+        case UnitKind.Collective:
+            return unit;
+    }
+}

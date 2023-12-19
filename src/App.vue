@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavTab from './components/NavTab.vue'
-import EventsList from './components/EventsList.vue';
 </script>
 
 <template>
@@ -17,7 +16,6 @@ import EventsList from './components/EventsList.vue';
     </nav>
   </header>
   <RouterView />
-  <EventsList />
 </template>
 
 <style scoped>

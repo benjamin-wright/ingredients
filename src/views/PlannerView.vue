@@ -10,6 +10,7 @@
   import { type DinnerPlan, Day, getDinnerPlans, deleteDinnerPlan, clearDinnerPlans } from "@/database/models/dinner-plans";
   import { type NonDinnerPlan, getBreakfastPlans, getLunchPlans, deleteBreakfastPlan, deleteLunchPlan, clearNonDinnerPlans } from "@/database/models/non-dinner-plans";
   import { type ExtraItem, getExtraItems, deleteExtraItem, clearExtraItems } from "@/database/models/extra-items";
+  import { getPlanIngredients, clearList, addListItem } from "@/database/models/list";
 
   const router = useRouter();
 
@@ -53,11 +54,22 @@
     await clearDinnerPlans();
     await clearNonDinnerPlans();
     await clearExtraItems();
+
     breakfasts.value = [];
     lunches.value = [];
     dinners.value = [];
     extras.value = [];
+    
     popup.value = false;
+  }
+
+  async function generate() {
+    await clearList();
+    const items = await getPlanIngredients();
+    for (const item of items) {
+      await addListItem(item.name, item.category_id, item.quantity, item.unit_id);
+    }
+    console.log(items);
   }
 </script>
 
@@ -137,7 +149,10 @@
           <NewThing to="/planner/extras/new" />
         </CollapsibleSection>
       </div>
-      <button type="reset" @click.stop="popup = !popup">Reset</button>
+      <div class="button-pair">
+        <button type="reset" @click.stop="popup = !popup">Reset</button>
+        <button type="submit" @click.stop="generate()">Generate</button>
+      </div>
       <PopUp v-if="popup" message="Delete you meal plans?" @submit="clear()" @cancel="popup = !popup" />
     </template>
   </main>
