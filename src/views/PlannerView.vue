@@ -10,7 +10,7 @@
   import { type DinnerPlan, Day, getDinnerPlans, deleteDinnerPlan, clearDinnerPlans } from "@/database/models/dinner-plans";
   import { type NonDinnerPlan, getBreakfastPlans, getLunchPlans, deleteBreakfastPlan, deleteLunchPlan, clearNonDinnerPlans } from "@/database/models/non-dinner-plans";
   import { type ExtraItem, getExtraItems, deleteExtraItem, clearExtraItems } from "@/database/models/extra-items";
-  import { generateList, clearList, addListItem } from "@/database/models/list";
+  import { generateList, clearList } from "@/database/models/list";
 
   const router = useRouter();
 
