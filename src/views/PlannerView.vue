@@ -10,7 +10,7 @@
   import { type DinnerPlan, Day, getDinnerPlans, deleteDinnerPlan, clearDinnerPlans } from "@/database/models/dinner-plans";
   import { type NonDinnerPlan, getBreakfastPlans, getLunchPlans, deleteBreakfastPlan, deleteLunchPlan, clearNonDinnerPlans } from "@/database/models/non-dinner-plans";
   import { type ExtraItem, getExtraItems, deleteExtraItem, clearExtraItems } from "@/database/models/extra-items";
-  import { getPlanIngredients, clearList, addListItem } from "@/database/models/list";
+  import { generateList, clearList, addListItem } from "@/database/models/list";
 
   const router = useRouter();
 
@@ -59,17 +59,13 @@
     lunches.value = [];
     dinners.value = [];
     extras.value = [];
-    
+
     popup.value = false;
   }
 
   async function generate() {
     await clearList();
-    const items = await getPlanIngredients();
-    for (const item of items) {
-      await addListItem(item.name, item.category_id, item.quantity, item.unit_id);
-    }
-    console.log(items);
+    await generateList();
   }
 </script>
 

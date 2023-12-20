@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { onMounted, ref, computed } from "vue";
 
-  import { type ListItem } from "@/database/models/list";
+  import { type ListItem, getListItems, checkListItem } from "@/database/models/list";
   import CollapsibleSection from "@/components/CollapsibleSection.vue";
 
   const loading = ref(true);
@@ -9,16 +9,17 @@
   const items = ref([] as ListItem[]);
 
   const categorisedItems = computed(() => {
-    const categories = new Map<string, ListItem[]>();
+    const categories: Record<string, ListItem[]> = {};
     for (const item of items.value) {
-      if (item.got !== got.value) {
+      if (item.got != got.value) {
         continue;
       }
 
-      if (!categories.has(item.category)) {
-        categories.set(item.category, []);
+      if (!categories[item.category]) {
+        categories[item.category] = [];
       }
-      categories.get(item.category)?.push(item);
+
+      categories[item.category].push(item);
     }
     return categories;
   });
@@ -26,8 +27,8 @@
   const nonEmptyCategories = computed(() => {
     const filtered: string[] = [];
 
-    for (const key in categorisedItems.value.keys()) {
-      if (categorisedItems.value.get(key)?.length) {
+    for (const key in categorisedItems.value) {
+      if (categorisedItems.value[key].length) {
         filtered.push(key);
       }
     }
@@ -36,10 +37,13 @@
   });
 
   onMounted(async () => {
+    items.value = await getListItems();
     loading.value = false;
   });
 
   async function check(item: ListItem) {
+    await checkListItem(item.id, !item.got);
+    item.got = !item.got;
   }
 </script>
 
@@ -55,8 +59,8 @@
             expanded
           >
             <ul>
-              <li class="checkbox" v-for="item in categorisedItems.get(category)" :key="item.id">
-                <label>{{ item.toString() }}</label>
+              <li class="checkbox" v-for="item in categorisedItems[category]" :key="item.id">
+                <label>{{ item.name }}: {{ item.quantity }}{{ item.quantity === 0 ? item.unitSingular : item.unitPlural }}</label>
                 <button @click.stop="check(item)">
                   <font-awesome-icon :icon="['fas', item.got ? 'check-square' : 'square']" />
                 </button>
@@ -65,10 +69,7 @@
           </CollapsibleSection>
         </li>
       </ul>
-      <div class="button-pair">
-        <button type="button" @click.stop="got = !got">{{ got ? "Need" : "Got" }}</button>
-        <button type="reset" @click.stop="console.log('hi')">Reset</button>
-      </div>
+      <button type="button" @click.stop="got = !got">{{ got ? "Need" : "Got" }}</button>
     </template>
   </main>
 </template>
