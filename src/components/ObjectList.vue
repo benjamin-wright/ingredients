@@ -1,27 +1,28 @@
-<script setup lang="ts" generic="T extends IListable">
-import { ref } from 'vue';
-
-export interface IListable {
-  id: number
-}
+<script setup lang="ts" generic="T">
+import { ref, type Ref } from 'vue';
+import PopUp from './PopUp.vue';
 
 const props = defineProps<{
   data: T[]
   dropdown?: boolean
   reorder?: boolean
+  confirmationMessage?: string
+  getId: (object: T) => number
 }>()
 
 const emit = defineEmits<{
   (event: "delete", object: T): void
   (event: "edit", object: T): void
-  (event: "move-up", object: T): void
-  (event: "move-down", object: T): void
+  (event: "swap", object1: T, object2: T): void
 }>()
 
 let selected: HTMLElement | null = null;
+let deleteObject: T | null = null;
+let selectedObject: Ref<T | null> = ref(null);
 let resize = ref(false);
+let popup = ref(false);
 
-function select(event: MouseEvent) {
+function select(event: MouseEvent, object: T) {
   selected?.classList.remove("selected");
   selected?.classList.remove("drop");
   resize.value = false;
@@ -33,6 +34,7 @@ function select(event: MouseEvent) {
   }
 
   selected = element;
+  selectedObject.value = object;
   element.classList.add("selected");
   if (props.dropdown) {
     element.classList.add("drop");
@@ -40,6 +42,23 @@ function select(event: MouseEvent) {
 }
 
 function remove(object: T) {
+  if (props.confirmationMessage) {
+    popup.value = true;
+    deleteObject = object;
+    return;
+  }
+  removeEvent(object);
+}
+
+function confirm() {
+  popup.value = false;
+  if (!deleteObject) {
+    return;
+  }
+  removeEvent(deleteObject);
+}
+
+function removeEvent(object: T) {
   emit("delete", object);
 
   selected?.classList.remove("selected");
@@ -59,26 +78,19 @@ function onResize() {
   resize.value = true;
 }
 
-function moveUp(object: T) {
-  emit("move-up", object);
-}
-
-function moveDown(object: T) {
-  emit("move-down", object);
-}
 </script>
 
 <template>
-  <div class="object-list">
+  <div class="object-list" v-bind="$attrs">
     <TransitionGroup name="list">
       <div class="parent"
-        @click="select($event)"
-        v-for="obj in data"
-        :key="obj.id"
+        @click="select($event, obj)"
+        v-for="(obj, idx) in data"
+        :key="getId(obj)"
       >
         <div class="object">
           <slot :obj="obj" name="content">
-            <h2>{{ obj.id }}</h2>
+            <h2>{{ getId(obj) }}</h2>
           </slot>
           <div class="buttons" v-if="!resize">
             <button @click.stop="edit(obj)">
@@ -92,20 +104,26 @@ function moveDown(object: T) {
             </button>
           </div>
           <div class="buttons" v-if="resize">
-            <button class="up" @click.stop="moveUp(obj)" >
+            <button class="up" @click.stop="emit('swap', obj, data[idx+1])" >
               <font-awesome-icon :icon="['fas', 'chevron-circle-down']" />
             </button>
-            <button class="down" @click.stop="moveDown(obj)">
+            <button class="down" @click.stop="emit('swap', obj, data[idx-1])">
               <font-awesome-icon :icon="['fas', 'chevron-circle-up']" />
             </button>
           </div>
         </div>
-        <div class="select-dropdown">
+        <div v-if="obj === selectedObject" class="select-dropdown">
           <slot :obj="obj" name="select-dropdown" />
         </div>
       </div>
     </TransitionGroup>
   </div>
+  <PopUp
+    v-if="popup"
+    :message="confirmationMessage || 'Are you sure?'"
+    @submit="confirm()"
+    @cancel="popup = false"
+  />
 </template>
 
 <style scoped>
@@ -123,10 +141,6 @@ function moveDown(object: T) {
     user-select: none;
     border: solid 2px var(--color-border);
     border-radius: 0.3em;
-  }
-
-  .object.reorder:only-child {
-
   }
 
   .drop .object {

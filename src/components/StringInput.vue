@@ -12,42 +12,35 @@ const modelValue = defineModel<string>({ required: true })
 </script>
 
 <template>
-  <fieldset>
-    <div class="row">
-      <div class="grower" :data-replicated-value="modelValue" v-if="multiline">
-        <textarea
-          :placeholder="label"
-          v-model="modelValue"
-          id="{{ id }}"
-          name="{{ name || id }}"
-          :required="required"
-        ></textarea>
-      </div>
-      <input
-        v-else
-        :placeholder="label"
-        v-model="modelValue"
-        type="text"
-        id="{{ id }}"
-        name="{{ name || id }}"
-        :required="required"
-      />
-      <button class="delete" v-if="remove" @click.prevent="remove()">
-        <font-awesome-icon :icon="['fas', 'minus-square']" />
-      </button>
-    </div>
-  </fieldset>
+  <label class="col1" :for="id">{{ label }}:</label>
+  <div :class="'grower ' + (remove ? 'col2' : 'col2-3' )" :data-replicated-value="modelValue" v-if="multiline">
+    <textarea
+      :placeholder="label"
+      v-model="modelValue"
+      :id="id"
+      :name="name || id"
+      :required="required"
+    ></textarea>
+  </div>
+  <input
+    v-else
+    :class="remove ? 'col2' : 'col2-3'"
+    :placeholder="label"
+    v-model="modelValue"
+    type="text"
+    :id="id"
+    :name="name || id"
+    :required="required"
+  />
+  <button class="delete col3" v-if="remove" @click.prevent="remove()">
+    <font-awesome-icon :icon="['fas', 'minus-square']" />
+  </button>
 </template>
 
 <style scoped>
-fieldset {
-  display: flex;
-  flex-direction: column;
-  border-radius: 0.35rem;
-}
-
 .grower {
   display: grid;
+  flex-grow: 1;
 }
 
 .grower::after {
@@ -73,9 +66,5 @@ fieldset {
   display: flex;
   flex-direction: row;
   gap: 0.5em;
-}
-
-.row *:first-child {
-  flex-grow: 1;
 }
 </style>

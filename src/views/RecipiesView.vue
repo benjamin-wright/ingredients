@@ -1,51 +1,61 @@
 <script setup lang="ts">
-  import { onMounted } from "vue";
+  import { onMounted, ref } from "vue";
   import { useRouter } from 'vue-router';
-  import { useRecipieStore } from "../stores/recipies";
-  import { useNewRecipieStore } from "../stores/new-recipie";
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
-  import type Recipie from "@/models/Recipie";
+  import { type Recipie, getRecipies, deleteRecipie } from "@/database/models/recipie";
+  import { type RecipieIngredient, getRecipieIngredients } from "@/database/models/recipie-ingredient";
 
-  const store = useRecipieStore();
   const router = useRouter();
+  
+  const recipies = ref([] as Recipie[]);
+  const ingredients = ref({} as Record<number, RecipieIngredient[]>);
+  const loading = ref(true);
 
-  onMounted(() => {
-    store.load();
+  onMounted(async () => {
+    recipies.value = await getRecipies();
+    loading.value = false;
+
+    for (const recipie of recipies.value) {
+      ingredients.value[recipie.id] = await getRecipieIngredients(recipie.id);
+    }
   });
 
   async function remove(recipie: Recipie) {
-    await store.remove(recipie);
+    await deleteRecipie(recipie.id);
+    recipies.value.splice(recipies.value.indexOf(recipie), 1);
   }
 
   function edit(recipie: Recipie) {
-    const newRecipieStore = useNewRecipieStore();
-    newRecipieStore.load(recipie);
-    router.push("/recipies/new/name");
+    router.push(`/recipies/${recipie.id}`);
   }
 </script>
 
 <template>
   <main>
-    <template v-if="store.error">{{ store.error }}</template>
-    <template v-else-if="store.loading">Loading...</template>
+    <template v-if="loading">Loading...</template>
     <template v-else>
       <h1>Recipies</h1>
-      <ObjectList :data="store.recipies" @delete="remove" @edit="edit" dropdown>
+      <ObjectList :data="recipies" :get-id="r => r.id" @delete="remove" @edit="edit" dropdown>
         <template #content="{ obj }">
           <h2 :title="obj.name">{{ obj.name }}</h2>
         </template>
         <template #select-dropdown="{ obj }">
-          <article>
-            <p>Ingredients:</p>
-            <p v-for="ingredient in obj.ingredients" :key="ingredient.ingredient.id">
-              - {{ ingredient.toString() }}
-            </p>
-            <p>Serves: {{ obj.portions }}</p>
+          <article class="grid">
+            <p class="col1-2">Serves: {{ obj.servings }}</p>
+            <h3 class="col1">Ingredients:</h3>
+            <button class="col2" @click.prevent="router.push(`/recipies/${obj.id}/ingredients`)">
+              <font-awesome-icon :icon="['fas', 'list']" />
+            </button>
+            <ul class="col1-2">
+              <li v-for="ingredient in ingredients[obj.id]" :key="ingredient.ingredientId">
+              - {{ ingredient.name }}: {{ ingredient.quantity }}{{ ingredient.quantity == 1 ? ingredient.unitSingular : ingredient.unitPlural  }}
+              </li>
+            </ul>
           </article>
         </template>
       </ObjectList>
-      <NewThing to="/recipies/new/name" />
+      <NewThing to="/recipies/new" />
     </template>
   </main>
 </template>
@@ -58,5 +68,19 @@
 
   article {
     padding: 0.5em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .col1 {
+    grid-column: 1;
+  }
+
+  .col1-2 {
+    grid-column: 1 / 3;
   }
 </style>

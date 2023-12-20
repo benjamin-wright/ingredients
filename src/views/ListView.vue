@@ -1,93 +1,78 @@
 <script setup lang="ts">
-  import { onMounted, computed, ref } from "vue";
-  import { useShoppingListStore } from '@/stores/shopping-list';
-  import { useCategoriesStore } from "@/stores/categories";
-  import { useCustomListStore } from "@/stores/custom-list";
-  import ShoppingListItem from "@/models/ShoppingListItem";
-  import CustomListItem from "@/models/CustomListItem";
-  import NewThing from "@/components/NewThing.vue";
-  import PopUp from "@/components/PopUp.vue";
-  import ExpanderButton from "@/components/ExpanderButton.vue";
+  import { onMounted, ref, computed } from "vue";
 
-  const store = useShoppingListStore();
-  const categories = useCategoriesStore();
-  const custom = useCustomListStore();
-  let collapsed = ref({} as Record<string, boolean>);
-  let need = ref(true);
-  let popup = ref(false);
+  import { type ListItem, getListItems, checkListItem } from "@/database/models/list";
+  import CollapsibleSection from "@/components/CollapsibleSection.vue";
+  import { type Category, getCategories } from "@/database/models/category";
 
-  onMounted(() => {
-    store.load();
-    categories.load();
-    custom.load();
+  const loading = ref(true);
+  const got = ref(false);
+  const items = ref([] as ListItem[]);
+  const categories = ref([] as Category[]);
+
+  const categorisedItems = computed(() => {
+    const categories: Record<string, ListItem[]> = {};
+    for (const item of items.value) {
+      if (item.got != got.value) {
+        continue;
+      }
+
+      if (!categories[item.category]) {
+        categories[item.category] = [];
+      }
+
+      categories[item.category].push(item);
+    }
+    return categories;
   });
 
-  async function reset() {
-    popup.value = !popup.value;
-    await store.clear();
-    await custom.clear();
-    await store.generate();
-  }
+  const nonEmptyCategories = computed(() => {
+    const filtered: string[] = [];
 
-  const categorisedItems = computed(() => categories.categories.reduce((map: Record<string, ShoppingListItem[]>, category) => {
-    map[category.name] = store.items.filter(item => item.item.category.id === category.id && item.need === need.value);
-    return map;
-  }, {}));
+    categories.value.forEach(category => {
+      if (categorisedItems.value[category.name]?.length) {
+        filtered.push(category.name);
+      }
+    });
 
-  const categorisedCustomItems = computed(() => categories.categories.reduce((map: Record<string, CustomListItem[]>, category) => {
-    map[category.name] = custom.items.filter(item => item.category.id === category.id && item.need === need.value);
-    return map;
-  }, {}));
+    return filtered;
+  });
 
-  const nonEmptyCategories = computed(() => categories.categories.filter(category => categorisedItems.value[category.name].length > 0 || categorisedCustomItems.value[category.name].length > 0));
+  onMounted(async () => {
+    categories.value = await getCategories();
+    items.value = await getListItems();
+    loading.value = false;
+  });
 
-  function check(item: ShoppingListItem) {
-    store.toggle(item.id, !item.need);
-  }
-
-  function checkCustom(item: CustomListItem) {
-    custom.toggle(item.id, !item.need);
+  async function check(item: ListItem) {
+    await checkListItem(item.id, !item.got);
+    item.got = !item.got;
   }
 </script>
 
 <template>
   <main>
-    <template v-if="store.loading">Loading...</template>
-    <template v-else-if="store.error">{{ store.error }}</template>
+    <template v-if="loading">Loading...</template>
     <template v-else>
       <h1>Shopping List</h1>
       <ul class="big-window">
-        <li v-for="category in nonEmptyCategories" :key="category.id">
-          <span class="horizontal">
-            <ExpanderButton v-model="collapsed[category.name]" />
-            <h2 @click.prevent="collapsed[category.name] = !collapsed[category.name]">
-              {{ category.name }}{{ collapsed[category.name] ? ` (${categorisedItems[category.name].length + categorisedCustomItems[category.name].length})` : '' }}
-            </h2>
-          </span>
-          <ul v-if="!collapsed[category.name]">
-            <li class="checkbox" v-for="item in categorisedItems[category.name]" :key="item.id">
-              <label>{{ item.toString() }}</label>
-              <button @click.stop="check(item)">
-                <font-awesome-icon :icon="['fas', item.need ? 'square' : 'check-square']" />
-              </button>
-            </li>
-            <li class="checkbox" v-for="item in categorisedCustomItems[category.name]" :key="item.id">
-              <label>{{ item.name }}</label>
-              <button @click.stop="checkCustom(item)">
-                <font-awesome-icon :icon="['fas', item.need ? 'square' : 'check-square']" />
-              </button>
-            </li>
-          </ul>
-        </li>
-        <li v-if="need">
-          <NewThing to="/list/custom" />
+        <li v-for="category in nonEmptyCategories" :key="category">
+          <CollapsibleSection
+            :title="category"
+            expanded
+          >
+            <ul>
+              <li class="checkbox" v-for="item in categorisedItems[category]" :key="item.id">
+                <label>{{ item.name }}: {{ item.quantity }}{{ item.quantity === 0 ? item.unitSingular : item.unitPlural }}</label>
+                <button @click.stop="check(item)">
+                  <font-awesome-icon :icon="['fas', item.got ? 'check-square' : 'square']" />
+                </button>
+              </li>
+            </ul>
+          </CollapsibleSection>
         </li>
       </ul>
-      <div class="button-pair">
-        <button type="button" @click.stop="need = !need">{{ need ? "Got" : "Need" }}</button>
-        <button type="reset" @click.stop="popup = !popup">Reset</button>
-      </div>
-      <PopUp v-if="popup" message="Are you sure?" @submit="reset()" @cancel="popup = !popup" />
+      <button type="button" @click.stop="got = !got">{{ got ? "Need" : "Got" }}</button>
     </template>
   </main>
 </template>

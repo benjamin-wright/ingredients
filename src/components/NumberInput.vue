@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 
 defineProps<{
   id: string
@@ -7,7 +8,13 @@ defineProps<{
   required?: boolean
 }>()
 
-const modelValue = defineModel<number>({ required: true, local: true })
+const modelValue = defineModel<number>({ required: true, local: true });
+const convertedValue = computed({
+  get: () => modelValue.value,
+  set: (value) => {
+    modelValue.value = Number(value);
+  },
+});
 
 function increment() {
   modelValue.value++;
@@ -19,26 +26,25 @@ function decrement() {
 </script>
 
 <template>
-  <fieldset>
-    <div class="row">
-      <label>{{ label }}:</label>
-      <button @click.prevent="decrement()">
-        <font-awesome-icon :icon="['fas', 'minus-square']" />
-      </button>
-      <input
-        :placeholder="label"
-        v-model="modelValue"
-        type="number"
-        pattern="[0-9]*"
-        id="{{ id }}"
-        name="{{ name || id }}"
-        :required="required"
-      />
-      <button @click.prevent="increment()">
-        <font-awesome-icon :icon="['fas', 'plus-square']" />
-      </button>
-    </div>
-  </fieldset>
+  <label class="col1">{{ label }}:</label>
+  <div class="row col2-3">
+    <button @click.prevent="decrement()">
+      <font-awesome-icon :icon="['fas', 'minus-square']" />
+    </button>
+    <input
+      :placeholder="label"
+      v-model="convertedValue"
+      type="text"
+      inputmode="decimal"
+      :id="id"
+      :name="name || id"
+      :required="required"
+      size="1"
+    />
+    <button @click.prevent="increment()">
+      <font-awesome-icon :icon="['fas', 'plus-square']" />
+    </button>
+  </div>
 </template>
 
 <style scoped>
@@ -52,6 +58,7 @@ fieldset {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: inherit 0;
 }
 
 .row input {
@@ -67,5 +74,13 @@ fieldset {
 
   text-indent: 1px;
   text-overflow: '';
+}
+
+.row button:first-child {
+  padding-left: 0;
+}
+
+.row button:last-child {
+  padding-right: 0;
 }
 </style>

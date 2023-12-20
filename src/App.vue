@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavTab from './components/NavTab.vue'
-import EventsList from './components/EventsList.vue';
 </script>
 
 <template>
   <header>
     <nav>
       <NavTab to="/" content="H" />
+      <NavTab to="/units" content="U" />
       <NavTab to="/categories" content="C" />
       <NavTab to="/ingredients" content="I" />
       <NavTab to="/recipies" content="R" />
@@ -16,7 +16,6 @@ import EventsList from './components/EventsList.vue';
     </nav>
   </header>
   <RouterView />
-  <EventsList />
 </template>
 
 <style scoped>

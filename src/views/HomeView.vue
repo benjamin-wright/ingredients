@@ -1,30 +1,18 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { useDinnerPlanStore } from '@/stores/dinner-plans';
-  import { useNonDinnerPlanStore } from '@/stores/non-dinner-plans';
-  import { useCustomListStore } from '@/stores/custom-list';
-  import { useNewRecipieStore } from '@/stores/new-recipie';
-  import { useRecipieStore } from '@/stores/recipies';
-  import { useIngredientsStore } from '@/stores/ingredients';
-  import { useCategoriesStore } from '@/stores/categories';
-  import { useEventsStore } from '@/stores/events';
-  import { clearAll } from '@/persistence/clear';
   import PopUp from '@/components/PopUp.vue';
-import ExpanderButton from '@/components/ExpanderButton.vue';
+  import ExpanderButton from '@/components/ExpanderButton.vue';
+  import { reset } from '@/database/database';
 
   async function clear() {
-    await useDinnerPlanStore().clear();
-    await useNonDinnerPlanStore().clear();
-    await useCustomListStore().clear();
-    await useNewRecipieStore().clear();
-    await useRecipieStore().clear();
-    await useIngredientsStore().clear();
-    await useCategoriesStore().clear();
-    useEventsStore().clear();
-    await clearAll();
-    popup.value = false;
+    try {
+      await reset();
 
-    window.location.reload();
+      popup.value = false;
+      window.location.reload();
+    } catch (err: any) {
+      console.error('error: Failed to reset database: ' + err);
+    }
   }
 
   const popup = ref(false);
