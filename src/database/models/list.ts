@@ -8,51 +8,6 @@ export type ListItemInput = {
 };
 
 export async function generateList(): Promise<void> {
-    await generateMealList();
-    // await generateExtrasList();
-}
-
-async function generateExtrasList(): Promise<void> {
-    const items = await query(
-        // convert the items from the extra_list_items table into the format of the shopping_list_items table
-        /*sql*/`
-            SELECT
-                ei.name,
-                ei.category_id,
-                SUM(ei.quantity * u.conversion),
-                CASE u.kind
-                    WHEN 1 THEN 1
-                    WHEN 2 THEN 3
-                    ELSE u.id
-                END as unit_id
-            FROM extra_items as ei
-            LEFT JOIN
-                units as u ON ei.unit_id = u.id
-            GROUP BY
-                ei.name, ei.category_id, unit_id;
-        `,
-        [], (values) => {
-            return {
-                name: values[0] as string,
-                category_id: values[1] as number,
-                quantity: values[2] as number,
-                unit_id: values[3] as number,
-            };
-        }
-    );
-
-    for (const item of items) {
-        await query(
-            /*sql*/`
-                INSERT INTO shopping_list_items (name, category_id, quantity, unit_id, got)
-                VALUES (?, ?, ?, ?, false);
-            `,
-            [item.name, item.category_id, item.quantity, item.unit_id]
-        );
-    }
-}
-
-async function generateMealList(): Promise<void> {
     const ingredients = await query(
         /*sql*/`
             SELECT

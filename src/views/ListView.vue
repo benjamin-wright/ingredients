@@ -3,10 +3,12 @@
 
   import { type ListItem, getListItems, checkListItem } from "@/database/models/list";
   import CollapsibleSection from "@/components/CollapsibleSection.vue";
+  import { type Category, getCategories } from "@/database/models/category";
 
   const loading = ref(true);
   const got = ref(false);
   const items = ref([] as ListItem[]);
+  const categories = ref([] as Category[]);
 
   const categorisedItems = computed(() => {
     const categories: Record<string, ListItem[]> = {};
@@ -27,16 +29,17 @@
   const nonEmptyCategories = computed(() => {
     const filtered: string[] = [];
 
-    for (const key in categorisedItems.value) {
-      if (categorisedItems.value[key].length) {
-        filtered.push(key);
+    categories.value.forEach(category => {
+      if (categorisedItems.value[category.name]?.length) {
+        filtered.push(category.name);
       }
-    }
+    });
 
     return filtered;
   });
 
   onMounted(async () => {
+    categories.value = await getCategories();
     items.value = await getListItems();
     loading.value = false;
   });

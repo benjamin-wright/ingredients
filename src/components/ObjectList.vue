@@ -93,21 +93,21 @@ function onResize() {
             <h2>{{ getId(obj) }}</h2>
           </slot>
           <div class="buttons" v-if="!resize">
-            <button @click.prevent="edit(obj)">
+            <button @click.stop="edit(obj)">
               <font-awesome-icon :icon="['fas', 'pencil']" />
             </button>
-            <button class="delete" @click.prevent="remove(obj)">
+            <button class="delete" @click.stop="remove(obj)">
               <font-awesome-icon :icon="['fas', 'trash']" />
             </button>
-            <button @click.prevent="onResize()" v-if="reorder">
+            <button @click.stop="onResize()" v-if="reorder">
               <font-awesome-icon :icon="['fas', 'up-down']" />
             </button>
           </div>
           <div class="buttons" v-if="resize">
-            <button class="up" @click.prevent="emit('swap', obj, data[idx+1])" >
+            <button class="up" @click.stop="emit('swap', obj, data[idx+1])" >
               <font-awesome-icon :icon="['fas', 'chevron-circle-down']" />
             </button>
-            <button class="down" @click.prevent="emit('swap', obj, data[idx-1])">
+            <button class="down" @click.stop="emit('swap', obj, data[idx-1])">
               <font-awesome-icon :icon="['fas', 'chevron-circle-up']" />
             </button>
           </div>
