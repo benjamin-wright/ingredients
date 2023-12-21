@@ -43,7 +43,7 @@
           <h2 @click.prevent="expanded.usage = !expanded.usage">Usage</h2>
         </div>
         <div v-if="expanded.usage">
-          <p>The app is split into five sections that can be accessed from the menu at the top of the screen:</p>
+          <p>The app is split into six sections that can be accessed from the menu at the top of the screen:</p>
           <dl>
             <dt>Units: <em>U</em></dt>
             <dd>
