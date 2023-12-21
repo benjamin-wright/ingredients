@@ -20,3 +20,7 @@ declare module "@jlongster/sql.js" {
   export default function initSqlJs(options: any): Promise<any>;
 }
 
+declare module 'virtual:pwa-register' {
+  const registerSW: (options?: { immediate?: boolean }) => void;
+  export { registerSW };
+}

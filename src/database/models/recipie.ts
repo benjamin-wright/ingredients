@@ -49,7 +49,7 @@ export async function deleteRecipie(id: number): Promise<void> {
 export async function addRecipie(name: string, description: string, servings: number): Promise<number> {
     const result = await query(
         /*sql*/`INSERT INTO recipies (name, description, servings) VALUES (?, ?, ?) RETURNING id`,
-        [name, description, servings],
+        [name, description || "", servings],
         (values) => values[0] as number
     );
 
@@ -59,6 +59,6 @@ export async function addRecipie(name: string, description: string, servings: nu
 export async function updateRecipie(id: number, name: string, description: string, servings: number): Promise<void> {
     await query(
         /*sql*/`UPDATE recipies SET name = ?, description = ?, servings = ? WHERE id = ?`,
-        [name, description, servings, id]
+        [name, description || "", servings, id]
     );
 }

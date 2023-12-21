@@ -5,7 +5,7 @@
   import { type Ingredient, getIngredients } from '@/database/models/ingredient';
   import { type Unit, getUnits } from '@/database/models/unit';
   import { type Recipie, getRecipie } from '@/database/models/recipie';
-  import { type RecipieIngredient, getRecipieIngredient, updateRecipieIngredient, addRecipieIngredient } from '@/database/models/recipie-ingredient';
+  import { type RecipieIngredient, getRecipieIngredient, updateRecipieIngredient, addRecipieIngredient, deleteRecipieIngredient } from '@/database/models/recipie-ingredient';
   import { idFromPath } from '@/utils/computed';
   import FormTemplate from '@/components/FormTemplate.vue';
   import NumberInput from '@/components/NumberInput.vue';
@@ -67,11 +67,14 @@
 
     let id: number;
     if (ingredientId.value !== null) {
-      // update
-      await updateRecipieIngredient(recipieId.value, ingredientId.value, ingredient.value.quantity, ingredient.value.unitId);
-      id = ingredientId.value;
+      if (ingredientId.value !== ingredient.value.ingredientId) {
+        await deleteRecipieIngredient(recipieId.value, ingredientId.value);
+        id = await addRecipieIngredient(recipieId.value, ingredient.value.ingredientId, ingredient.value.quantity, ingredient.value.unitId);
+      } else {
+        await updateRecipieIngredient(recipieId.value, ingredient.value.ingredientId, ingredient.value.quantity, ingredient.value.unitId);
+        id = ingredientId.value;
+      }
     } else {
-      // that
       id = await addRecipieIngredient(recipieId.value, ingredient.value.ingredientId, ingredient.value.quantity, ingredient.value.unitId);
     }
     navigator.navigate({

@@ -56,7 +56,7 @@
   <template v-if="loading">loading...</template>
   <FormTemplate v-else :title="title" @cancel="cancel" @submit="submit">
     <StringInput id="name" name="name" label="Name" v-model="recipie.name" required />
-    <StringInput id="description" name="description" label="Description" v-model="recipie.description" required multiline />
+    <StringInput id="description" name="description" label="Description" v-model="recipie.description" multiline />
     <NumberInput id="servings" name="servings" label="Servings" v-model="recipie.servings" required />
   </FormTemplate>
 </template>

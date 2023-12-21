@@ -8,11 +8,19 @@
   const router = useRouter();
 
   const loading = ref(true);
+  const error = ref("");
   const categories = ref([] as Category[]);
 
   onMounted(async () => {
-    categories.value = await getCategories();
+    error.value = "loading.....";
     loading.value = false;
+    try {
+      error.value = "loading categories....."
+      categories.value = await getCategories();
+      error.value = ""
+    } catch (err: any) {
+      error.value = err.toString();
+    }
   });
 
   async function remove(category: Category) {
@@ -29,6 +37,7 @@
 <template>
   <main>
     <template v-if="loading">Loading...</template>
+    <template v-else-if="error">{{ error }}</template>
     <template v-else>
       <h1>Categories</h1>
       <ObjectList

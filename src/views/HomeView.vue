@@ -4,15 +4,16 @@
   import ExpanderButton from '@/components/ExpanderButton.vue';
   import { reset } from '@/database/database';
 
-  async function clear() {
+  async function clear() {    
     try {
       await reset();
-
-      popup.value = false;
       window.location.reload();
     } catch (err: any) {
-      console.error('error: Failed to reset database: ' + err);
+      alert('error: Failed to reset database: ' + err);
+      window.location.reload();
     }
+
+    popup.value = false;
   }
 
   const popup = ref(false);
@@ -30,7 +31,7 @@
       <h1>Welcome to <em>Nom Nom</em>!</h1>
       <p>
         This is a simple app to help you plan your meals and shopping list.
-        It's designed to be used on a phone, so it's not very pretty on a desktop.
+        It's designed to be used on a phone, so it's not very pretty on a desktop browser.
       </p>
 
       <section>
@@ -81,8 +82,8 @@
             If you're using an iPhone or iPad, you can install this app as a PWA (Progressive Web App) by following these steps:
           </p>
           <ol>
-            <li>Open Safari</li>
-            <li>Go to <a href="https://nomnom.pongle.hub.co.uk">https://nomnom.pongle-hub.co.uk</a></li>
+            <li>Open Google Chrome (Safari not supported)</li>
+            <li>Go to <a href="https://nomnom.pongle-hub.co.uk">https://nomnom.pongle-hub.co.uk</a></li>
             <li>Click the <em>Share</em> button</li>
             <li>Click <em>Add to Home Screen</em></li>
             <li>Click <em>Add</em></li>

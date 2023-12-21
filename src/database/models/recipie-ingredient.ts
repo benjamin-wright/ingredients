@@ -66,13 +66,12 @@ export async function deleteRecipieIngredient(recipieId: number, ingredientId: n
 }
 
 export async function addRecipieIngredient(recipieId: number, ingredientId: number, quantity: number, unitId: number): Promise<number> {
-    const result = await query(
-        /*sql*/`INSERT INTO recipie_ingredients (recipie_id, ingredient_id, quantity, unit_id) VALUES (?, ?, ?, ?) RETURNING ingredient_id`,
-        [recipieId, ingredientId, quantity, unitId],
-        (values) => values[0] as number
+    await query(
+        /*sql*/`INSERT INTO recipie_ingredients (recipie_id, ingredient_id, quantity, unit_id) VALUES (?, ?, ?, ?)`,
+        [recipieId, ingredientId, quantity, unitId]
     );
 
-    return result[0];
+    return ingredientId;
 }
 
 export async function updateRecipieIngredient(recipieId: number, ingredientId: number, quantity: number, unitId: number): Promise<void> {
