@@ -4,7 +4,7 @@
   import ExpanderButton from '@/components/ExpanderButton.vue';
   import { reset } from '@/database/database';
 
-  async function clear() {    
+  async function clear() {
     try {
       await reset();
       window.location.reload();
@@ -42,6 +42,11 @@
         <div v-if="expanded.usage">
           <p>The app is split into five sections that can be accessed from the menu at the top of the screen:</p>
           <dl>
+            <dt>Units: <em>U</em></dt>
+            <dd>
+              This is where you can add units to the app.
+              Units represent the quantity of an ingredient, e.g. grams, millilitres, etc.
+            </dd>
             <dt>Categories: <em>C</em></dt>
             <dd>
               This is where you can add categories to the app.
