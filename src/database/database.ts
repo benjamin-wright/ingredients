@@ -2,11 +2,7 @@ import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
 import hash from '@/utils/hash';
 import DBWorker from './database-worker.ts?worker';
 import { type ExecResponse, type ExecRequest } from './request-types';
-
-import migration00 from './migrations/migration-00.sql?raw';
-import migration01 from './migrations/migration-01.sql?raw';
-import migration02 from './migrations/migration-02.sql?raw';
-import migration03 from './migrations/migration-03.sql?raw';
+import migrations from './migrations';
 
 type Request<T> = {
   resolve: (value: T[]) => void;
@@ -160,16 +156,21 @@ class Database {
   }
 }
 
-const database = (async () => {
-  const db = new Database();
-  await db.init();
-  return db;
-})();
+let database: Promise<Database>;
+let migrated: Promise<Database>;
 
-const migrated = database.then(async (db) => {
-  await db.migrate([migration00, migration01, migration02, migration03]);
-  return db;
-});
+export function init() {
+  database = (async () => {
+    const db = new Database();
+    await db.init();
+    return db;
+  })();
+
+  migrated = database.then(async (db) => {
+    await db.migrate(migrations);
+    return db;
+  });
+}
 
 export async function query<T>(sql: string, bind?: any[], reader?: (row: any[]) => T): Promise<T[]> {
   return migrated.then(db => db.exec(sql, bind, reader));

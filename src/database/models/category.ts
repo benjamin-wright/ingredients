@@ -33,6 +33,10 @@ export async function getCategory(id: number): Promise<Category> {
         }
     );
 
+    if (categories.length == 0) {
+        throw new Error(`No category with id ${id}`);
+    }
+
     return categories[0];
 }
 
@@ -49,11 +53,11 @@ export async function addCategory(name: string): Promise<number> {
         [],
         (values) => values[0] as number
     );
-    const position = result[0] + 1 ?? 1;
+    const position = (result[0] || 0) + 1 ?? 1;
 
     result = await query(
         /*sql*/`INSERT INTO categories (name, position) VALUES (?, ?) RETURNING id`,
-        [name, position],
+        [name.toLowerCase(), position],
         (values) => values[0] as number
     );
 
@@ -63,7 +67,7 @@ export async function addCategory(name: string): Promise<number> {
 export async function updateCategory(id: number, name: string): Promise<void> {
     await query(
         /*sql*/`UPDATE categories SET name = ? WHERE id = ?`,
-        [name, id]
+        [name.toLowerCase(), id]
     );
 }
 
