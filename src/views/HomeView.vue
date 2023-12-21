@@ -30,6 +30,9 @@
     <section class="scroll">
       <h1>Welcome to <em>Nom Nom</em>!</h1>
       <p>
+        Version: 1.0.0
+      </p>
+      <p>
         This is a simple app to help you plan your meals and shopping list.
         It's designed to be used on a phone, so it's not very pretty on a desktop browser.
       </p>
