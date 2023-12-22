@@ -29,7 +29,7 @@
   }
 
   async function swap(category1: Category, category2: Category) {
-    await swapCategories(category1, category2);
+    await swapCategories(category1.id, category2.id);
     categories.value = await getCategories();
   }
 </script>

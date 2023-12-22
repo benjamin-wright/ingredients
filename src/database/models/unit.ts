@@ -56,6 +56,10 @@ export async function getUnit(id: number): Promise<Unit> {
         }
     );
 
+    if (names.length == 0) {
+        throw new Error(`No unit with id ${id}`);
+    }
+
     return names[0];
 }
 

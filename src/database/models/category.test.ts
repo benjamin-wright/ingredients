@@ -181,10 +181,7 @@ describe('swapCategories', () => {
         await addCategory('Test');
         await addCategory('Test 2');
 
-        await swapCategories(
-            { id: 1, position: 1},
-            { id: 2, position: 2}
-        );
+        await swapCategories(1, 2);
 
         expect(await getCategories()).toStrictEqual([
             { id: 2, position: 1, name: 'test 2'},
@@ -192,19 +189,14 @@ describe('swapCategories', () => {
         ]);
     });
 
-    test('should not throw if no category', async () => {
-        await swapCategories(1, 2);
+    test('should throw if no category', async () => {
+        await expect(swapCategories(1, 2)).rejects.toThrow();
     });
 
-    test('should not make changes if no category with id', async () => {
+    test('should throw if only one is missing', async () => {
         await addCategory('Test');
         await addCategory('Test 2');
 
-        await swapCategories(1, 3);
-
-        expect(await getCategories()).toStrictEqual([
-            { id: 1, position: 1, name: 'test'},
-            { id: 2, position: 2, name: 'test 2'},
-        ]);
+        await expect(swapCategories(1, 3)).rejects.toThrow();
     });
 });

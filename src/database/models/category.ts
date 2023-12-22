@@ -71,13 +71,28 @@ export async function updateCategory(id: number, name: string): Promise<void> {
     );
 }
 
-export async function swapCategories(a: Category, b: Category): Promise<void> {
+export async function swapCategories(a: number, b: number): Promise<void> {
+    const rows = await query(
+        /*sql*/`SELECT id, position FROM categories WHERE id IN (?, ?)`,
+        [a, b],
+        (values) => {
+            return {
+                id: values[0] as number,
+                position: values[1] as number,
+            };
+        }
+    );
+
+    if (rows.length != 2) {
+        throw new Error(`Expected 2 categories, got ${rows.length}`);
+    }
+
     await query(
         /*sql*/`UPDATE categories SET position = ? WHERE id = ?`,
-        [b.position, a.id]
+        [rows[1].position, rows[0].id]
     );
     await query(
         /*sql*/`UPDATE categories SET position = ? WHERE id = ?`,
-        [a.position, b.id]
+        [rows[0].position, rows[1].id]
     );
 }
