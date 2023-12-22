@@ -3,7 +3,6 @@ import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   to?: string,
-  click?: () => void,
 }>()
 
 const router = useRouter();
@@ -11,10 +10,6 @@ const router = useRouter();
 function handler() {
     if (props.to) {
         router.push(props.to);
-    }
-
-    if (props.click) {
-        props.click();
     }
 }
 </script>
