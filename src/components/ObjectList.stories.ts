@@ -48,14 +48,18 @@ export const Default = {
     confirmationMessage: 'sure?',
     getId: getId.objects,
   },
-  template: `
-    <ObjectList v-bind="$props" @delete="onDelete" @edit="onEdit" @swap="onSwap">
-      <template #default="{ item }">
-        <div>Hi {{ item.name }}</div>
-      </template>
-      <template #dropdown="{ item }">
-        <div>Dropdown {{ item.name }}</div>
-      </template>
-    </ObjectList>
-  `,
+  render: (args, { argTypes }) => ({
+    components: { ObjectList },
+    props: Object.keys(argTypes),
+    template: `
+      <ObjectList v-bind="$props" @delete="onDelete" @edit="onEdit" @swap="onSwap">
+        <template #default="{ item }">
+          <div>Hi {{ item.name }}</div>
+        </template>
+        <template #dropdown="{ item }">
+          <div>Dropdown {{ item.name }}</div>
+        </template>
+      </ObjectList>
+    `,
+  }),
 };
