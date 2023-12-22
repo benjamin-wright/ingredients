@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CategoriesView > should render 1`] = `"<main data-v-6a11679b=\\"\\">Loading...</main>"`;
