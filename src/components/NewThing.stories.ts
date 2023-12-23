@@ -1,4 +1,5 @@
 import NewThing from './NewThing.vue';
+import { vueRouter } from 'storybook-vue3-router'
 
 import '../assets/base.css';
 import '../assets/main.css';
@@ -12,6 +13,7 @@ export default {
   },
   //👇 Our exports that end in "Data" are not stories.
   excludeStories: /.*Data$/,
+  decorators: [vueRouter()],
 };
 
 export const Default = {
