@@ -93,21 +93,21 @@ function onResize() {
             <h2>{{ getId(obj) }}</h2>
           </slot>
           <div class="buttons" v-if="!resize">
-            <button @click.stop="edit(obj)">
+            <button aria-label="edit" @click.stop="edit(obj)">
               <font-awesome-icon :icon="['fas', 'pencil']" />
             </button>
-            <button class="delete" @click.stop="remove(obj)">
+            <button aria-label="delete" class="delete" @click.stop="remove(obj)">
               <font-awesome-icon :icon="['fas', 'trash']" />
             </button>
-            <button @click.stop="onResize()" v-if="reorder">
+            <button aria-label="swap" @click.stop="onResize()" v-if="reorder">
               <font-awesome-icon :icon="['fas', 'up-down']" />
             </button>
           </div>
           <div class="buttons" v-if="resize">
-            <button class="up" @click.stop="emit('swap', obj, data[idx+1])" >
+            <button aria-label="up" class="up" @click.stop="emit('swap', obj, data[idx+1])" >
               <font-awesome-icon :icon="['fas', 'chevron-circle-down']" />
             </button>
-            <button class="down" @click.stop="emit('swap', obj, data[idx-1])">
+            <button aria-label="down" class="down" @click.stop="emit('swap', obj, data[idx-1])">
               <font-awesome-icon :icon="['fas', 'chevron-circle-up']" />
             </button>
           </div>

@@ -12,7 +12,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test-storybook": "test-storybook"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
@@ -31,7 +32,10 @@
     "@storybook/addon-links": "^7.6.6",
     "@storybook/blocks": "^7.6.6",
     "@storybook/builder-vite": "^7.6.6",
+    "@storybook/jest": "^0.2.3",
     "@storybook/test": "^7.6.6",
+    "@storybook/test-runner": "^0.16.0",
+    "@storybook/testing-library": "^0.2.2",
     "@storybook/vue3": "^7.6.6",
     "@storybook/vue3-vite": "^7.6.6",
     "@tsconfig/node18": "^18.2.0",
