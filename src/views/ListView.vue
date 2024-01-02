@@ -1,10 +1,11 @@
 <script setup lang="ts">
-  import { onMounted, ref, computed } from "vue";
+  import { onMounted, ref, computed, inject } from "vue";
 
   import { type ListItem, getListItems, checkListItem } from "@/database/models/list";
   import CollapsibleSection from "@/components/CollapsibleSection.vue";
-  import { type Category, getCategories } from "@/database/models/category";
+  import { type Category, type ICategoryProvider } from "@/database/models/category";
 
+  const provider = inject<ICategoryProvider>("categories");
   const loading = ref(true);
   const got = ref(false);
   const items = ref([] as ListItem[]);
@@ -39,7 +40,7 @@
   });
 
   onMounted(async () => {
-    categories.value = await getCategories();
+    categories.value = await provider?.getCategories() || [];
     items.value = await getListItems();
     loading.value = false;
   });

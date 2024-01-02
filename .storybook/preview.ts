@@ -13,7 +13,13 @@ const preview: Preview = {
         date: /Date$/i
       }
     }
-  }
+  },
+  decorators: [
+    (story) => ({
+      components: { story },
+      template: '<Suspense><story /></Suspense>',
+    }),
+  ],
 }
 
 export default preview

@@ -1,15 +1,16 @@
 <script setup lang="ts">
-  import { onMounted, ref, computed } from "vue";
+  import { onMounted, ref, computed, inject } from "vue";
   import { useRouter } from 'vue-router';
   import FormTemplate from "@/components/FormTemplate.vue";
   import StringInput from "../components/StringInput.vue";
   import ObjectSelect from "@/components/ObjectSelect.vue";
 
-  import { type Category, getCategories } from "@/database/models/category";
+  import { type Category, type ICategoryProvider } from "@/database/models/category";
   import { getIngredient, updateIngredient, addIngredient } from "@/database/models/ingredient"; 
   import { Navigator } from "@/utils/navigator";
   import { idFromPath, idFromQuery } from "@/utils/computed";
 
+  const provider = inject<ICategoryProvider>("categories");
   const router = useRouter();
   const navigator = new Navigator({
     router: router,
@@ -24,7 +25,7 @@
   const loading = ref(true);
   
   onMounted(async () => {
-    categories.value = await getCategories();
+    categories.value = await provider?.getCategories() || categories.value;
     if (ingredientId.value !== null) {
       ingredient.value = await getIngredient(ingredientId.value);
       ingredient.value.categoryId = categoryId.value || ingredient.value.categoryId

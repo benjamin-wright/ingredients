@@ -1,37 +1,47 @@
 <script setup lang="ts">
-  import { computed, onMounted, ref } from "vue";
+  import { computed, onMounted, onBeforeUpdate, ref, inject } from "vue";
   import { useRouter } from 'vue-router';
   import FormTemplate from "@/components/FormTemplate.vue";
   import StringInput from "../components/StringInput.vue";
-  import { type Category, addCategory, updateCategory, getCategory } from "@/database/models/category";
-  import { idFromPath } from "@/utils/computed";
+  import { type Category, type ICategoryProvider } from "@/database/models/category";
+  import { getIdFromPath } from "@/utils/computed";
   import { Navigator } from "@/utils/navigator";
 
+  const provider: ICategoryProvider = (() => {
+    let provider = inject<ICategoryProvider>("categories");
+    if (!provider) {
+      throw new Error("No category provider found");
+    }
+    return provider;
+  })();
   const router = useRouter();
-  const categoryId = computed(idFromPath(router, "id"));
+  const categoryId = ref(null as number | null);
   const navigator = new Navigator({
     router: router,
     default: "/categories"
   });
 
   onMounted(async () => {
+    categoryId.value = getIdFromPath(router, "id");
+
     if (categoryId.value !== null) {
-      category.value = await getCategory(categoryId.value);
+      category.value = await provider.getCategory(categoryId.value);
     }
+
     loading.value = false;
   });
 
-  const title = `${ categoryId.value !== null ? "Edit" : "New" } Category`
+  const title = computed(() => `${ categoryId.value !== null ? "Edit" : "New" } Category`);
   const category = ref({ name: "" } as Category);
   const loading = ref(true);
 
   async function submit() {
     let id;
     if (categoryId.value !== null) {
-      await updateCategory(categoryId.value, category.value.name);
+      await provider.updateCategory(categoryId.value, category.value.name);
       id = categoryId.value;
     } else {
-      id = await addCategory(category.value.name);
+      id = await provider.addCategory(category.value.name);
     }
 
     navigator.navigate({ "category": id.toString() });

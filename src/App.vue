@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import NavTab from './components/NavTab.vue'
+import { provide } from 'vue';
+import { RouterView } from 'vue-router';
+import NavTab from './components/NavTab.vue';
+
+import { CategoryProvider } from './database/models/category';
+
+provide('categories', new CategoryProvider());
 </script>
 
 <template>

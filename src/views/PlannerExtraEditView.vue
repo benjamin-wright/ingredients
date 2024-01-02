@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { onMounted, computed, ref } from "vue";
+  import { onMounted, computed, ref, inject } from "vue";
   import { useRouter } from 'vue-router';
 
   import { type Unit, getUnits } from "@/database/models/unit";
-  import { type Category, getCategories } from "@/database/models/category";
+  import { type Category, type ICategoryProvider } from "@/database/models/category";
   import { type ExtraItem, getExtraItem, addExtraItem, updateExtraItem } from "@/database/models/extra-items";
   import { idFromPath, idFromQuery } from "@/utils/computed";
 
@@ -12,6 +12,7 @@
   import NumberInput from "@/components/NumberInput.vue";
   import StringInput from "@/components/StringInput.vue";
 
+  const provider = inject<ICategoryProvider>("categories");
   const router = useRouter();
   const loading = ref(true);
   const units = ref([] as Unit[]);
@@ -30,7 +31,7 @@
 
   onMounted(async () => {
     units.value = await getUnits();
-    categories.value = await getCategories();
+    categories.value = await provider?.getCategories() || [];
 
     if (itemId.value !== null) {
       extraItem.value = await getExtraItem(itemId.value);
