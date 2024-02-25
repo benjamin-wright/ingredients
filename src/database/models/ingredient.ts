@@ -46,7 +46,7 @@ export async function deleteIngredient(id: number): Promise<void> {
 export async function addIngredient(name: string, categoryId: number): Promise<number> {
     const result = await query(
         /*sql*/`INSERT INTO ingredients (name, category_id) VALUES (?, ?) RETURNING id`,
-        [name, categoryId],
+        [name.toLowerCase(), categoryId],
         (values) => values[0] as number
     );
 
@@ -56,6 +56,6 @@ export async function addIngredient(name: string, categoryId: number): Promise<n
 export async function updateIngredient(id: number, name: string, categoryId: number): Promise<void> {
     await query(
         /*sql*/`UPDATE ingredients SET name = ?, category_id = ? WHERE id = ?`,
-        [name, categoryId, id]
+        [name.toLowerCase(), categoryId, id]
     );
 }

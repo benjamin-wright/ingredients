@@ -16,3 +16,15 @@ export type ExecRequest = {
     sql: string;
     bind?: any[];
 }
+
+export type BackupRequest = {
+    type: 'backup';
+    requestId: number;
+}
+
+export type BackupResponse = {
+    type: 'backup';
+    requestId: number;
+    result: Uint8Array;
+    error?: string;
+}

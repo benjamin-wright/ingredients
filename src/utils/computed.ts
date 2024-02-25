@@ -1,4 +1,14 @@
-import { type LocationQueryValue, type Router } from 'vue-router'
+import { inject } from 'vue';
+import { type LocationQueryValue, type Router } from 'vue-router';
+
+export function getProvider<T>(name: string): T {
+    const provider = inject(name);
+    if (provider === null) {
+        throw new Error(`Provider '${name}' not found`);
+    }
+
+    return provider;
+}
 
 export function getIdFromPath(r: Router, prop: string): number | null {
     const id = r.currentRoute.value.params[prop];

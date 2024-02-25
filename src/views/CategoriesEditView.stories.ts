@@ -2,10 +2,6 @@ import type { Meta, StoryObj} from '@storybook/vue3';
 import { setup } from '@storybook/vue3';
 import { asyncVueRouter } from 'storybook-vue3-router';
 
-import { type ICategoryProvider } from '@/database/models/category';
-
-import { expect, jest } from '@storybook/jest';
-
 import '../assets/base.css'
 import '../assets/main.css'
 

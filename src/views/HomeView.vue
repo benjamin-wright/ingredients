@@ -2,7 +2,7 @@
   import { ref } from 'vue';
   import PopUp from '@/components/PopUp.vue';
   import ExpanderButton from '@/components/ExpanderButton.vue';
-  import { reset } from '@/database/database';
+  import { reset, backup } from '@/database/database';
 
   async function clear() {
     try {
@@ -16,11 +16,23 @@
     popup.value = false;
   }
 
+  async function exportData() {
+    const data = await backup();
+    
+    const blob = new Blob([data], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'nomnom-backup.dat';
+    a.click();
+  }
+
   const popup = ref(false);
   const expanded = ref({
     'usage': false,
     'installSafari': false,
     'installAndroid': false,
+    'importExport': false,
     'destructive': false,
   });
 </script>
@@ -123,6 +135,27 @@
             This will install the app on your device, and you can use it like any other app.
             It will even work offline!
           </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="horizontal">
+          <ExpanderButton v-model="expanded.importExport" />
+          <h2 @click.prevent="expanded.importExport = !expanded.importExport">Import / Export</h2>
+        </div>
+        <div v-if="expanded.importExport">
+          <p>
+            You can import and export your data from the app using the buttons at the bottom of the menu.
+            This will create a SQLite 3 file that you can save to your device, and then import back into the app later.
+          </p>
+          <p>
+            This is useful if you want to back up your data, or if you want to move your data to a different device.
+          </p>
+          <div class="button-pair">
+            <button type="reset">Import</button>
+            <button type="submit" @click.prevent="exportData">Export</button>
+          </div>
+          <PopUp v-if="popup" message="This will permanently delete all your data. Are you sure?" @submit="clear()" @cancel="popup = !popup" />
         </div>
       </section>
 

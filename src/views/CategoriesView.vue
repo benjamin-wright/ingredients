@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import { onMounted, ref, inject } from "vue";
+  import { onMounted, ref } from "vue";
   import { useRouter } from 'vue-router';
+  import { getProvider } from "@/utils/computed";
   import ObjectList from "../components/ObjectList.vue";
   import NewThing from "@/components/NewThing.vue";
   import { type ICategoryProvider, type Category } from "@/database/models/category";
 
   const router = useRouter();
-
-  const provider = inject<ICategoryProvider>("categories");
+  const provider = getProvider<ICategoryProvider>("categories");
 
   const loading = ref(true);
   const error = ref("");
@@ -16,7 +16,7 @@
   onMounted(async () => {
     try {
       error.value = "loading categories....."
-      categories.value = await provider?.getCategories() || [];
+      categories.value = await provider.getCategories();
       error.value = ""
       loading.value = false;
     } catch (err: any) {
@@ -26,13 +26,13 @@
   });
 
   async function remove(category: Category) {
-    await provider?.deleteCategory(category.id);
+    await provider.deleteCategory(category.id);
     categories.value.splice(categories.value.indexOf(category), 1);
   }
 
   async function swap(category1: Category, category2: Category) {
-    await provider?.swapCategories(category1.id, category2.id);
-    categories.value = await provider?.getCategories() || [];
+    await provider.swapCategories(category1.id, category2.id);
+    categories.value = await provider.getCategories();
   }
 </script>
 
@@ -64,5 +64,6 @@
   h2 {
     overflow: hidden;
     text-overflow: ellipsis;
+    text-transform: capitalize;
   }
 </style>

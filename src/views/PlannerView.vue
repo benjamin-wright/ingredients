@@ -158,4 +158,8 @@
   article {
     padding: 0.5em;
   }
+
+  h2 {
+    text-transform: capitalize;
+  }
 </style>

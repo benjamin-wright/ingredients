@@ -2,7 +2,7 @@ import initSqlJs from '@jlongster/sql.js'
 import { SQLiteFS } from 'absurd-sql'
 import IndexedDBBackend from 'absurd-sql/dist/indexeddb-backend'
 import absurdSqlWasmUrl from '@jlongster/sql.js/dist/sql-wasm.wasm?url'
-import { type ExecRequest } from './request-types'
+import { type BackupRequest, type ExecRequest } from './request-types'
 
 async function run() {
   console.info('Initializing SQL.js');
@@ -41,6 +41,10 @@ async function run() {
         console.info('close', event.data)
         db.close()
         break
+      case 'backup':
+        console.info('backup', event.data)
+        backup(db, event.data)
+        break
       default:
         console.error('Unknown message type', event.data)
     }
@@ -63,6 +67,14 @@ function execError(id: number, error: string) {
   })
 }
 
+function backupResult(id: number, data: any) {
+  postMessage({
+    type: 'backup',
+    requestId: id,
+    result: data,
+  })
+}
+
 function onExec(db: any, request: ExecRequest) {
   try {
     // db.exec('BEGIN TRANSACTION');
@@ -75,6 +87,12 @@ function onExec(db: any, request: ExecRequest) {
   } catch (err: any) {
     execError(request.requestId, err.message);
   }
+}
+
+function backup(db: any, request: BackupRequest) {
+  const buffer = db.export()
+  const result = new Uint8Array(buffer)
+  backupResult(request.requestId, result)
 }
 
 run()

@@ -100,4 +100,8 @@
   opacity: 0;
 }
 
+h1, li {
+  text-transform: capitalize;
+}
+
 </style>

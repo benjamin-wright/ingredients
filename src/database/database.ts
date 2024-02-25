@@ -1,11 +1,11 @@
 import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
 import hash from '@/utils/hash';
 import DBWorker from './database-worker.ts?worker';
-import { type ExecResponse, type ExecRequest } from './request-types';
+import { type ExecResponse, type ExecRequest, type BackupResponse, type BackupRequest } from './request-types';
 import migrations from './migrations';
 
 type Request<T> = {
-  resolve: (value: T[]) => void;
+  resolve: (value: T[] | T) => void;
   reject: (reason?: any) => void;
   reader?: (row: any[]) => T;
 }
@@ -41,6 +41,7 @@ class Database {
       case 'exec': {
         const response = event.data as ExecResponse;
         const request = this.requests[response.requestId];
+        delete this.requests[response.requestId];
 
         if (response.error) {
           request.reject(response.error);
@@ -70,6 +71,27 @@ class Database {
           request.resolve([]);
         }
 
+        break;
+      }
+      case 'backup': {
+        const response = event.data as BackupResponse;
+
+        console.log('backup response', response);
+
+        const request = this.requests[response.requestId];
+        delete this.requests[response.requestId];
+
+        if (response.error) {
+          request.reject(response.error);
+          return;
+        }
+
+        if (!request) {
+          console.error('Unknown request id', response.requestId);
+          return;
+        }
+
+        request.resolve(response.result);
         break;
       }
       case '__absurd:spawn-idb-worker': {
@@ -117,6 +139,15 @@ class Database {
     return new Promise<T[]>((resolve, reject) => {
       this.requests[id] = { resolve, reject, reader };
       const request: ExecRequest = { type: 'exec', requestId: id, sql, bind };
+      this.worker.postMessage(request);
+    });
+  }
+  
+  backup(): Promise<Uint8Array> {
+    const id = this.queryCounter++;
+    return new Promise<Uint8Array>((resolve, reject) => {
+      this.requests[id] = { resolve, reject };
+      const request: BackupRequest = { type: 'backup', requestId: id };
       this.worker.postMessage(request);
     });
   }
@@ -178,4 +209,8 @@ export async function query<T>(sql: string, bind?: any[], reader?: (row: any[]) 
 
 export async function reset(): Promise<void> {
   return database.then(db => db.reset());
+}
+
+export async function backup(): Promise<Uint8Array> {
+  return database.then(db => db.backup());
 }

@@ -73,7 +73,7 @@ export async function deleteUnit(id: number): Promise<void> {
 export async function addUnit(name: string, singular: string, plural: string, kind: UnitKind, conversion: number): Promise<number> {
     const result = await query(
         'INSERT INTO units (name, singular, plural, kind, conversion) VALUES (?, ?, ?, ?, ?) RETURNING id',
-        [name, singular, plural, kind, conversion],
+        [name.toLowerCase(), singular, plural, kind, conversion],
         (values) => values[0] as number
     );
 
@@ -83,7 +83,7 @@ export async function addUnit(name: string, singular: string, plural: string, ki
 export async function updateUnit(id: number, name: string, singular: string, plural: string, kind: UnitKind, conversion: number): Promise<void> {
     await query(
         'UPDATE units SET name = ?, singular = ?, plural = ?, kind = ?, conversion = ? WHERE id = ?',
-        [name, singular, plural, kind, conversion, id]
+        [name.toLowerCase(), singular, plural, kind, conversion, id]
     );
 }
 

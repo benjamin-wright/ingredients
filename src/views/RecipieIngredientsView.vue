@@ -85,6 +85,10 @@
 </template>
 
 <style scoped>
+h2 {
+  text-transform: capitalize;
+}
+
 select {
   background: none;
   border: none;

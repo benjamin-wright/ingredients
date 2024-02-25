@@ -1,12 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import { setup, type Meta, type StoryObj } from '@storybook/vue3';
 import { vueRouter } from 'storybook-vue3-router';
-
-import { type ICategoryProvider } from '@/database/models/category';
-
-import { expect, jest } from '@storybook/jest';
 
 import '../assets/base.css'
 import '../assets/main.css'
+
+setup(app => {
+  app.provide('categories', {
+    getCategories: async () => [
+      { id: 1, name: 'Category 1' },
+      { id: 2, name: 'Category 2' },
+      { id: 3, name: 'Category 3' },
+    ]
+  });
+})
 
 import CategoriesView from './CategoriesView.vue'
 const meta = {

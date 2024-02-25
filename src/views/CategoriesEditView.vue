@@ -1,19 +1,13 @@
 <script setup lang="ts">
-  import { computed, onMounted, onBeforeUpdate, ref, inject } from "vue";
+  import { computed, onMounted, ref } from "vue";
   import { useRouter } from 'vue-router';
   import FormTemplate from "@/components/FormTemplate.vue";
   import StringInput from "../components/StringInput.vue";
   import { type Category, type ICategoryProvider } from "@/database/models/category";
-  import { getIdFromPath } from "@/utils/computed";
+  import { getIdFromPath, getProvider } from "@/utils/computed";
   import { Navigator } from "@/utils/navigator";
 
-  const provider: ICategoryProvider = (() => {
-    let provider = inject<ICategoryProvider>("categories");
-    if (!provider) {
-      throw new Error("No category provider found");
-    }
-    return provider;
-  })();
+  const provider = getProvider<ICategoryProvider>("categories");
   const router = useRouter();
   const categoryId = ref(null as number | null);
   const navigator = new Navigator({

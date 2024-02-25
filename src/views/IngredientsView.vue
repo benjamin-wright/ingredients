@@ -49,5 +49,6 @@
   h2 {
     overflow: hidden;
     text-overflow: ellipsis;
+    text-transform: capitalize;
   }
 </style>
