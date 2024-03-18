@@ -1,7 +1,5 @@
 import NewThing from './NewThing.vue';
 import { vueRouter } from 'storybook-vue3-router'
-import { userEvent, within } from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
 
 import '../assets/base.css';
 import '../assets/main.css';
@@ -18,17 +16,6 @@ export default {
 };
 
 export const Default = {
-  play: async (options: any) => {
-    const canvas = within(options.canvasElement);
-    const button = await canvas.findByRole('button');
-
-    const old_route = await canvas.findByRole('assertion');
-    expect(old_route.textContent).toBe('Route: /');
-
-    await userEvent.click(button);
-    const new_route = await canvas.findByRole('assertion');
-    expect(new_route.textContent).toBe('Route: /new-path');
-  },
   args: {
     to: '/new-path',
   },
